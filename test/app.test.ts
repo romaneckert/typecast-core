@@ -1,8 +1,13 @@
-import { Server } from '../src/service/server';
+import { Application } from '../src/app';
 
 test('server', () => {
 
-    let server = new Server();
+    let app = new Application();
 
-    expect(server.start()).toBe(undefined);
+    app.boot();
+
+    app.service.logger.log('test');
+
+
+    //expect(app.service.server.start()).toBe(undefined);
 });
