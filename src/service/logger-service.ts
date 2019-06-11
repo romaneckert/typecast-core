@@ -1,10 +1,10 @@
-import { LoggerInterface } from '../interface/logger-interface';
+import { ILogger } from '../interface/logger-interface';
 
-export class LoggerService implements LoggerInterface {
+export class LoggerService implements ILogger {
 
-    start() { }
+    public start() { }
 
-    log(message: string): boolean {
+    public log(message: string): boolean {
         console.log(message);
         return true;
     }

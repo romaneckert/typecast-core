@@ -1,11 +1,11 @@
-import { ServiceInterface } from '../interface/service-interface';
-import { LoggerInterface } from '../interface/logger-interface';
+import { ILogger } from '../interface/logger-interface';
+import { IService } from '../interface/service-interface';
 
-export class ServerService implements ServiceInterface {
+export class ServerService implements IService {
 
-  logger: LoggerInterface
+  public logger: ILogger
 
-  constructor(logger: LoggerInterface, config: Object = {}) {
+  constructor(logger: ILogger, config: object = {}) {
     this.logger = logger;
   }
 

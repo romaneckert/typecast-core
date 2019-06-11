@@ -1,10 +1,10 @@
-import { LoggerInterface } from "../interface/logger-interface";
+import { ILogger } from "../interface/logger-interface";
 
 export class UserController {
 
-    logger: LoggerInterface
+    protected logger: ILogger
 
-    constructor(logger: LoggerInterface) {
+    constructor(logger: ILogger) {
         this.logger = logger
     }
 

@@ -1,9 +1,9 @@
-import { ServiceInterface } from "./service-interface";
-import { LoggerInterface } from "./logger-interface";
+import { ILogger } from "./logger-interface";
+import { IService } from "./service-interface";
 
-export interface ApplicationInterface {
+export interface IApplication {
     service: {
-        logger: LoggerInterface
-        server: ServiceInterface
+        logger: ILogger
+        server: IService
     }
 }  

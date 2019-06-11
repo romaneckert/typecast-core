@@ -1,5 +1,5 @@
-import { ServiceInterface } from "./service-interface";
+import { IService } from "./service-interface";
 
-export interface LoggerInterface extends ServiceInterface {
+export interface ILogger extends IService {
     log(message: string): boolean;
 }  

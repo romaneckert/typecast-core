@@ -1,30 +1,30 @@
-import { ApplicationInterface } from "./interface/application-interface";
-import { ServerService } from "./service/server-service";
-import { LoggerService } from "./service/logger-service";
 import { UserController } from "./controller/user-controller";
+import { IApplication } from "./interface/application-interface";
+import { LoggerService } from "./service/logger-service";
+import { ServerService } from "./service/server-service";
 import { FileSystem } from "./util/fs";
 
-export class Application implements ApplicationInterface {
+export class Application implements IApplication {
 
-    controller: {
+    public controller: {
         user: UserController
     }
 
-    service: {
+    public service: {
         logger: LoggerService
         server: ServerService
     }
 
-    util: {
+    public util: {
         fs: FileSystem
     }
 
     constructor() {
 
-        let logger = new LoggerService();
+        const logger = new LoggerService();
 
         this.service = {
-            logger: logger,
+            logger,
             server: new ServerService(logger)
         }
 
@@ -37,10 +37,10 @@ export class Application implements ApplicationInterface {
         }
     }
 
-    boot() {
+    public boot() {
         console.log('...booting');
 
-        for (let service of Object.values(this.service)) {
+        for (const service of Object.values(this.service)) {
             service.start();
         }
     }

@@ -1,3 +1,3 @@
-export interface ServiceInterface {
+export interface IService {
   start(): void;
 }
