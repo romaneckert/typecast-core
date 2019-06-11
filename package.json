@@ -1,6 +1,6 @@
 {
   "name": "@typecast/core",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "scripts": {
     "build": "tsc && cp -rf package.json lib",
