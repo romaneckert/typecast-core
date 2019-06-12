@@ -3,12 +3,11 @@
   "version": "0.0.4",
   "description": "",
   "scripts": {
-    "build": "tsc && cp -rf package.json lib",
+    "build": "tsc && cp -rf package.json lib && cp -rf LICENSE lib && cp -rf README.md lib",
     "format": "prettier --write 'src/**/*.ts' 'src/**/*.js'",
     "lint": "tslint -p tsconfig.json",
     "test": "jest --config jestconfig.json",
-    "prepare": "npm run build && cd lib",
-    "prepublishOnly": "npm test && npm run lint",
+    "upload": "npm run lint && npm test && npm run build && cd lib && npm publish",
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags"
