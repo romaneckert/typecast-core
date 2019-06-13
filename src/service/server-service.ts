@@ -9,6 +9,6 @@ export class ServerService implements IService {
   }
 
   public start(): void {
-    this.logger.log('start');
+    this.logger.log('server started');
   }
 }

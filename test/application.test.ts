@@ -1,13 +1,23 @@
 import { Application } from '../src/application';
+import { LoggerService } from '../src/service/logger-service';
+import { ServerService } from '../src/service/server-service';
 
-test('server', () => {
+class App extends Application {
 
-    let app = new Application();
+    public service: [ServerService]
 
+    constructor() {
+
+        super();
+
+        this.service = [
+            new ServerService(new LoggerService('service', 'server'))
+        ]
+    }
+}
+
+test('application', () => {
+    const app = new App();
     app.boot();
-
-    app.service.logger.log('test');
-
-
-    //expect(app.service.server.start()).toBe(undefined);
+    //expect(app.logger.log('test')).toBe(true);
 });

@@ -5,7 +5,5 @@ export class UserController {
 
   constructor(logger: ILogger) {
     this.logger = logger;
-
-    console.log('init user controller');
   }
 }
