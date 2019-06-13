@@ -1,13 +1,12 @@
 import { ILogger } from '../interface/logger-interface';
 
 export class LoggerService implements ILogger {
-
-  public type: string
-  public name: string
+  public type: string;
+  public name: string;
 
   public constructor(type: string, name: string) {
-    this.type = type
-    this.name = name
+    this.type = type;
+    this.name = name;
   }
 
   public start() {
@@ -16,6 +15,6 @@ export class LoggerService implements ILogger {
 
   public log(message: string): boolean {
     // console.log(message)
-    return true
+    return true;
   }
 }
