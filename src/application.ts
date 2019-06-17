@@ -1,6 +1,10 @@
 import * as nodePath from 'path';
 import { ApplicationConfig } from './config/application-config';
 import { ServerConfig } from './config/server-config';
+import { IndexHandler } from './handler/index-handler';
+import { AuthMiddleware } from './middleware/auth-middleware';
+import { LocaleMiddleware } from './middleware/locale-middleware';
+import { RolesMiddleware } from './middleware/roles-middleware';
 import { DatabaseService } from './service/database-service';
 import { FileSystemService } from './service/file-system-service';
 import { LoggerService } from './service/logger-service';
@@ -17,12 +21,16 @@ export class Application {
 
     constructor() {
         const applicationConfig = new ApplicationConfig();
-        const serverConfig = new ServerConfig(3000, [
-            new Route('index', '/', ),
-            new Route('typecast_user_sign_in', 'typecast/user/sign-in', ['get', 'post']),
-        ]);
-        serverConfig.port = 3000;
+        const serverConfig = new ServerConfig(
+            3000,
+            [
+                new Route('index', '/', new IndexHandler()),
+                // new Route('typecast_user_sign_in', 'typecast/user/sign-in', ['get', 'post'], ),
+            ],
+            [new AuthMiddleware(), new RolesMiddleware(), new LocaleMiddleware()],
+        );
         serverConfig.viewPaths = [nodePath.join(applicationConfig.basePath, 'view', 'template')];
+
         const fileSystemService = new FileSystemService();
 
         this.logger = new LoggerService('application', 'application', applicationConfig, fileSystemService);

@@ -115,12 +115,39 @@ export class ServerService {
         // TODO: start server
     }
 
-    private registerRoutes() {
-        for (let route of this.config.routes) {
-        }
-    }
-
     public stop() {
         // TODO: stop server
+    }
+
+    private registerRoutes() {
+        for (const route of this.config.routes) {
+            for (const middleware of this.config.middlewares) {
+                for (const method of route.methods) {
+                    switch (method) {
+                        case 'get':
+                            this.router.get(route.path, middleware.handle.bind(middleware));
+                            break;
+                        case 'post':
+                            this.router.post(route.path, middleware.handle.bind(middleware));
+                            break;
+                        default:
+                            throw new Error('method ' + method + ' is not supported');
+                    }
+                }
+            }
+
+            for (const method of route.methods) {
+                switch (method) {
+                    case 'get':
+                        this.router.get(route.path, route.handler.handle.bind(route.handler));
+                        break;
+                    case 'post':
+                        this.router.post(route.path, route.handler.handle.bind(route.handler));
+                        break;
+                    default:
+                        throw new Error('method ' + method + ' is not supported');
+                }
+            }
+        }
     }
 }

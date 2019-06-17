@@ -1,5 +1,7 @@
 import { Application } from './application';
 
-const app = new Application();
-app.logger.removeAllLogFiles();
-app.start();
+(async () => {
+    const app = new Application();
+    await app.logger.removeAllLogFiles();
+    await app.start();
+})();

@@ -9,9 +9,8 @@ export class ErrorMiddleware {
     }
 
     public async handle(err: any, req: express.Request, res: express.Response, next: () => void) {
-        console.log(typeof err);
-
-        await this.logger.error(req.url + ' ' + err.message);
-        return next();
+        await this.logger.error(req.url + ' ' + err);
+        res.status(500);
+        return res.render('status-500');
     }
 }

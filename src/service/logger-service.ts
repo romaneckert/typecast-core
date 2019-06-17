@@ -87,6 +87,7 @@ export class LoggerService implements ILogger {
         }
 
         await this.writeLog(log);
+        this.writeToConsole(log);
     }
 
     private async writeLog(log: Log) {
@@ -125,6 +126,28 @@ export class LoggerService implements ILogger {
             // write line to log file
             await this.fileSystemService.appendFile(logFilePath, output + '\n');
         }
+    }
+
+    private writeToConsole(log: Log): void {
+        // disabled, if log level less then notice and in mode production
+        if ('production' === this.applicationConfig.context && log.code > 5) {
+            return;
+        }
+
+        // disabled, if context in mode test
+        if ('test' === this.applicationConfig.context) {
+            return;
+        }
+
+        let consoleOutput = '';
+
+        consoleOutput += `[${log.level}] `;
+        consoleOutput += `[${log.contextType}/${log.contextName}] `;
+        consoleOutput += `${log.message} `;
+
+        consoleOutput += `[pid:${process.pid}] `;
+
+        console.log(consoleOutput.replace(/\r?\n?/g, '').trim());
     }
 
     private dateToString(date: Date): string {

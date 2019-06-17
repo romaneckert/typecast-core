@@ -7,7 +7,7 @@ export class Route {
     public handler: IRouteHandler;
     public disabled: boolean = false;
 
-    constructor(name: string, path: string, methods: string[] = ['get'], handler: IRouteHandler) {
+    constructor(name: string, path: string, handler: IRouteHandler, methods: string[] = ['get']) {
         this.name = name;
         this.methods = methods;
         this.path = path;
