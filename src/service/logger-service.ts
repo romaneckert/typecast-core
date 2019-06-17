@@ -6,16 +6,13 @@ import { ILogger } from '../interface/logger-interface';
 import { FileSystemService } from './file-system-service';
 
 export class LoggerService implements ILogger {
-    public contextType: string;
-    public contextName: string;
-
-    public logRepository: Repository<Log>;
-
+    private logRepository: Repository<Log>;
+    private contextType: string;
+    private contextName: string;
     private maxSizePerLogFile: number = 16 * 1024 * 1024;
     private maxLogRotationsPerType: number = 10;
     private maxHistoryLength: number = 1000;
     private duplicateTime: number = 10000;
-
     private applicationConfig: ApplicationConfig;
     private fileSystemService: FileSystemService;
 
@@ -35,8 +32,8 @@ export class LoggerService implements ILogger {
         this.logRepository = connection.getRepository(Log);
     }
 
-    public async emergency(message: string, meta: any): Promise<void> {
-        await this.log(0, message, meta);
+    public async emergency(message: string, data?: any): Promise<void> {
+        await this.log(0, message, data);
     }
 
     public async alert(message: string, data?: any): Promise<void> {
@@ -67,6 +64,10 @@ export class LoggerService implements ILogger {
         await this.log(7, message, data);
     }
 
+    public async removeAllLogFiles(): Promise<void> {
+        this.fileSystemService.remove(nodePath.join(process.cwd(), 'var', this.applicationConfig.context, 'log'));
+    }
+
     private async log(code: number, message: string, data?: any): Promise<void> {
         const date = new Date();
 
@@ -91,11 +92,12 @@ export class LoggerService implements ILogger {
 
     private async writeLog(log: Log) {
         const logFilePaths = [
-            nodePath.join(process.cwd(), 'var', this.applicationConfig.context, log.level + '.log'),
+            nodePath.join(process.cwd(), 'var', this.applicationConfig.context, 'log', log.level + '.log'),
             nodePath.join(
                 process.cwd(),
                 'var',
                 this.applicationConfig.context,
+                'log',
                 log.contextType,
                 log.contextName,
                 log.level + '.log',

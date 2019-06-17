@@ -1,9 +1,9 @@
 import { ApplicationConfig } from './config/application-config';
+import { ILogger } from './interface/logger-interface';
 import { DatabaseService } from './service/database-service';
 import { FileSystemService } from './service/file-system-service';
 import { LoggerService } from './service/logger-service';
 import { ServerService } from './service/server-service';
-import { file } from '@babel/types';
 
 export class Application {
     public service: {
@@ -11,9 +11,13 @@ export class Application {
         server: ServerService;
     };
 
+    public logger: LoggerService;
+
     constructor() {
         const applicationConfig = new ApplicationConfig();
         const fileSystemService = new FileSystemService();
+
+        this.logger = new LoggerService('application', 'application', applicationConfig, fileSystemService);
 
         this.service = {
             database: new DatabaseService(
