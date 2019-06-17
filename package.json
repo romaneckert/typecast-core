@@ -3,6 +3,7 @@
     "version": "0.0.10",
     "description": "",
     "scripts": {
+        "start": "npm run build && node dist/index.js",
         "build": "tsc && cp -rf package.json dist && cp -rf LICENSE dist && cp -rf README.md dist",
         "format": "prettier --write 'src/**/*.ts' 'src/**/*.js'",
         "lint": "tslint -p tsconfig.json",

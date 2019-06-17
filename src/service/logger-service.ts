@@ -1,10 +1,13 @@
+import * as nodePath from 'path';
 import { Connection, Repository } from 'typeorm';
+import { ApplicationConfig } from '../config/application-config';
 import { Log } from '../entity/log';
 import { ILogger } from '../interface/logger-interface';
+import { FileSystemService } from './file-system-service';
 
 export class LoggerService implements ILogger {
-    public type: string;
-    public name: string;
+    public contextType: string;
+    public contextName: string;
 
     public logRepository: Repository<Log>;
 
@@ -13,21 +16,23 @@ export class LoggerService implements ILogger {
     private maxHistoryLength: number = 1000;
     private duplicateTime: number = 10000;
 
-    public constructor(type: string, name: string) {
-        this.type = type;
-        this.name = name;
+    private applicationConfig: ApplicationConfig;
+    private fileSystemService: FileSystemService;
+
+    public constructor(
+        contextType: string,
+        contextName: string,
+        applicationConfig: ApplicationConfig,
+        fileSystemService: FileSystemService,
+    ) {
+        this.contextType = contextType;
+        this.contextName = contextName;
+        this.applicationConfig = applicationConfig;
+        this.fileSystemService = fileSystemService;
     }
 
     public set databaseConnection(connection: Connection) {
         this.logRepository = connection.getRepository(Log);
-    }
-
-    public start() {
-        // TODO: check and create directories
-    }
-
-    public stop() {
-        // nothing to do
     }
 
     public async emergency(message: string, meta: any): Promise<void> {
@@ -71,9 +76,7 @@ export class LoggerService implements ILogger {
         // remove line breaks from message
         message = message.replace(/(\r?\n|\r)/gm, ' ');
 
-        const log = new Log();
-        log.code = code;
-        log.message = message;
+        const log = new Log(code, date, this.contextType, this.contextName, message);
 
         if (undefined !== this.logRepository) {
             try {
@@ -82,5 +85,50 @@ export class LoggerService implements ILogger {
                 // TODO: handle error
             }
         }
+
+        await this.writeLog(log);
+    }
+
+    private async writeLog(log: Log) {
+        const logFilePaths = [
+            nodePath.join(process.cwd(), 'var', this.applicationConfig.context, log.level + '.log'),
+            nodePath.join(
+                process.cwd(),
+                'var',
+                this.applicationConfig.context,
+                log.contextType,
+                log.contextName,
+                log.level + '.log',
+            ),
+        ];
+
+        let output = '[' + this.dateToString(log.date) + '] ';
+        output += '[' + log.level + '] ';
+        output += '[' + log.contextType + '/' + log.contextName + '] ';
+        output += '[' + log.message + ']';
+        output = output.replace(/\r?\n?/g, '').trim();
+
+        for (const logFilePath of logFilePaths) {
+            // check if log file exists and create if not
+            await this.fileSystemService.ensureFileExists(logFilePath);
+
+            // check if log rotation is necessary
+            //await this._rotateLogFile(logFile);
+
+            // write line to log file
+            await this.fileSystemService.appendFile(logFilePath, output + '\n');
+        }
+    }
+
+    private dateToString(date: Date): string {
+        return (
+            date.getFullYear() +
+            '-' +
+            ('0' + (date.getMonth() + 1)).slice(-2) +
+            '-' +
+            ('0' + date.getDate()).slice(-2) +
+            ' ' +
+            date.toTimeString().slice(0, 8)
+        );
     }
 }

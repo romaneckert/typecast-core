@@ -1,7 +1,6 @@
 import { ILogger } from '../interface/logger-interface';
-import { IService } from '../interface/service-interface';
 
-export class ServerService implements IService {
+export class ServerService {
     public logger: ILogger;
 
     constructor(logger: ILogger, config: object = {}) {
@@ -9,7 +8,7 @@ export class ServerService implements IService {
     }
 
     public async start(): Promise<void> {
-        await this.logger.info('server started');
+        await this.logger.notice('server started');
 
         // TODO: start server
     }

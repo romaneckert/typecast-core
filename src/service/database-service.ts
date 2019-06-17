@@ -1,20 +1,28 @@
 import { Connection, createConnection } from 'typeorm';
+import { ApplicationConfig } from '../config/application-config';
 import { ILogger } from '../interface/logger-interface';
-import { IService } from '../interface/service-interface';
 
-export class DatabaseService implements IService {
+export class DatabaseService {
     public connection: Connection;
     public logger: ILogger;
+    private applicationConfig: ApplicationConfig;
 
-    constructor(logger: ILogger) {
+    constructor(logger: ILogger, applicationConfig: ApplicationConfig) {
         this.logger = logger;
+        this.applicationConfig = applicationConfig;
     }
 
     public async start(): Promise<void> {
+        let fileType = 'js';
+
+        if ('test' === this.applicationConfig.context) {
+            fileType = 'ts';
+        }
+
         try {
             this.connection = await createConnection({
                 database: 'typecast-core',
-                entities: [__dirname + '/../entity/*.ts'],
+                entities: [__dirname + '/../entity/*.' + fileType],
                 host: 'localhost',
                 synchronize: true,
                 type: 'mongodb',
@@ -24,7 +32,7 @@ export class DatabaseService implements IService {
             await this.logger.critical('can not connect to db', err);
         }
 
-        await this.logger.info('connected to db');
+        await this.logger.notice('connected to db');
     }
 
     public async stop() {

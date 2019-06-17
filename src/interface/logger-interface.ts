@@ -1,9 +1,8 @@
 import { Connection } from 'typeorm';
-import { IService } from './service-interface';
 
-export interface ILogger extends IService {
-    type: string;
-    name: string;
+export interface ILogger {
+    contextType: string;
+    contextName: string;
     databaseConnection: Connection;
 
     emergency(message: string, data?: any): Promise<void>;
