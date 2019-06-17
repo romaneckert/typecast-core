@@ -3,11 +3,11 @@ import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 @Entity()
 export class Log {
     @ObjectIdColumn()
-    id: ObjectID;
+    public id: ObjectID;
 
     @Column()
-    code: number;
+    public code: number;
 
     @Column()
-    message: string;
+    public message: string;
 }

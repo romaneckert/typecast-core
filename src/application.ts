@@ -1,6 +1,5 @@
-import { IApplication } from './interface/application-interface';
 import { IService } from './interface/service-interface';
 
-export abstract class Application implements IApplication {
+export abstract class Application {
     public abstract service: {};
 }

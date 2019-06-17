@@ -63,8 +63,6 @@ export class LoggerService implements ILogger {
     }
 
     private async log(code: number, message: string, data?: any): Promise<void> {
-        console.log(message + '/' + this.type + '/' + this.name);
-
         const date = new Date();
 
         // trim message
@@ -81,8 +79,7 @@ export class LoggerService implements ILogger {
             try {
                 await this.logRepository.save(log);
             } catch (err) {
-                console.log(log.message);
-                console.log(err);
+                // TODO: handle error
             }
         }
     }
