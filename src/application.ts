@@ -1,8 +1,10 @@
+import * as nodePath from 'path';
 import { ApplicationConfig } from './config/application-config';
-import { ILogger } from './interface/logger-interface';
+import { ServerConfig } from './config/server-config';
 import { DatabaseService } from './service/database-service';
 import { FileSystemService } from './service/file-system-service';
 import { LoggerService } from './service/logger-service';
+import { Route } from './service/router/route';
 import { ServerService } from './service/server-service';
 
 export class Application {
@@ -15,6 +17,12 @@ export class Application {
 
     constructor() {
         const applicationConfig = new ApplicationConfig();
+        const serverConfig = new ServerConfig(3000, [
+            new Route('index', '/', ),
+            new Route('typecast_user_sign_in', 'typecast/user/sign-in', ['get', 'post']),
+        ]);
+        serverConfig.port = 3000;
+        serverConfig.viewPaths = [nodePath.join(applicationConfig.basePath, 'view', 'template')];
         const fileSystemService = new FileSystemService();
 
         this.logger = new LoggerService('application', 'application', applicationConfig, fileSystemService);
@@ -24,7 +32,12 @@ export class Application {
                 new LoggerService('service', 'database', applicationConfig, fileSystemService),
                 applicationConfig,
             ),
-            server: new ServerService(new LoggerService('service', 'server', applicationConfig, fileSystemService)),
+            server: new ServerService(
+                serverConfig,
+                applicationConfig,
+                new LoggerService('service', 'server', applicationConfig, fileSystemService),
+                fileSystemService,
+            ),
         };
     }
 

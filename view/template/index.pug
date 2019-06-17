@@ -1,0 +1,26 @@
+extends ../layout/default.pug
+
+block head
+    meta(name="description" content="Typecast")
+    title Typecast
+
+block body
+    h1 Welcome to Typecast
+
+    h2 Last 10 Logs
+
+    ul
+        each log in logs
+            li= log.message
+
+    h2 Mixins
+    h3 Error
+
+    +error(errors=errors)
+    +error(errors=null)
+
+    h2 View helper
+    h3 url
+    h4 example
+
+    =view.url('index')

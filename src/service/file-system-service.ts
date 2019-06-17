@@ -79,4 +79,12 @@ export class FileSystemService {
     public async appendFile(path: nodeFs.PathLike, data: any): Promise<void> {
         return nodeFs.promises.appendFile(path, data);
     }
+
+    public async readFile(path: nodeFs.PathLike, options?: any): Promise<Buffer> {
+        if (undefined === options) {
+            options = 'utf8';
+        }
+
+        return nodeFs.promises.readFile(path, options);
+    }
 }

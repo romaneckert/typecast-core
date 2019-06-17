@@ -6,6 +6,7 @@ import { ILogger } from '../interface/logger-interface';
 import { FileSystemService } from './file-system-service';
 
 export class LoggerService implements ILogger {
+    public databaseConnection: Connection;
     private logRepository: Repository<Log>;
     private contextType: string;
     private contextName: string;
@@ -26,10 +27,6 @@ export class LoggerService implements ILogger {
         this.contextName = contextName;
         this.applicationConfig = applicationConfig;
         this.fileSystemService = fileSystemService;
-    }
-
-    public set databaseConnection(connection: Connection) {
-        this.logRepository = connection.getRepository(Log);
     }
 
     public async emergency(message: string, data?: any): Promise<void> {
@@ -79,9 +76,11 @@ export class LoggerService implements ILogger {
 
         const log = new Log(code, date, this.contextType, this.contextName, message);
 
-        if (undefined !== this.logRepository) {
+        if (undefined !== this.databaseConnection) {
+            const logRepository = this.databaseConnection.getRepository(Log);
+
             try {
-                await this.logRepository.save(log);
+                await logRepository.save(log);
             } catch (err) {
                 // TODO: handle error
             }
@@ -92,9 +91,15 @@ export class LoggerService implements ILogger {
 
     private async writeLog(log: Log) {
         const logFilePaths = [
-            nodePath.join(process.cwd(), 'var', this.applicationConfig.context, 'log', log.level + '.log'),
             nodePath.join(
-                process.cwd(),
+                this.applicationConfig.basePath,
+                'var',
+                this.applicationConfig.context,
+                'log',
+                log.level + '.log',
+            ),
+            nodePath.join(
+                this.applicationConfig.basePath,
                 'var',
                 this.applicationConfig.context,
                 'log',

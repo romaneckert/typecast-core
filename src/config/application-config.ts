@@ -1,7 +1,8 @@
 export class ApplicationConfig {
-    public url: string = 'http://localhost:3000';
+    public baseUrl: string = 'http://localhost:3000';
     public allowedContexts: string[] = ['production', 'acceptance', 'staging', 'test', 'development'];
     public context: string = 'production';
+    public basePath: string;
 
     constructor() {
         // detect context and write to this.context
@@ -10,5 +11,8 @@ export class ApplicationConfig {
         if (-1 !== this.allowedContexts.indexOf(processEnv)) {
             this.context = processEnv;
         }
+
+        // detect base path
+        this.basePath = process.cwd();
     }
 }
