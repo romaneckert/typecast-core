@@ -121,7 +121,7 @@ export class LoggerService implements ILogger {
             await this.fileSystemService.ensureFileExists(logFilePath);
 
             // check if log rotation is necessary
-            //await this._rotateLogFile(logFile);
+            // await this._rotateLogFile(logFile);
 
             // write line to log file
             await this.fileSystemService.appendFile(logFilePath, output + '\n');
@@ -147,6 +147,7 @@ export class LoggerService implements ILogger {
 
         consoleOutput += `[pid:${process.pid}] `;
 
+        // tslint:disable-next-line
         console.log(consoleOutput.replace(/\r?\n?/g, '').trim());
     }
 
