@@ -23,6 +23,8 @@ export class ServerService {
     private pathToKeyPem: string;
     private pathToCertPem: string;
 
+    private connection: any;
+
     constructor(
         config: ServerConfig,
         applicationConfig: ApplicationConfig,
@@ -108,15 +110,17 @@ export class ServerService {
             );
         }
 
-        server.listen(this.config.port);
+        this.connection = server.listen(this.config.port);
 
-        await this.logger.notice('server started');
+        await this.logger.notice('started');
 
         // TODO: start server
     }
 
-    public stop() {
-        // TODO: stop server
+    public async stop() {
+        await this.connection.close();
+
+        await this.logger.notice('stopped');
     }
 
     private registerRoutes() {
