@@ -1,8 +1,6 @@
 import { Connection } from 'typeorm';
 
 export interface ILogger {
-    databaseConnection: Connection;
-
     emergency(message: string, data?: any): Promise<void>;
     alert(message: string, data?: any): Promise<void>;
     critical(message: string, data?: any): Promise<void>;

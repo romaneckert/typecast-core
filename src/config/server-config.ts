@@ -7,9 +7,10 @@ export class ServerConfig {
     public routes: Route[];
     public viewPaths: string[];
 
-    constructor(port: number, routes: Route[], middlewares: IMiddleware[]) {
+    constructor(port: number, routes: Route[], middlewares: IMiddleware[], viewPaths: string[]) {
         this.port = port;
         this.middlewares = middlewares;
         this.routes = routes;
+        this.viewPaths = viewPaths;
     }
 }

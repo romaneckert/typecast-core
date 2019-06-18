@@ -1,32 +1,24 @@
 import * as nodePath from 'path';
-import { Connection, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { ApplicationConfig } from '../config/application-config';
+import { Container } from '../container';
 import { Log } from '../entity/log';
 import { ILogger } from '../interface/logger-interface';
 import { FileSystemService } from './file-system-service';
 
 export class LoggerService implements ILogger {
-    public databaseConnection: Connection;
-    private logRepository: Repository<Log>;
+    private container: Container;
     private contextType: string;
     private contextName: string;
     private maxSizePerLogFile: number = 16 * 1024 * 1024;
     private maxLogRotationsPerType: number = 10;
     private maxHistoryLength: number = 1000;
     private duplicateTime: number = 10000;
-    private applicationConfig: ApplicationConfig;
-    private fileSystemService: FileSystemService;
 
-    public constructor(
-        contextType: string,
-        contextName: string,
-        applicationConfig: ApplicationConfig,
-        fileSystemService: FileSystemService,
-    ) {
+    public constructor(container: Container, contextType: string, contextName: string) {
+        this.container = container;
         this.contextType = contextType;
         this.contextName = contextName;
-        this.applicationConfig = applicationConfig;
-        this.fileSystemService = fileSystemService;
     }
 
     public async emergency(message: string, data?: any): Promise<void> {
@@ -62,7 +54,9 @@ export class LoggerService implements ILogger {
     }
 
     public async removeAllLogFiles(): Promise<void> {
-        this.fileSystemService.remove(nodePath.join(process.cwd(), 'var', this.applicationConfig.context, 'log'));
+        this.container.service.fs.remove(
+            nodePath.join(process.cwd(), 'var', this.container.config.application.context, 'log'),
+        );
     }
 
     private async log(code: number, message: string, data?: any): Promise<void> {
@@ -76,8 +70,10 @@ export class LoggerService implements ILogger {
 
         const log = new Log(code, date, this.contextType, this.contextName, message);
 
-        if (undefined !== this.databaseConnection) {
-            const logRepository = this.databaseConnection.getRepository(Log);
+        const entityManager = this.container.entityManager;
+
+        if (null !== entityManager) {
+            const logRepository = entityManager.getRepository(Log);
 
             try {
                 await logRepository.save(log);
@@ -93,16 +89,16 @@ export class LoggerService implements ILogger {
     private async writeLog(log: Log) {
         const logFilePaths = [
             nodePath.join(
-                this.applicationConfig.basePath,
+                this.container.config.application.basePath,
                 'var',
-                this.applicationConfig.context,
+                this.container.config.application.context,
                 'log',
                 log.level + '.log',
             ),
             nodePath.join(
-                this.applicationConfig.basePath,
+                this.container.config.application.basePath,
                 'var',
-                this.applicationConfig.context,
+                this.container.config.application.context,
                 'log',
                 log.contextType,
                 log.contextName,
@@ -118,24 +114,24 @@ export class LoggerService implements ILogger {
 
         for (const logFilePath of logFilePaths) {
             // check if log file exists and create if not
-            await this.fileSystemService.ensureFileExists(logFilePath);
+            await this.container.service.fs.ensureFileExists(logFilePath);
 
             // check if log rotation is necessary
             // await this._rotateLogFile(logFile);
 
             // write line to log file
-            await this.fileSystemService.appendFile(logFilePath, output + '\n');
+            await this.container.service.fs.appendFile(logFilePath, output + '\n');
         }
     }
 
     private writeToConsole(log: Log): void {
         // disabled, if log level less then notice and in mode production
-        if ('production' === this.applicationConfig.context && log.code > 5) {
+        if ('production' === this.container.config.application.context && log.code > 5) {
             return;
         }
 
         // disabled, if context in mode test
-        if ('test' === this.applicationConfig.context) {
+        if ('test' === this.container.config.application.context) {
             return;
         }
 

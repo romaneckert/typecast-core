@@ -1,21 +1,22 @@
 import { Connection, createConnection } from 'typeorm';
-import { ApplicationConfig } from '../config/application-config';
+import { Container } from '../container';
 import { ILogger } from '../interface/logger-interface';
+import { LoggerService } from './logger-service';
 
 export class DatabaseService {
     public connection: Connection;
-    public logger: ILogger;
-    private applicationConfig: ApplicationConfig;
+    public container: Container;
+    private logger: ILogger;
 
-    constructor(logger: ILogger, applicationConfig: ApplicationConfig) {
-        this.logger = logger;
-        this.applicationConfig = applicationConfig;
+    constructor(container: Container) {
+        this.container = container;
+        this.logger = new LoggerService(container, 'service', 'database');
     }
 
     public async start(): Promise<void> {
         let fileType = 'js';
 
-        if ('test' === this.applicationConfig.context) {
+        if ('test' === this.container.config.application.context) {
             fileType = 'ts';
         }
 
@@ -35,7 +36,13 @@ export class DatabaseService {
         await this.logger.notice('connected to db');
     }
 
-    public async stop() {
+    public async stop(): Promise<boolean> {
+        if (null === this.connection) {
+            return false;
+        }
+
         await this.connection.close();
+
+        return true;
     }
 }
