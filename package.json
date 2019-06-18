@@ -8,8 +8,8 @@
         "build": "rm -rf dist && tsc && cp -rf package.json dist && cp -rf LICENSE dist && cp -rf README.md dist && cp -rf view dist && cp -rf public dist",
         "format": "prettier --write 'src/**/*.ts' 'src/**/*.js'",
         "lint": "tslint -p tsconfig.json",
-        "test": "jest --config jestconfig.json --runInBand",
-        "upload": "npm run lint && npm test && npm run build && cd dist && npm publish",
+        "test": "npm run lint && jest --config jestconfig.json --runInBand",
+        "upload": "npm test && npm run build && cd dist && npm publish",
         "preversion": "npm run lint",
         "version": "npm run format && git add -A src",
         "postversion": "git push"

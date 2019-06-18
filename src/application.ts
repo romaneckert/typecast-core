@@ -1,15 +1,14 @@
 import * as nodePath from 'path';
 import { ApplicationConfig } from './config/application-config';
+import { RouteContainer } from './config/route-config';
 import { ServerConfig } from './config/server-config';
 import { Container } from './container';
-import { IndexHandler } from './handler/index-handler';
 import { AuthMiddleware } from './middleware/auth-middleware';
 import { LocaleMiddleware } from './middleware/locale-middleware';
 import { RolesMiddleware } from './middleware/roles-middleware';
 import { DatabaseService } from './service/database-service';
 import { FileSystemService } from './service/file-system-service';
 import { LoggerService } from './service/logger-service';
-import { Route } from './service/router/route';
 import { ServerService } from './service/server-service';
 
 export class Application {
@@ -23,10 +22,7 @@ export class Application {
         const applicationConfig = new ApplicationConfig();
         const serverConfig = new ServerConfig(
             3000,
-            [
-                new Route('index', '/', new IndexHandler(this.container)),
-                // new Route('typecast_user_sign_in', 'typecast/user/sign-in', ['get', 'post'], ),
-            ],
+            [new RouteContainer(this.container)],
             [new AuthMiddleware(), new RolesMiddleware(), new LocaleMiddleware()],
             [nodePath.join(applicationConfig.basePath, 'view', 'template')],
         );

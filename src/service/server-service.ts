@@ -10,6 +10,7 @@ import { AccessMiddleware } from '../middleware/access-middleware';
 import { ErrorMiddleware } from '../middleware/error-middleware';
 import { NotFoundMiddleware } from '../middleware/not-found-middleware';
 import { LoggerService } from './logger-service';
+import { Route } from './router/route';
 
 export class ServerService {
     private logger: ILogger;
@@ -58,7 +59,7 @@ export class ServerService {
 
         // this.router.engine('pug', app.module.renderer.render.bind(app.module.renderer));
 
-        this.router.set('views', this.container.config.server.viewPaths);
+        this.router.set('views', this.container.config.server.viewPaths.reverse());
         this.router.set('view engine', 'pug');
 
         let server = null;
@@ -95,7 +96,20 @@ export class ServerService {
     }
 
     private registerRoutes() {
-        for (const route of this.container.config.server.routes) {
+        const routes: Route[] = [];
+        const routeNames: string[] = [];
+
+        for (const routeContainer of this.container.config.server.routeContainers.reverse()) {
+            for (const route of routeContainer.routes) {
+                if (routeNames.includes(route.name)) {
+                    continue;
+                }
+                routes.push(route);
+                routeNames.push(route.name);
+            }
+        }
+
+        for (const route of routes) {
             for (const middleware of this.container.config.server.middlewares) {
                 for (const method of route.methods) {
                     switch (method) {
