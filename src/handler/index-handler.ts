@@ -1,15 +1,9 @@
 import express from 'express';
-import { Container } from '../container';
+import { ContainerAware } from '../core/container-aware';
 import { Log } from '../entity/log';
 import { IRouteHandler } from '../interface/route-handler-interface';
 
-export class IndexHandler implements IRouteHandler {
-    private container: Container;
-
-    constructor(container: Container) {
-        this.container = container;
-    }
-
+export class IndexHandler extends ContainerAware implements IRouteHandler {
     public async handle(req: express.Request, res: express.Response): Promise<void> {
         const errors = {
             password: {

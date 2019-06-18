@@ -85,8 +85,6 @@ export class ServerService {
         this.connection = server.listen(this.container.config.server.port);
 
         await this.logger.notice('started');
-
-        // TODO: start server
     }
 
     public async stop() {
