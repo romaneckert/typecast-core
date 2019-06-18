@@ -1,6 +1,6 @@
 {
     "name": "@typecast/core",
-    "version": "0.0.15",
+    "version": "0.0.16",
     "description": "",
     "scripts": {
         "start": "npm run build && cd dist && export NODE_ENV=production && node index.js",
