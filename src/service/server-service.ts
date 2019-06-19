@@ -59,7 +59,14 @@ export class ServerService extends ContainerAware {
         this.router.use(notFoundMiddleware.handle.bind(notFoundMiddleware));
 
         this.router.engine('pug', this.container.service.renderer.render.bind(this.container.service.renderer));
-        this.router.set('views', this.container.config.server.viewPaths.reverse());
+
+        const viewPaths = [];
+
+        for (const viewPath of this.container.config.server.viewPaths.reverse()) {
+            viewPaths.push(nodePath.join(this.container.config.application.basePath, viewPath));
+        }
+
+        this.router.set('views', viewPaths);
         this.router.set('view engine', 'pug');
 
         let server = null;

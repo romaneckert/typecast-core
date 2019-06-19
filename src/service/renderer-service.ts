@@ -9,7 +9,13 @@ export class RendererService extends ContainerAware {
     private templates: { [key: string]: any } = {};
 
     public async start() {
-        for (const path of this.container.config.server.viewPaths) {
+        const viewPaths = [];
+
+        for (const viewPath of this.container.config.server.viewPaths.reverse()) {
+            viewPaths.push(nodePath.join(this.container.config.application.basePath, viewPath));
+        }
+
+        for (const path of viewPaths) {
             await this.compileTemplates(path);
         }
     }

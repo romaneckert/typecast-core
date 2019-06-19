@@ -1,5 +1,5 @@
 export class ApplicationConfig {
-    public baseUrl: string = 'http://localhost:3000';
+    public baseUrl?: string = undefined;
     public allowedContexts: string[] = ['production', 'acceptance', 'staging', 'test', 'development'];
     public context: string = 'production';
     public basePath: string = process.cwd();

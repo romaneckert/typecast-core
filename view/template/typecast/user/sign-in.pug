@@ -20,7 +20,7 @@ block content
 
         .form-group
             label(for='password')=view.translate(locale, 'typecast.form.label.password')
-            +textfield.form-control(id='password' type='password' name='password' form=form required='required')
+            +textfield.form-control(id='password' type='password' name='password' form=form)
 
         button.btn.btn-primary(type='submit')=view.translate(locale, 'typecast.form.sign_in')
 

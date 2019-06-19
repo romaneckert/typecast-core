@@ -1,5 +1,6 @@
 import * as nodePath from 'path';
 import { ApplicationConfig } from './config/application-config';
+import { AuthConfig } from './config/auth-config';
 import { I18nConfig } from './config/i18n-config';
 import { RouteContainer } from './config/route-config';
 import { ServerConfig } from './config/server-config';
@@ -21,30 +22,38 @@ export class Application {
 
     constructor() {
         this.container = new Container();
+        this.logger = new LoggerService(this.container, 'application', 'application');
 
         const applicationConfig = new ApplicationConfig();
+        const authConfig = new AuthConfig();
         const i18nConfig = new I18nConfig();
-        i18nConfig.defaultLocale = 'de';
-        i18nConfig.locales = ['de'];
-        i18nConfig.localePaths = [nodePath.join(applicationConfig.basePath, 'locale')];
-        const serverConfig = new ServerConfig(
-            this.container,
-            3000,
-            [new RouteContainer(this.container)],
-            [new AuthMiddleware(), new RolesMiddleware(), new LocaleMiddleware(this.container)],
-            [nodePath.join(applicationConfig.basePath, 'view', 'template')],
-        );
+        const serverConfig = new ServerConfig(this.container);
 
         this.container.config = {
             application: applicationConfig,
+            auth: authConfig,
             i18n: i18nConfig,
             server: serverConfig,
         };
 
-        this.logger = new LoggerService(this.container, 'application', 'application');
+        this.container.config.i18n.localePaths = ['locale'];
+        this.container.config.server.routeContainers = [new RouteContainer(this.container)];
+        this.container.config.server.middlewares = [
+            new AuthMiddleware(),
+            new RolesMiddleware(),
+            new LocaleMiddleware(this.container),
+        ];
+        this.container.config.server.viewPaths = ['view/template'];
+    }
+
+    public initConfig() {
+        this.container.config.i18n.locales = ['de'];
+        this.container.config.i18n.defaultLocale = 'de';
     }
 
     public async start() {
+        this.initConfig();
+
         const fileSystemService = new FileSystemService();
         const databaseService = new DatabaseService(this.container);
         const serverService = new ServerService(this.container);

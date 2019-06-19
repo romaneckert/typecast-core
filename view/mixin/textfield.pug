@@ -9,7 +9,7 @@ mixin textfield()
         }
 
         if(attributes.form.errors && attributes.form.errors[attributes.name]) {
-            let cssClasses = attributes.class.split(' ');
+            const cssClasses = attributes.class.split(' ');
             cssClasses.push('has-error');
             attributes.class = cssClasses.join(' ');
         }
