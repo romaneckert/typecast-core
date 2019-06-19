@@ -1,12 +1,8 @@
-doctype html
-html(lang="en")
-    head
-        block head
-            meta(charset="utf-8")
-            meta(http-equiv="x-ua-compatible" content="ie=edge")
-            meta(name="viewport" content="width=device-width, initial-scale=1")
-            link(rel='stylesheet' href=view.asset('typecast/css/style.css'))
-            link(rel='stylesheet' href=view.asset('vendor/fontawesome/css/all.min.css'))
+extends ../default.pug
 
-    body
-        block content
+block append head
+    link(rel='stylesheet' href=view.asset('typecast/css/style.css'))
+    link(rel='stylesheet' href=view.asset('vendor/fontawesome/css/all.min.css'))
+
+
+block body

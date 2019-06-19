@@ -1,5 +1,3 @@
-import { IObjectLiteral } from './object-literal';
-
 export class Form {
     public submitted: boolean = false;
     public valid: boolean = false;
@@ -14,7 +12,7 @@ export class Form {
         this.instance = instance;
     }
 
-    public handle(data?: IObjectLiteral): Form {
+    public handle(data?: { [key: string]: any }): Form {
         // test if data is empty
         if ('object' !== typeof data || 0 === Object.keys(data).length) {
             return this;
@@ -23,7 +21,7 @@ export class Form {
         // set form to status submitted
         this.submitted = true;
 
-        const cleanedData: IObjectLiteral = {};
+        const cleanedData: { [key: string]: any } = {};
 
         for (const [key, value] of Object.entries(data)) {
             if (Object.keys(this).includes(key)) {

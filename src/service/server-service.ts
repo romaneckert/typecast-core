@@ -57,8 +57,7 @@ export class ServerService {
         const notFoundMiddleware = new NotFoundMiddleware();
         this.router.use(notFoundMiddleware.handle.bind(notFoundMiddleware));
 
-        // this.router.engine('pug', app.module.renderer.render.bind(app.module.renderer));
-
+        this.router.engine('pug', this.container.service.renderer.render.bind(this.container.service.renderer));
         this.router.set('views', this.container.config.server.viewPaths.reverse());
         this.router.set('view engine', 'pug');
 

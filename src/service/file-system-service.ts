@@ -87,4 +87,8 @@ export class FileSystemService {
 
         return nodeFs.promises.readFile(path, options);
     }
+
+    public async readDirectory(path: nodeFs.PathLike): Promise<string[]> {
+        return nodeFs.promises.readdir(path);
+    }
 }

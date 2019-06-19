@@ -1,10 +1,7 @@
 import * as nodePath from 'path';
-import { Repository } from 'typeorm';
-import { ApplicationConfig } from '../config/application-config';
 import { Container } from '../container';
 import { Log } from '../entity/log';
 import { ILogger } from '../interface/logger-interface';
-import { FileSystemService } from './file-system-service';
 
 export class LoggerService implements ILogger {
     private container: Container;
