@@ -1,6 +1,7 @@
-import * as nodePath from 'path';
+import * as dotenv from 'dotenv';
 import { ApplicationConfig } from './config/application-config';
 import { AuthConfig } from './config/auth-config';
+import { DatabaseConfig } from './config/database-config';
 import { I18nConfig } from './config/i18n-config';
 import { RouteContainer } from './config/route-config';
 import { ServerConfig } from './config/server-config';
@@ -21,19 +22,17 @@ export class Application {
     public logger: LoggerService;
 
     constructor() {
+        dotenv.config();
+
         this.container = new Container();
         this.logger = new LoggerService(this.container, 'application', 'application');
 
-        const applicationConfig = new ApplicationConfig();
-        const authConfig = new AuthConfig();
-        const i18nConfig = new I18nConfig();
-        const serverConfig = new ServerConfig(this.container);
-
         this.container.config = {
-            application: applicationConfig,
-            auth: authConfig,
-            i18n: i18nConfig,
-            server: serverConfig,
+            application: new ApplicationConfig(),
+            auth: new AuthConfig(),
+            database: new DatabaseConfig(),
+            i18n: new I18nConfig(),
+            server: new ServerConfig(this.container),
         };
 
         this.container.config.i18n.localePaths = ['locale'];
@@ -54,6 +53,7 @@ export class Application {
 
     public async start() {
         this.initConfig();
+        this.validateConfig();
 
         const fileSystemService = new FileSystemService();
         const databaseService = new DatabaseService(this.container);
@@ -88,5 +88,11 @@ export class Application {
 
         // stop server
         await this.container.service.server.stop();
+    }
+
+    private validateConfig() {
+        for (const [key, config] of Object.entries(this.container.config)) {
+            config.validate();
+        }
     }
 }

@@ -1,6 +1,7 @@
 import { EntityManager } from 'typeorm';
 import { ApplicationConfig } from './config/application-config';
 import { AuthConfig } from './config/auth-config';
+import { DatabaseConfig } from './config/database-config';
 import { I18nConfig } from './config/i18n-config';
 import { ServerConfig } from './config/server-config';
 import { DatabaseService } from './service/database-service';
@@ -13,6 +14,7 @@ export class Container {
     public config: {
         application: ApplicationConfig;
         auth: AuthConfig;
+        database: DatabaseConfig;
         i18n: I18nConfig;
         server: ServerConfig;
     };
