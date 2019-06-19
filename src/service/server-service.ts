@@ -38,10 +38,14 @@ export class ServerService extends ContainerAware {
         this.router.use(compression());
         this.router.use(bodyParser.urlencoded({ extended: false }));
 
-        const publicPath = nodePath.join(this.container.config.application.basePath, 'public');
+        for (const publicPathInConfig of this.container.config.server.publicPaths.reverse()) {
+            const publicPath = nodePath.join(this.container.config.application.basePath, publicPathInConfig);
 
-        if (await this.container.service.fs.isDirectory(publicPath)) {
-            this.router.use(express.static(publicPath, { maxAge: '30 days' }));
+            if (await this.container.service.fs.isDirectory(publicPath)) {
+                this.router.use(express.static(publicPath, { maxAge: '30 days' }));
+            } else {
+                this.logger.error(`public directory ${publicPath} does not exists`);
+            }
         }
 
         // register access middleware
@@ -62,8 +66,14 @@ export class ServerService extends ContainerAware {
 
         const viewPaths = [];
 
-        for (const viewPath of this.container.config.server.viewPaths.reverse()) {
-            viewPaths.push(nodePath.join(this.container.config.application.basePath, viewPath));
+        for (const viewPathInConfig of this.container.config.server.viewPaths.reverse()) {
+            const viewPath = nodePath.join(this.container.config.application.basePath, viewPathInConfig);
+
+            if (await this.container.service.fs.isDirectory(viewPath)) {
+                viewPaths.push(viewPath);
+            } else {
+                this.logger.error(`view directory ${viewPath} does not exists`);
+            }
         }
 
         this.router.set('views', viewPaths);

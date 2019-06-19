@@ -44,6 +44,7 @@ export class Application {
             new LocaleMiddleware(this.container),
         ];
         this.container.config.server.viewPaths = ['view/template'];
+        this.container.config.server.publicPaths = ['public'];
     }
 
     public initConfig() {

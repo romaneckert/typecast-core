@@ -11,6 +11,7 @@ export class ServerConfig extends ContainerAware {
     public middlewares: IMiddleware[];
     public routeContainers: IRouteContainer[];
     public viewPaths: string[];
+    public publicPaths: string[];
     public viewHelper: {
         [key: string]: any;
     } = {};
