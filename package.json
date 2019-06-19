@@ -6,7 +6,7 @@
         "gulp": "npx gulp",
         "start": "npm run build && cd dist && export NODE_ENV=production && node index.js",
         "dev": "npm run build && cd dist && export NODE_ENV=development && node index.js",
-        "build": "rm -rf dist && tsc && cp -rf package.json dist && cp -rf LICENSE dist && cp -rf README.md dist && cp -rf view dist && cp -rf public dist",
+        "build": "rm -rf dist && tsc && cp -rf package.json dist && cp -rf LICENSE dist && cp -rf README.md dist && cp -rf view dist && cp -rf public dist && cp -rf locale dist",
         "format": "prettier --write 'src/**/*.ts' 'src/**/*.js'",
         "lint": "tslint -p tsconfig.json",
         "test": "npm run lint && jest --config jestconfig.json --runInBand",

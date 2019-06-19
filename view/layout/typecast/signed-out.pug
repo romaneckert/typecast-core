@@ -7,32 +7,16 @@ block append head
 block body
     .typecast-page.typecast-page-panel
         .typecast-panel
-            a.typecast-logo.typecast-brand-name(href=view.url('typecast'))
-                span T
-                span Y
-                span P
-                span E
-                span C
-                span A
-                span S
-                span T
+            a.typecast-logo.typecast-brand-name(href=view.url('typecast'))=view.translate(locale, 'typecast.title')
 
             .typecast-panel-content
                 block content
 
             .typecast-panel-footer
                 p
-                    span.typecast-brand-name
-                        span T
-                        span Y
-                        span P
-                        span E
-                        span C
-                        span A
-                        span S
-                        span T
+                    span.typecast-brand-name=view.translate(locale, 'typecast.title')
                     |
                     | -
                     |
-                    =view.translate('typecast.panel.footer.text', view.url('typecast'))
+                    =view.translate(locale, 'typecast.panel.footer.text', view.url('typecast'))
 

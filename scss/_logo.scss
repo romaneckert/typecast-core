@@ -10,18 +10,6 @@
     line-height: 118px;
     text-align: center;
     transform: translate(-50%, 0%);
-    text-shadow: 0px 2px 3px rgba(#000000,0.2);
-
-
-}
-.typecast-brand-name {
-
-    span {
-        display: inline-block;
-
-        &:nth-child(3) {
-            transform: scaleX(-1);
-        }
-    }
-
+    text-shadow: 0px 2px 3px rgba(#000000, 0.2);
+    text-decoration: none;
 }

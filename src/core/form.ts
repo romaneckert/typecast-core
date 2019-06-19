@@ -1,7 +1,7 @@
 export class Form {
     public submitted: boolean = false;
     public valid: boolean = false;
-    public errors: string[];
+    public errors: { [key: string]: any } = {};
 
     private entity: any;
     private instance: any;

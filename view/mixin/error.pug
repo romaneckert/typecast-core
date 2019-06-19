@@ -3,7 +3,7 @@ mixin error(errors)
     - if(undefined === attributes.errors) throw new Error('no attribute errors');
 
     if attributes.errors
-        ul.tc-errors
+        ul.typecast-errors
             each errors,key in attributes.errors
                 each error in errors
-                    li(class='tc-error tc-error-' + key)=view.translate(locale, error)
+                    li(class='typecast-error typecast-error-' + key)=view.translate(locale, error)
