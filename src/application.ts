@@ -35,15 +35,12 @@ export class Application {
             server: new ServerConfig(this.container),
         };
 
-        this.container.config.i18n.localePaths = ['locale'];
         this.container.config.server.routeContainers = [new RouteContainer(this.container)];
         this.container.config.server.middlewares = [
             new AuthMiddleware(),
             new RolesMiddleware(),
             new LocaleMiddleware(this.container),
         ];
-        this.container.config.server.viewPaths = ['view/template'];
-        this.container.config.server.publicPaths = ['public'];
     }
 
     public initConfig() {

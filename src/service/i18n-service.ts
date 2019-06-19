@@ -14,14 +14,12 @@ export class I18nService extends ContainerAware {
     }
 
     public async start() {
-        const localePaths = [];
+        for (const applicationPath of this.container.config.application.applicationPaths) {
+            const localePath = nodePath.join(applicationPath, 'locale');
 
-        for (const localePath of this.container.config.i18n.localePaths) {
-            localePaths.push(nodePath.join(this.container.config.application.basePath, localePath));
-        }
-
-        for (const localePath of localePaths) {
-            await this.loadLocales(localePath, this.catalog);
+            if (await this.container.service.fs.isDirectory(localePath)) {
+                await this.loadLocales(localePath, this.catalog);
+            }
         }
     }
 

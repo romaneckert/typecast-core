@@ -10,10 +10,9 @@
         "format": "prettier --write 'src/**/*.ts' 'src/**/*.js'",
         "lint": "tslint -p tsconfig.json",
         "test": "npm run lint && jest --config jestconfig.json --runInBand",
-        "upload": "npm test && npm run build && cd dist && npm publish",
         "preversion": "npm test",
         "version": "npm run format && git add -A src",
-        "postversion": "git push"
+        "postversion": "git push && npm run build && cd dist && npm publish"
     },
     "repository": {
         "type": "git",

@@ -2,21 +2,16 @@ import * as nodePath from 'path';
 import * as pug from 'pug';
 import { ContainerAware } from '../core/container-aware';
 
-/**
- * TODO: optimize
- */
 export class RendererService extends ContainerAware {
     private templates: { [key: string]: any } = {};
 
     public async start() {
-        const viewPaths = [];
+        for (const applicationPath of this.container.config.application.applicationPaths) {
+            const viewPath = nodePath.join(applicationPath, 'view/template');
 
-        for (const viewPath of this.container.config.server.viewPaths.reverse()) {
-            viewPaths.push(nodePath.join(this.container.config.application.basePath, viewPath));
-        }
-
-        for (const path of viewPaths) {
-            await this.compileTemplates(path);
+            if (await this.container.service.fs.isDirectory(viewPath)) {
+                await this.compileTemplates(viewPath);
+            }
         }
     }
 

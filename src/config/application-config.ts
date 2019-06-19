@@ -1,11 +1,12 @@
 import { IConfig } from '../interface/config-interface';
 
 export class ApplicationConfig implements IConfig {
+    public applicationPaths: string[] = [process.cwd()];
     public allowedContexts: string[] = ['production', 'acceptance', 'staging', 'test', 'development'];
-    public context: string = 'production';
     public basePath: string = process.cwd();
-    public buildDate: Date = new Date();
     public baseUrl?: string = process.env.APP_BASE_URL;
+    public buildDate: Date = new Date();
+    public context: string = 'production';
     public extensionPaths?: string[] = undefined;
 
     constructor() {

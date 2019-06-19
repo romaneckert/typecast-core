@@ -11,8 +11,6 @@ export class ServerConfig extends ContainerAware implements IConfig {
     public port: number = 3000;
     public middlewares: IMiddleware[];
     public routeContainers: IRouteContainer[];
-    public viewPaths: string[];
-    public publicPaths: string[];
     public viewHelper: { [key: string]: any } = {};
 
     constructor(container: Container) {

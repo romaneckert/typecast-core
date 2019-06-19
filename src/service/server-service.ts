@@ -38,13 +38,11 @@ export class ServerService extends ContainerAware {
         this.router.use(compression());
         this.router.use(bodyParser.urlencoded({ extended: false }));
 
-        for (const publicPathInConfig of this.container.config.server.publicPaths.reverse()) {
-            const publicPath = nodePath.join(this.container.config.application.basePath, publicPathInConfig);
+        for (const applicationPath of this.container.config.application.applicationPaths) {
+            const publicPath = nodePath.join(applicationPath, 'public');
 
             if (await this.container.service.fs.isDirectory(publicPath)) {
                 this.router.use(express.static(publicPath, { maxAge: '30 days' }));
-            } else {
-                this.logger.error(`public directory ${publicPath} does not exists`);
             }
         }
 
@@ -66,13 +64,11 @@ export class ServerService extends ContainerAware {
 
         const viewPaths = [];
 
-        for (const viewPathInConfig of this.container.config.server.viewPaths.reverse()) {
-            const viewPath = nodePath.join(this.container.config.application.basePath, viewPathInConfig);
+        for (const applicationPath of this.container.config.application.applicationPaths) {
+            const viewPath = nodePath.join(applicationPath, 'view/template');
 
             if (await this.container.service.fs.isDirectory(viewPath)) {
                 viewPaths.push(viewPath);
-            } else {
-                this.logger.error(`view directory ${viewPath} does not exists`);
             }
         }
 
