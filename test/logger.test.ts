@@ -4,8 +4,6 @@ test('logger', async () => {
     const app = new Application();
     await app.start();
 
-    app.logger.removeAllLogFiles();
-
     app.logger.alert('alert test');
     app.logger.critical('critical test');
     app.logger.debug('debug test');
