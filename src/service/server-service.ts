@@ -100,6 +100,18 @@ export class ServerService extends ContainerAware {
         await this.logger.notice('started');
     }
 
+    public async render(filePath: string, locals: { [key: string]: any } = {}) {
+        return new Promise((resolve, reject) => {
+            this.router.render(filePath, locals, (err, html) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(html);
+                }
+            });
+        });
+    }
+
     public async stop() {
         await this.connection.close();
 

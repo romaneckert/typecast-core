@@ -3,6 +3,7 @@ import { ApplicationConfig } from './config/application-config';
 import { AuthConfig } from './config/auth-config';
 import { DatabaseConfig } from './config/database-config';
 import { I18nConfig } from './config/i18n-config';
+import { MailConfig } from './config/mail-config';
 import { RouteContainer } from './config/route-config';
 import { ServerConfig } from './config/server-config';
 import { Container } from './container';
@@ -13,6 +14,7 @@ import { DatabaseService } from './service/database-service';
 import { FileSystemService } from './service/file-system-service';
 import { I18nService } from './service/i18n-service';
 import { LoggerService } from './service/logger-service';
+import { MailService } from './service/mail-service';
 import { RendererService } from './service/renderer-service';
 import { ServerService } from './service/server-service';
 
@@ -32,6 +34,7 @@ export class Application {
             auth: new AuthConfig(),
             database: new DatabaseConfig(),
             i18n: new I18nConfig(),
+            mail: new MailConfig(),
             server: new ServerConfig(this.container),
         };
 
@@ -52,22 +55,27 @@ export class Application {
         this.initConfig();
         this.validateConfig();
 
-        const fileSystemService = new FileSystemService();
         const databaseService = new DatabaseService(this.container);
-        const serverService = new ServerService(this.container);
-        const rendererService = new RendererService(this.container);
+        const fileSystemService = new FileSystemService();
         const i18nService = new I18nService(this.container);
+        const mailService = new MailService(this.container);
+        const rendererService = new RendererService(this.container);
+        const serverService = new ServerService(this.container);
 
         this.container.service = {
             database: databaseService,
             fs: fileSystemService,
             i18n: i18nService,
+            mail: mailService,
             renderer: rendererService,
             server: serverService,
         };
 
         // start database service
         await this.container.service.database.start();
+
+        // start mail service
+        await this.container.service.mail.start();
 
         // start i18n service
         await this.container.service.i18n.start();
