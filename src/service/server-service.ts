@@ -6,13 +6,13 @@ import * as https from 'https';
 import * as nodePath from 'path';
 import { Container } from '../container';
 import { ContainerAware } from '../core/container-aware';
+import { ErrorCatchHandler } from '../handler/error-catch-handler';
 import { ILogger } from '../interface/logger-interface';
 import { AccessMiddleware } from '../middleware/access-middleware';
 import { ErrorMiddleware } from '../middleware/error-middleware';
 import { NotFoundMiddleware } from '../middleware/not-found-middleware';
 import { LoggerService } from './logger-service';
 import { Route } from './router/route';
-import { ErrorCatchHandler } from '../handler/error-catch-handler';
 
 export class ServerService extends ContainerAware {
     public routes: { [key: string]: Route } = {};
