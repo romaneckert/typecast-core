@@ -1,7 +1,5 @@
 mixin error(errors)
 
-    - if(undefined === attributes.errors) throw new Error('no attribute errors');
-
     if attributes.errors
         ul.typecast-errors
             each validationError in attributes.errors

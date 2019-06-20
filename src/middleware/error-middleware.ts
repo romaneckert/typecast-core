@@ -8,8 +8,8 @@ export class ErrorMiddleware {
         this.logger = logger;
     }
 
-    public async handle(err: any, req: express.Request, res: express.Response, next: () => void) {
-        await this.logger.error(req.url + ' ' + err);
+    public async handle(err: any, req: express.Request, res: express.Response, next: () => void): Promise<void> {
+        this.logger.error(req.url + ' ' + err);
         res.status(500);
         return res.render('status-500');
     }

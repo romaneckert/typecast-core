@@ -2,7 +2,7 @@ import express from 'express';
 import { ContainerAware } from '../../../core/container-aware';
 import { IRouteHandler } from '../../../interface/route-handler-interface';
 
-export class SignOutHandler extends ContainerAware implements IRouteHandler {
+export class TypeCastUserSignOutHandler extends ContainerAware implements IRouteHandler {
     public async handle(req: express.Request, res: express.Response): Promise<void> {
         this.container.service.auth.signOut(req, res);
 

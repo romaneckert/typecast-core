@@ -7,16 +7,10 @@ block append head
 block body
     .typecast-page.typecast-page-panel
         .typecast-panel
-            a.typecast-logo.typecast-brand-name(href=view.url('typecast'))=view.translate(locale, 'application.title')
+            a.typecast-logo.typecast-brand-name=view.translate(locale, 'application.title')
 
             .typecast-panel-content
                 block content
 
-            .typecast-panel-footer
-                p
-                    span.typecast-brand-name=view.translate(locale, 'typecast.title')
-                    |
-                    | -
-                    |
-                    =view.translate(locale, 'typecast.panel.footer.text', view.url('typecast'))
+            a.typecast-panel-footer(target="_blank" href='https://www.npmjs.com/package/@typecast/core')=view.translate(locale, 'typecast.panel.footer.text')
 

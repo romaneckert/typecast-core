@@ -65,7 +65,10 @@ export class LoggerService extends ContainerAware implements ILogger {
         // remove line breaks from message
         message = message.replace(/(\r?\n|\r)/gm, ' ');
 
-        const log = new Log(code, date, this.contextType, this.contextName, message);
+        // string type cast data
+        data = this.container.service.string.cast(data);
+
+        const log = new Log(code, date, this.contextType, this.contextName, message, data);
 
         await this.saveToDB(log);
         await this.writeLog(log);
@@ -130,13 +133,7 @@ export class LoggerService extends ContainerAware implements ILogger {
             return;
         }
 
-        let consoleOutput = '';
-
-        consoleOutput += `[${log.level}] `;
-        consoleOutput += `[${log.contextType}/${log.contextName}] `;
-        consoleOutput += `${log.message} `;
-
-        consoleOutput += `[pid:${process.pid}] `;
+        const consoleOutput = `[${log.level}] [${log.contextType}/${log.contextName}] ${log.message} [${log.data}] [pid:${process.pid}]`;
 
         // tslint:disable-next-line
         console.log(consoleOutput.replace(/\r?\n?/g, '').trim());

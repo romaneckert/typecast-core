@@ -25,4 +25,4 @@ block content
         button.btn.btn-primary(type='submit')=view.translate(locale, 'typecast.form.sign_in')
 
     .typecast-text
-        p!=view.translate(locale, 'typecast.user.sign_in.text_bottom', {url: view.url('typecast/user/password-reset')})
+        p!=view.translate(locale, 'typecast.user.sign_in.text_bottom', {url: view.url('/typecast/user/password-reset')})

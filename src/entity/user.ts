@@ -9,7 +9,13 @@ export class User {
     public email: string;
 
     @Column()
-    public password: string;
+    public passwordHash: string;
+
+    @Column()
+    public passwordCreationDate: Date;
+
+    @Column()
+    public passwordToken: string;
 
     @Column()
     public roles: string[] = [];

@@ -7,14 +7,15 @@ export class Route {
     public handler: IRouteHandler;
     public disabled: boolean = false;
 
-    constructor(path: string, handler: IRouteHandler, methods: string[] = ['get'], name?: string) {
-        if (undefined === name) {
-            this.name = path;
-        } else {
-            this.name = name;
-        }
-        this.methods = methods;
-        this.path = path;
+    constructor(name: string, handler: IRouteHandler, methods: string[] = ['get'], path?: string) {
+        this.name = name;
         this.handler = handler;
+        this.methods = methods;
+
+        if (undefined === path) {
+            this.path = name;
+        } else {
+            this.name = path;
+        }
     }
 }

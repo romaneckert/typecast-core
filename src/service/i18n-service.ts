@@ -29,7 +29,7 @@ export class I18nService extends ContainerAware {
         }
     }
 
-    public translate(locale: string, key: string, data: { [key: string]: any }) {
+    public translate(locale: string, key: string, data?: { [key: string]: any }) {
         // check if locale is in the list of predefined locales, if not fall back to default locale
         if (-1 === this.container.config.i18n.locales.indexOf(locale)) {
             locale = this.container.config.i18n.defaultLocale;
@@ -78,7 +78,7 @@ export class I18nService extends ContainerAware {
         for (const fileName of await this.container.service.fs.readDirectory(path)) {
             const absPath = nodePath.join(path, fileName);
 
-            if (await this.container.service.fs.isFile(absPath)) {
+            if ((await this.container.service.fs.isFile(absPath)) && '.locale' === nodePath.parse(fileName).ext) {
                 catalog[nodePath.parse(fileName).name] = await this.container.service.fs.readFile(absPath);
             } else if (await this.container.service.fs.isDirectory(absPath)) {
                 if (undefined === catalog[fileName]) {
@@ -90,7 +90,11 @@ export class I18nService extends ContainerAware {
         }
     }
 
-    private addData(locale: string, key: string, value: string, data: { [key: string]: any }) {
+    private addData(locale: string, key: string, value: string, data?: { [key: string]: any }): string {
+        if (undefined === data) {
+            return value;
+        }
+
         return value.replace(/{{(.+?)}}/g, match => {
             const property = match
                 .replace('{{', '')

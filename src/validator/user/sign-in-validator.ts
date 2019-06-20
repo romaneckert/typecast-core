@@ -1,7 +1,6 @@
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
-import { Form } from '../core/form';
+import { IsEmail, IsNotEmpty } from 'class-validator';
 
-export class SignInForm extends Form {
+export class UserSignInValidator {
     @IsEmail(
         {},
         {

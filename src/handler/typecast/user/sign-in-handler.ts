@@ -1,14 +1,12 @@
 import express from 'express';
 import { ContainerAware } from '../../../core/container-aware';
-import { User } from '../../../entity/user';
-import { SignInForm } from '../../../form/sign-in-form';
+import { Form } from '../../../core/form';
 import { IRouteHandler } from '../../../interface/route-handler-interface';
+import { UserSignInValidator } from '../../../validator/user/sign-in-validator';
 
-export class SignInHandler extends ContainerAware implements IRouteHandler {
+export class TypeCastUserSignInHandler extends ContainerAware implements IRouteHandler {
     public async handle(req: express.Request, res: express.Response): Promise<void> {
-        const form = new SignInForm(this.container);
-
-        await form.handle(req.body);
+        const form = await new Form(this.container, new UserSignInValidator()).handle(req);
 
         if (!form.valid) {
             return res.render('typecast/user/sign-in', {
@@ -16,7 +14,7 @@ export class SignInHandler extends ContainerAware implements IRouteHandler {
             });
         }
 
-        const user = await this.container.repository.user.findOne({ where: { email: form.email } });
+        const user = await this.container.repository.user.findOne({ where: { email: form.data.email } });
 
         if (undefined === user) {
             form.addError(
@@ -31,7 +29,7 @@ export class SignInHandler extends ContainerAware implements IRouteHandler {
             });
         }
 
-        if (await this.container.service.auth.verifyPassword(form.password, user.password)) {
+        if (await this.container.service.auth.verifyPassword(form.data.password, user.passwordHash)) {
             form.addError(
                 {
                     incorrect_username_or_password: 'typecast.error.user.incorrect_username_or_password',

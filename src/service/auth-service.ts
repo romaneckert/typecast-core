@@ -15,6 +15,10 @@ export class AuthService extends ContainerAware {
         return hashedPassword === (await this.hashPasssword(plainPassword));
     }
 
+    public async generatePasswordToken(): Promise<string> {
+        return crypto.randomBytes(32).toString('hex');
+    }
+
     public async signIn(req: express.Request, res: express.Response, user: User): Promise<boolean> {
         // validate user
         if ('object' !== typeof user || null === user) {

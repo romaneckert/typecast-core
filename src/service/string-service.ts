@@ -15,4 +15,35 @@ export class StringService {
             .replace(/_/g, separator)
             .toLowerCase();
     }
+
+    public cast(data: any) {
+        if (null === data) {
+            return '';
+        }
+
+        if ('undefined' === typeof data) {
+            return '';
+        }
+
+        if (data instanceof Error) {
+            return String(data);
+        }
+
+        if ('object' === typeof data) {
+            const cache: any[] = [];
+
+            return JSON.stringify(data, (key, val) => {
+                // prevent cycles
+                if (typeof data === 'object') {
+                    if (cache.indexOf(val) !== -1) {
+                        return;
+                    }
+                    cache.push(val);
+                }
+                return val;
+            });
+        }
+
+        return String(data);
+    }
 }

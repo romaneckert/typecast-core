@@ -1,7 +1,6 @@
 import express from 'express';
 import { ContainerAware } from '../core/container-aware';
 import { ValidationError } from '../core/validation-error';
-import { Log } from '../entity/log';
 import { IRouteHandler } from '../interface/route-handler-interface';
 
 export class IndexHandler extends ContainerAware implements IRouteHandler {

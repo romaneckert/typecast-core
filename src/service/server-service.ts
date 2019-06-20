@@ -12,8 +12,11 @@ import { ErrorMiddleware } from '../middleware/error-middleware';
 import { NotFoundMiddleware } from '../middleware/not-found-middleware';
 import { LoggerService } from './logger-service';
 import { Route } from './router/route';
+import { ErrorCatchHandler } from '../handler/error-catch-handler';
 
 export class ServerService extends ContainerAware {
+    public routes: { [key: string]: Route } = {};
+
     private logger: ILogger;
     private router: express.Application;
 
@@ -101,6 +104,11 @@ export class ServerService extends ContainerAware {
     }
 
     public async render(filePath: string, locals: { [key: string]: any } = {}) {
+        // set defaults
+        if ('string' !== typeof locals.baseUrl || 0 === locals.baseUrl.length) {
+            locals.baseUrl = this.container.config.application.baseUrl;
+        }
+
         return new Promise((resolve, reject) => {
             this.router.render(filePath, locals, (err, html) => {
                 if (err) {
@@ -119,21 +127,11 @@ export class ServerService extends ContainerAware {
     }
 
     private registerRoutes() {
-        const routes: Route[] = [];
-        const routeNames: string[] = [];
-
         for (const route of Object.values(this.container.config.server.routes)) {
-            if (!(route instanceof Route)) {
-                continue;
-            }
-            if (routeNames.includes(route.name)) {
-                continue;
-            }
-            routes.push(route);
-            routeNames.push(route.name);
+            this.routes[route.name] = route;
         }
 
-        for (const route of routes) {
+        for (const route of Object.values(this.routes)) {
             for (const middleware of this.container.config.server.middlewares) {
                 for (const method of route.methods) {
                     switch (method) {
@@ -150,12 +148,14 @@ export class ServerService extends ContainerAware {
             }
 
             for (const method of route.methods) {
+                const errorCatchHandler = new ErrorCatchHandler(route.handler);
+
                 switch (method) {
                     case 'get':
-                        this.router.get(route.path, route.handler.handle.bind(route.handler));
+                        this.router.get(route.path, errorCatchHandler.handle.bind(errorCatchHandler));
                         break;
                     case 'post':
-                        this.router.post(route.path, route.handler.handle.bind(route.handler));
+                        this.router.post(route.path, errorCatchHandler.handle.bind(errorCatchHandler));
                         break;
                     default:
                         throw new Error('method ' + method + ' is not supported');

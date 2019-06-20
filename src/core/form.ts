@@ -1,15 +1,23 @@
 import { validate, ValidationError as ClassValidationError } from 'class-validator';
+import express from 'express';
+import { Container } from '../container';
 import { ContainerAware } from './container-aware';
 import { ValidationError } from './validation-error';
 
 export class Form extends ContainerAware {
     public submitted: boolean = false;
     public valid: boolean = false;
-    public errors: { [key: string]: ValidationError } = {};
+    public errors: { [key: string]: ValidationError } | null = null;
+    public data: any;
 
-    [key: string]: any;
+    public constructor(container: Container, validator: any) {
+        super(container);
+        this.data = validator;
+    }
 
-    public async handle(data?: { [key: string]: any }): Promise<Form> {
+    public async handle(req: express.Request): Promise<Form> {
+        const data = req.body;
+
         // test if data is empty
         if ('object' !== typeof data || 0 === Object.keys(data).length) {
             return this;
@@ -19,12 +27,14 @@ export class Form extends ContainerAware {
         this.submitted = true;
 
         for (const [key, value] of Object.entries(data)) {
-            if (Object.keys(this).includes(key)) {
-                this[key] = value;
+            if (Object.keys(this.data).includes(key)) {
+                this.data[key] = value;
             }
         }
 
-        const validationErrors: ClassValidationError[] = await validate(this);
+        const validationErrors: ClassValidationError[] = await validate(this.data);
+
+        this.errors = {};
 
         for (const validationError of Object.values(validationErrors)) {
             this.errors[validationError.property] = new ValidationError(
@@ -36,14 +46,19 @@ export class Form extends ContainerAware {
 
         if (0 === Object.keys(this.errors).length) {
             this.valid = true;
+            this.errors = null;
         }
 
         return this;
     }
 
-    public addError(constraints: { [key: string]: string }, property: string, value: string = '') {
+    public addError(constraints: { [key: string]: string }, property: string, value: string = ''): void {
+        if (null === this.errors) {
+            this.errors = {};
+        }
+
         this.errors[property] = new ValidationError(property, value, this.cleanContraints(constraints));
-        return this;
+        this.valid = false;
     }
 
     private cleanContraints(constraints: { [key: string]: string }): { [key: string]: string } {

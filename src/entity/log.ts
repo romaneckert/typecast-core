@@ -20,12 +20,19 @@ export class Log {
     @Column()
     public contextName: string;
 
-    constructor(code: number, date: Date, contextType: string, contextName: string, message: string) {
+    @Column()
+    public data: string = '';
+
+    constructor(code: number, date: Date, contextType: string, contextName: string, message: string, data?: string) {
         this.code = code;
         this.date = date;
         this.contextType = contextType;
         this.contextName = contextName;
         this.message = message;
+
+        if (undefined !== data) {
+            this.data = data;
+        }
     }
 
     public get level(): string {

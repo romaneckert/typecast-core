@@ -1,0 +1,14 @@
+extends ../../../layout/typecast/signed-out
+
+block append head
+    title=view.translate(locale, 'typecast.install.user_creation_success.title')
+    meta(name="description" content=view.translate(locale, 'typecast.install.user_creation_success.description'))
+
+block content
+
+    h1.h2=view.translate(locale, 'typecast.install.user_creation_success.headline')
+
+    .jeneric-text
+        p=view.translate(locale, 'typecast.install.user_creation_success.text')
+
+

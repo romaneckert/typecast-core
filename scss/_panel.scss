@@ -21,8 +21,10 @@
     }
 
     .typecast-panel-footer {
-        padding: 20px 30px 10px 30px;
-        font-size:12px;
+        padding: 20px 30px 20px 30px;
+        font-size: 12px;
         border-top: 1px solid rgba($color-dark-blue, 0.2);
+        text-decoration: none;
+        display: block;
     }
 }
