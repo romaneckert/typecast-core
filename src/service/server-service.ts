@@ -12,7 +12,6 @@ import { ErrorMiddleware } from '../middleware/error-middleware';
 import { NotFoundMiddleware } from '../middleware/not-found-middleware';
 import { LoggerService } from './logger-service';
 import { Route } from './router/route';
-import { isInterfaceExtends } from '@babel/types';
 
 export class ServerService extends ContainerAware {
     private logger: ILogger;
