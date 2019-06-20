@@ -57,7 +57,7 @@
         "jsonwebtoken": "8.5.1",
         "mongodb": "3.2.7",
         "nodemailer": "^6.2.1",
-        "pug": "2.0.3",
+        "pug": "^2.0.4",
         "querystring": "^0.2.0",
         "reflect-metadata": "0.1.13",
         "typeorm": "0.2.18"
