@@ -28,7 +28,7 @@ export class ServerConfig extends ContainerAware implements IConfig {
         this.viewHelper.url = new UrlViewHelper(this.container);
 
         this.routes = [
-            new Route('/', new IndexHandler(this.container), ['get'], 'index'),
+            new Route('/', new IndexHandler(this.container), ['get']),
             new Route('/typecast/install', new InstallHandler(container), ['get', 'post']),
             new Route('/typecast/user/password-reset', new TypeCastUserPasswordResetHandler(container), [
                 'get',

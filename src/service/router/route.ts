@@ -13,9 +13,9 @@ export class Route {
         this.methods = methods;
 
         if (undefined === path) {
-            this.path = name;
+            this.path = this.name;
         } else {
-            this.name = path;
+            this.path = path;
         }
     }
 }
