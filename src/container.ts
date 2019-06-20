@@ -1,4 +1,4 @@
-import { EntityManager, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { ApplicationConfig } from './config/application-config';
 import { AuthConfig } from './config/auth-config';
 import { DatabaseConfig } from './config/database-config';
@@ -13,6 +13,7 @@ import { I18nService } from './service/i18n-service';
 import { MailService } from './service/mail-service';
 import { RendererService } from './service/renderer-service';
 import { ServerService } from './service/server-service';
+import { StringService } from './service/string-service';
 
 export class Container {
     public initialized: boolean = false;
@@ -33,6 +34,7 @@ export class Container {
         mail: MailService;
         renderer: RendererService;
         server: ServerService;
+        string: StringService;
     };
 
     public repository: {

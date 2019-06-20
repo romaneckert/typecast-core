@@ -14,8 +14,4 @@ export class SignInForm extends Form {
         message: 'typecast.error.password.required',
     })
     public password?: string = undefined;
-
-    constructor() {
-        super();
-    }
 }

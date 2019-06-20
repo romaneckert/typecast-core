@@ -6,4 +6,4 @@ mixin error(errors)
         ul.typecast-errors
             each validationError in attributes.errors
                 each error,key in validationError.errors
-                    li(class='typecast-error typecast-error-' + validationError.property + ' typecast-error-' + key)=view.translate(locale, error)
+                    li(class='typecast-error typecast-error-property-' + validationError.property + ' typecast-error-key-' + key)=view.translate(locale, error)

@@ -19,6 +19,7 @@ import { LoggerService } from './service/logger-service';
 import { MailService } from './service/mail-service';
 import { RendererService } from './service/renderer-service';
 import { ServerService } from './service/server-service';
+import { StringService } from './service/string-service';
 
 export class Application {
     public container: Container;
@@ -70,20 +71,14 @@ export class Application {
         this.initConfig();
         this.validateConfig();
 
-        const databaseService = new DatabaseService(this.container);
-        const fileSystemService = new FileSystemService();
-        const i18nService = new I18nService(this.container);
-        const mailService = new MailService(this.container);
-        const rendererService = new RendererService(this.container);
-        const serverService = new ServerService(this.container);
-
         this.container.service = {
-            database: databaseService,
-            fs: fileSystemService,
-            i18n: i18nService,
-            mail: mailService,
-            renderer: rendererService,
-            server: serverService,
+            database: new DatabaseService(this.container),
+            fs: new FileSystemService(),
+            i18n: new I18nService(this.container),
+            mail: new MailService(this.container),
+            renderer: new RendererService(this.container),
+            server: new ServerService(this.container),
+            string: new StringService(),
         };
 
         // start database service

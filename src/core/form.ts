@@ -1,7 +1,8 @@
 import { validate, ValidationError as ClassValidationError } from 'class-validator';
+import { ContainerAware } from './container-aware';
 import { ValidationError } from './validation-error';
 
-export class Form {
+export class Form extends ContainerAware {
     public submitted: boolean = false;
     public valid: boolean = false;
     public errors: { [key: string]: ValidationError } = {};
@@ -26,13 +27,11 @@ export class Form {
         const validationErrors: ClassValidationError[] = await validate(this);
 
         for (const validationError of Object.values(validationErrors)) {
-            const error = new ValidationError(
+            this.errors[validationError.property] = new ValidationError(
                 validationError.property,
                 validationError.value,
-                validationError.constraints,
+                this.cleanContraints(validationError.constraints),
             );
-
-            this.errors[validationError.property] = error;
         }
 
         if (0 === Object.keys(this.errors).length) {
@@ -40,5 +39,20 @@ export class Form {
         }
 
         return this;
+    }
+
+    public addError(constraints: { [key: string]: string }, property: string, value: string = '') {
+        this.errors[property] = new ValidationError(property, value, this.cleanContraints(constraints));
+        return this;
+    }
+
+    private cleanContraints(constraints: { [key: string]: string }): { [key: string]: string } {
+        const cleanedConstraints: { [key: string]: string } = {};
+
+        for (const [key, value] of Object.entries(constraints)) {
+            cleanedConstraints[this.container.service.string.decamelize(key)] = value;
+        }
+
+        return cleanedConstraints;
     }
 }
