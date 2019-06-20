@@ -1,15 +1,15 @@
 import { Connection, ConnectionOptions, createConnection } from 'typeorm';
 import { Container } from '../container';
+import { ContainerAware } from '../core/container-aware';
 import { ILogger } from '../interface/logger-interface';
 import { LoggerService } from './logger-service';
 
-export class DatabaseService {
-    public connection: Connection;
-    public container: Container;
+export class DatabaseService extends ContainerAware {
+    public connection?: Connection;
     private logger: ILogger;
 
     constructor(container: Container) {
-        this.container = container;
+        super(container);
         this.logger = new LoggerService(container, 'service', 'database');
     }
 
@@ -29,17 +29,19 @@ export class DatabaseService {
             useNewUrlParser: true,
         };
 
-        this.connection = await createConnection(config);
+        const connection = await createConnection(config);
 
-        if (null === this.connection) {
+        if (null === connection) {
+            this.connection = undefined;
             await this.logger.critical('can not connect to db');
+        } else {
+            this.connection = connection;
+            await this.logger.notice('connected to db');
         }
-
-        await this.logger.notice('connected to db');
     }
 
     public async stop(): Promise<boolean> {
-        if (null === this.connection) {
+        if (undefined === this.connection) {
             return false;
         }
 

@@ -1,10 +1,10 @@
 import * as nodePath from 'path';
 import { Container } from '../container';
+import { ContainerAware } from '../core/container-aware';
 import { Log } from '../entity/log';
 import { ILogger } from '../interface/logger-interface';
 
-export class LoggerService implements ILogger {
-    private container: Container;
+export class LoggerService extends ContainerAware implements ILogger {
     private contextType: string;
     private contextName: string;
     private maxSizePerLogFile: number = 16 * 1024 * 1024;
@@ -13,7 +13,7 @@ export class LoggerService implements ILogger {
     private duplicateTime: number = 10000;
 
     public constructor(container: Container, contextType: string, contextName: string) {
-        this.container = container;
+        super(container);
         this.contextType = contextType;
         this.contextName = contextName;
     }
@@ -67,20 +67,18 @@ export class LoggerService implements ILogger {
 
         const log = new Log(code, date, this.contextType, this.contextName, message);
 
-        const entityManager = this.container.entityManager;
-
-        if (null !== entityManager) {
-            const logRepository = entityManager.getRepository(Log);
-
-            try {
-                await logRepository.save(log);
-            } catch (err) {
-                // TODO: handle error
-            }
-        }
-
+        await this.saveToDB(log);
         await this.writeLog(log);
         this.writeToConsole(log);
+    }
+
+    private async saveToDB(log: Log): Promise<boolean> {
+        if (!this.container.initialized) {
+            return false;
+        }
+
+        await this.container.repository.log.save(log);
+        return true;
     }
 
     private async writeLog(log: Log) {

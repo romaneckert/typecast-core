@@ -1,10 +1,12 @@
-import { EntityManager } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { ApplicationConfig } from './config/application-config';
 import { AuthConfig } from './config/auth-config';
 import { DatabaseConfig } from './config/database-config';
 import { I18nConfig } from './config/i18n-config';
 import { MailConfig } from './config/mail-config';
 import { ServerConfig } from './config/server-config';
+import { Log } from './entity/log';
+import { User } from './entity/user';
 import { DatabaseService } from './service/database-service';
 import { FileSystemService } from './service/file-system-service';
 import { I18nService } from './service/i18n-service';
@@ -13,6 +15,8 @@ import { RendererService } from './service/renderer-service';
 import { ServerService } from './service/server-service';
 
 export class Container {
+    public initialized: boolean = false;
+
     public config: {
         application: ApplicationConfig;
         auth: AuthConfig;
@@ -31,7 +35,8 @@ export class Container {
         server: ServerService;
     };
 
-    public get entityManager(): EntityManager {
-        return this.service.database.connection.manager;
-    }
+    public repository: {
+        log: Repository<Log>;
+        user: Repository<User>;
+    };
 }

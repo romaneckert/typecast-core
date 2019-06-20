@@ -1,1 +1,117 @@
-export class AuthService {}
+import * as crypto from 'crypto';
+import express from 'express';
+import * as jwt from 'jsonwebtoken';
+import { ContainerAware } from '../core/container-aware';
+import { User } from '../entity/user';
+
+export class AuthService extends ContainerAware {
+    public async hash(password: string): Promise<string> {
+        const hmac = crypto.createHmac('sha512', this.container.config.auth.secret);
+        hmac.update(password);
+        return hmac.digest('hex');
+    }
+
+    public async signIn(req: express.Request, res: express.Response, user: User): Promise<boolean> {
+        // validate user
+        if ('object' !== typeof user || null === user) {
+            return false;
+        }
+
+        // validate user email
+        if ('string' !== typeof user.email || 0 === user.email.length) {
+            return false;
+        }
+
+        // validate user roles
+        if ('object' !== typeof user.roles || 0 === user.roles.length) {
+            return false;
+        }
+
+        // generate json web token
+        const token = jwt.sign(
+            {
+                user: {
+                    email: user.email,
+                    roles: user.roles,
+                },
+            },
+            this.container.config.auth.secret,
+            {
+                expiresIn: this.container.config.auth.tokenExpiresIn,
+            },
+        );
+
+        // add json web token cookie
+        res.cookie(this.container.config.auth.tokenCookieName, token, {
+            expires: new Date(Date.now() + this.container.config.auth.tokenExpiresIn * 1000),
+            httpOnly: true,
+            sameSite: 'Strict',
+            secure: true,
+        });
+
+        // add user to req and res
+        res.locals.user = user;
+
+        return true;
+    }
+
+    public async signOut(req: express.Request, res: express.Response) {
+        // remove user from request and response
+        res.locals.user = null;
+
+        // clear token cookie
+        res.clearCookie(this.container.config.auth.tokenCookieName);
+    }
+
+    public async verify(req: express.Request, res: express.Response): Promise<User | undefined> {
+        // validate req
+        if ('object' !== typeof req || null === req) {
+            return undefined;
+        }
+
+        // validate cookies
+        if ('object' !== typeof req.cookies || null === req.cookies) {
+            return undefined;
+        }
+
+        // validate json web token cookie
+        if (
+            'string' !== typeof req.cookies[this.container.config.auth.tokenCookieName] ||
+            0 === req.cookies[this.container.config.auth.tokenCookieName].length
+        ) {
+            return undefined;
+        }
+
+        // verify token
+        const data = Object(
+            jwt.verify(req.cookies[this.container.config.auth.tokenCookieName], this.container.config.auth.secret),
+        );
+
+        // validate user data
+        if ('object' !== typeof data.user || null === data.user) {
+            return undefined;
+        }
+
+        // validate user email
+        if ('string' !== typeof data.user.email || 0 === data.user.email.length) {
+            return undefined;
+        }
+
+        // validate user roles
+        if ('object' !== typeof data.user.roles || 0 === data.user.roles.length) {
+            return undefined;
+        }
+
+        // get user from db
+        const user = await this.container.repository.user.findOne({ email: data.user.email });
+
+        if (undefined === user) {
+            return undefined;
+        }
+
+        // sign in user to refresh the json web token
+        this.signIn(req, res, user);
+
+        return user;
+    }
+}

@@ -13,7 +13,7 @@ export class IndexHandler extends ContainerAware implements IRouteHandler {
             }),
         ];
 
-        const logs = await this.container.entityManager.getRepository(Log).find({ take: 10, order: { date: 'DESC' } });
+        const logs = await this.container.repository.log.find({ take: 10, order: { date: 'DESC' } });
 
         return res.render('index', {
             errors,

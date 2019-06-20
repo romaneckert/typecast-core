@@ -7,6 +7,8 @@ import { MailConfig } from './config/mail-config';
 import { RouteContainer } from './config/route-config';
 import { ServerConfig } from './config/server-config';
 import { Container } from './container';
+import { Log } from './entity/log';
+import { User } from './entity/user';
 import { AuthMiddleware } from './middleware/auth-middleware';
 import { LocaleMiddleware } from './middleware/locale-middleware';
 import { RolesMiddleware } from './middleware/roles-middleware';
@@ -51,6 +53,19 @@ export class Application {
         this.container.config.i18n.defaultLocale = 'de';
     }
 
+    public async initRepositories(): Promise<boolean> {
+        if (undefined === this.container.service.database.connection) {
+            return false;
+        }
+
+        this.container.repository = {
+            log: this.container.service.database.connection.manager.getRepository(Log),
+            user: this.container.service.database.connection.manager.getRepository(User),
+        };
+
+        return true;
+    }
+
     public async start() {
         this.initConfig();
         this.validateConfig();
@@ -74,6 +89,15 @@ export class Application {
         // start database service
         await this.container.service.database.start();
 
+        // init repositories
+
+        let repositoriesInitialized = false;
+        if (await this.initRepositories()) {
+            repositoriesInitialized = true;
+        } else {
+            this.logger.critical('can not init repositories');
+        }
+
         // start mail service
         await this.container.service.mail.start();
 
@@ -85,9 +109,17 @@ export class Application {
 
         // start server service
         await this.container.service.server.start();
+
+        // set container to initialized
+        if (repositoriesInitialized) {
+            this.container.initialized = true;
+        }
     }
 
     public async stop() {
+        // deinit repository
+        this.container.initialized = false;
+
         // stop database
         await this.container.service.database.stop();
 

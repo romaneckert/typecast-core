@@ -16,9 +16,6 @@ export class SignInHandler extends ContainerAware implements IRouteHandler {
             });
         }
 
-        const entityManager = this.container.entityManager;
-        const userRepository = entityManager.getRepository(User);
-
-        const user = await userRepository.findOne({ where: { email: form.email } });
+        const user = await this.container.repository.user.findOne({ where: { email: form.email } });
     }
 }
