@@ -1,6 +1,6 @@
 import { IsEmail } from 'class-validator';
 
-export class UserEmailValidator {
+export class EmailValidator {
     @IsEmail(
         {},
         {

@@ -3,7 +3,7 @@ import { ContainerAware } from '../../core/container-aware';
 import { Form } from '../../core/form';
 import { User } from '../../entity/user';
 import { IRouteHandler } from '../../interface/route-handler-interface';
-import { UserEmailValidator } from '../../validator/user/email-validator';
+import { EmailValidator } from '../../validator/email-validator';
 
 export class TypecastInstallHandler extends ContainerAware implements IRouteHandler {
     public async handle(req: express.Request, res: express.Response): Promise<void> {
@@ -12,7 +12,7 @@ export class TypecastInstallHandler extends ContainerAware implements IRouteHand
             return res.redirect('/typecast/user/sign-in');
         }
 
-        const form = await new Form(this.container, new UserEmailValidator()).handle(req);
+        const form = await new Form(this.container, new EmailValidator()).handle(req);
 
         if (!form.valid) {
             return res.render('typecast/install/user-creation', {

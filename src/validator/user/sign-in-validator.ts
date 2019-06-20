@@ -1,14 +1,7 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
+import { EmailValidator } from '../email-validator';
 
-export class UserSignInValidator {
-    @IsEmail(
-        {},
-        {
-            message: 'typecast.error.email.not_valid',
-        },
-    )
-    public email: string = '';
-
+export class UserSignInValidator extends EmailValidator {
     @IsNotEmpty({
         message: 'typecast.error.password.required',
     })

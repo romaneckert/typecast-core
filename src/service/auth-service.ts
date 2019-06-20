@@ -5,14 +5,14 @@ import { ContainerAware } from '../core/container-aware';
 import { User } from '../entity/user';
 
 export class AuthService extends ContainerAware {
-    public async hashPasssword(plainPassword: string): Promise<string> {
+    public async hashPassword(plainPassword: string): Promise<string> {
         const hmac = crypto.createHmac('sha512', this.container.config.auth.secret);
         hmac.update(plainPassword);
         return hmac.digest('hex');
     }
 
     public async verifyPassword(plainPassword: string, hashedPassword: string) {
-        return hashedPassword === (await this.hashPasssword(plainPassword));
+        return hashedPassword === (await this.hashPassword(plainPassword));
     }
 
     public async generatePasswordToken(): Promise<string> {

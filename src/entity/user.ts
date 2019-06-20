@@ -15,10 +15,10 @@ export class User {
     public passwordHashCreationDate: Date;
 
     @Column()
-    public passwordToken: string;
+    public passwordToken?: string;
 
     @Column()
-    public passwordTokenCreationDate: Date;
+    public passwordTokenCreationDate?: Date;
 
     @Column()
     public roles: string[] = [];
