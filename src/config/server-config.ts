@@ -1,11 +1,11 @@
 import { Container } from '../container';
 import { ContainerAware } from '../core/container-aware';
 import { IndexHandler } from '../handler/index-handler';
-import { InstallHandler } from '../handler/typecast/install';
-import { TypeCastUserPasswordHandler } from '../handler/typecast/user/password-handler';
-import { TypeCastUserPasswordResetHandler } from '../handler/typecast/user/password-reset-handler';
-import { TypeCastUserSignInHandler } from '../handler/typecast/user/sign-in-handler';
-import { TypeCastUserSignOutHandler } from '../handler/typecast/user/sign-out-handler';
+import { TypecastInstallHandler } from '../handler/typecast/install';
+import { TypecastUserPasswordHandler } from '../handler/typecast/user/password-handler';
+import { TypecastUserPasswordResetHandler } from '../handler/typecast/user/password-reset-handler';
+import { TypecastUserSignInHandler } from '../handler/typecast/user/sign-in-handler';
+import { TypecastUserSignOutHandler } from '../handler/typecast/user/sign-out-handler';
 
 import { IConfig } from '../interface/config-interface';
 import { IMiddleware } from '../interface/middleware-interface';
@@ -29,16 +29,16 @@ export class ServerConfig extends ContainerAware implements IConfig {
 
         this.routes = [
             new Route('/', new IndexHandler(this.container), ['get']),
-            new Route('/typecast/install', new InstallHandler(container), ['get', 'post']),
-            new Route('/typecast/user/password-reset', new TypeCastUserPasswordResetHandler(container), [
+            new Route('/typecast/install', new TypecastInstallHandler(container), ['get', 'post']),
+            new Route('/typecast/user/password-reset', new TypecastUserPasswordResetHandler(container), [
                 'get',
                 'post',
             ]),
-            new Route('/typecast/user/sign-in', new TypeCastUserSignInHandler(container), ['get', 'post']),
-            new Route('/typecast/user/sign-out', new TypeCastUserSignOutHandler(container)),
+            new Route('/typecast/user/sign-in', new TypecastUserSignInHandler(container), ['get', 'post']),
+            new Route('/typecast/user/sign-out', new TypecastUserSignOutHandler(container)),
             new Route(
                 '/typecast/user/password',
-                new TypeCastUserPasswordHandler(container),
+                new TypecastUserPasswordHandler(container),
                 ['get', 'post'],
                 '/typecast/user/password/:passwordToken',
             ),

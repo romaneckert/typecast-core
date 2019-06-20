@@ -4,7 +4,7 @@ import { Form } from '../../../core/form';
 import { IRouteHandler } from '../../../interface/route-handler-interface';
 import { UserSignInValidator } from '../../../validator/user/sign-in-validator';
 
-export class TypeCastUserSignInHandler extends ContainerAware implements IRouteHandler {
+export class TypecastUserSignInHandler extends ContainerAware implements IRouteHandler {
     public async handle(req: express.Request, res: express.Response): Promise<void> {
         const form = await new Form(this.container, new UserSignInValidator()).handle(req);
 

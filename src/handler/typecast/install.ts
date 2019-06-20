@@ -5,7 +5,7 @@ import { User } from '../../entity/user';
 import { IRouteHandler } from '../../interface/route-handler-interface';
 import { UserEmailValidator } from '../../validator/user/email-validator';
 
-export class InstallHandler extends ContainerAware implements IRouteHandler {
+export class TypecastInstallHandler extends ContainerAware implements IRouteHandler {
     public async handle(req: express.Request, res: express.Response): Promise<void> {
         // check if some users in db exists
         if (0 < (await this.container.repository.user.count())) {
@@ -35,7 +35,7 @@ export class InstallHandler extends ContainerAware implements IRouteHandler {
         const user = new User();
         user.email = form.data.email;
         user.passwordToken = passwordToken;
-        user.passwordCreationDate = new Date();
+        user.passwordTokenCreationDate = new Date();
         user.roles = ['admin', 'user'];
 
         await this.container.repository.user.save(user);

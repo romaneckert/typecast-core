@@ -12,10 +12,13 @@ export class User {
     public passwordHash: string;
 
     @Column()
-    public passwordCreationDate: Date;
+    public passwordHashCreationDate: Date;
 
     @Column()
     public passwordToken: string;
+
+    @Column()
+    public passwordTokenCreationDate: Date;
 
     @Column()
     public roles: string[] = [];
