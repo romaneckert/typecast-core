@@ -4,6 +4,8 @@ import { IRouteHandler } from '../../../interface/route-handler-interface';
 
 export class SignOutHandler extends ContainerAware implements IRouteHandler {
     public async handle(req: express.Request, res: express.Response): Promise<void> {
-        // TODO:
+        this.container.service.auth.signOut(req, res);
+
+        return res.redirect('/typecast/user/sign-in');
     }
 }

@@ -4,7 +4,6 @@ import { AuthConfig } from './config/auth-config';
 import { DatabaseConfig } from './config/database-config';
 import { I18nConfig } from './config/i18n-config';
 import { MailConfig } from './config/mail-config';
-import { RouteContainer } from './config/route-config';
 import { ServerConfig } from './config/server-config';
 import { Container } from './container';
 import { Log } from './entity/log';
@@ -12,6 +11,7 @@ import { User } from './entity/user';
 import { AuthMiddleware } from './middleware/auth-middleware';
 import { LocaleMiddleware } from './middleware/locale-middleware';
 import { RolesMiddleware } from './middleware/roles-middleware';
+import { AuthService } from './service/auth-service';
 import { DatabaseService } from './service/database-service';
 import { FileSystemService } from './service/file-system-service';
 import { I18nService } from './service/i18n-service';
@@ -41,7 +41,6 @@ export class Application {
             server: new ServerConfig(this.container),
         };
 
-        this.container.config.server.routeContainers = [new RouteContainer(this.container)];
         this.container.config.server.middlewares = [
             new AuthMiddleware(),
             new RolesMiddleware(),
@@ -72,6 +71,7 @@ export class Application {
         this.validateConfig();
 
         this.container.service = {
+            auth: new AuthService(this.container),
             database: new DatabaseService(this.container),
             fs: new FileSystemService(),
             i18n: new I18nService(this.container),

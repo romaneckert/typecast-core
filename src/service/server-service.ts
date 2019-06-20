@@ -12,6 +12,7 @@ import { ErrorMiddleware } from '../middleware/error-middleware';
 import { NotFoundMiddleware } from '../middleware/not-found-middleware';
 import { LoggerService } from './logger-service';
 import { Route } from './router/route';
+import { isInterfaceExtends } from '@babel/types';
 
 export class ServerService extends ContainerAware {
     private logger: ILogger;
@@ -122,14 +123,15 @@ export class ServerService extends ContainerAware {
         const routes: Route[] = [];
         const routeNames: string[] = [];
 
-        for (const routeContainer of this.container.config.server.routeContainers.reverse()) {
-            for (const route of routeContainer.routes) {
-                if (routeNames.includes(route.name)) {
-                    continue;
-                }
-                routes.push(route);
-                routeNames.push(route.name);
+        for (const route of Object.values(this.container.config.server.routes)) {
+            if (!(route instanceof Route)) {
+                continue;
             }
+            if (routeNames.includes(route.name)) {
+                continue;
+            }
+            routes.push(route);
+            routeNames.push(route.name);
         }
 
         for (const route of routes) {

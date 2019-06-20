@@ -21,7 +21,7 @@ export class SignInHandler extends ContainerAware implements IRouteHandler {
         if (undefined === user) {
             form.addError(
                 {
-                    incorrect_username_or_password: 'jeneric.error.user.incorrect_username_or_password',
+                    incorrect_username_or_password: 'typecast.error.user.incorrect_username_or_password',
                 },
                 'user',
             );
@@ -30,5 +30,33 @@ export class SignInHandler extends ContainerAware implements IRouteHandler {
                 form,
             });
         }
+
+        if (await this.container.service.auth.verifyPassword(form.password, user.password)) {
+            form.addError(
+                {
+                    incorrect_username_or_password: 'typecast.error.user.incorrect_username_or_password',
+                },
+                'user',
+            );
+
+            return res.render('typecast/user/sign-in', {
+                form,
+            });
+        }
+
+        if (!this.container.service.auth.signIn(req, res, user)) {
+            form.addError(
+                {
+                    incorrect_username_or_password: 'typecast.error.data_process',
+                },
+                'user',
+            );
+
+            return res.render('typecast/user/sign-in', {
+                form,
+            });
+        }
+
+        return res.redirect('/typecast');
     }
 }

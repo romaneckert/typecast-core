@@ -7,6 +7,7 @@ import { MailConfig } from './config/mail-config';
 import { ServerConfig } from './config/server-config';
 import { Log } from './entity/log';
 import { User } from './entity/user';
+import { AuthService } from './service/auth-service';
 import { DatabaseService } from './service/database-service';
 import { FileSystemService } from './service/file-system-service';
 import { I18nService } from './service/i18n-service';
@@ -28,6 +29,7 @@ export class Container {
     };
 
     public service: {
+        auth: AuthService;
         database: DatabaseService;
         fs: FileSystemService;
         i18n: I18nService;
