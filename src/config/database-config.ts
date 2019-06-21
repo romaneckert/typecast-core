@@ -1,6 +1,8 @@
-import { IConfig } from '../interface/config-interface';
+import { Component } from '../core/component';
+import { IDatabaseConfig } from '../interface/config/database-config-interface';
 
-export class DatabaseConfig implements IConfig {
+@Component('config', 'database')
+export class DatabaseConfig implements IDatabaseConfig {
     public host: string = 'localhost';
     public database?: string = process.env.DB_DATABASE;
 

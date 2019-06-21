@@ -1,4 +1,4 @@
-export interface ILogger {
+export interface ILoggerService {
     emergency(message: string, data?: any): Promise<void>;
     alert(message: string, data?: any): Promise<void>;
     critical(message: string, data?: any): Promise<void>;

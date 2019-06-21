@@ -1,21 +1,27 @@
 import * as nodemailer from 'nodemailer';
 import * as querystring from 'querystring';
 import * as url from 'url';
+import { Component } from '../core/component';
+import { Inject } from '../core/inject';
+import { IMailConfig } from '../interface/config/mail-config-interface';
+import { IMailService } from '../interface/service/mail-service-interface';
 
-import { ContainerAware } from '../core/container-aware';
+@Component('service', 'mail')
+export class MailService implements IMailService {
+    @Inject('config', 'mail')
+    private config: IMailConfig;
 
-export class MailService extends ContainerAware {
     private transporter: any;
 
     public async start() {
-        const mailUrl = url.parse(String(this.container.config.mail.url));
+        const mailUrl = url.parse(String(this.config.url));
 
         mailUrl.search = querystring.stringify({
-            connectionTimeout: this.container.config.mail.connectionTimeout,
+            connectionTimeout: this.config.connectionTimeout,
         });
 
         this.transporter = nodemailer.createTransport(url.format(mailUrl), {
-            from: this.container.config.mail.defaultFrom,
+            from: this.config.defaultFrom,
         });
     }
 

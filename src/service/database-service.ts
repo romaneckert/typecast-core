@@ -1,29 +1,34 @@
 import { Connection, ConnectionOptions, createConnection } from 'typeorm';
-import { Container } from '../container';
-import { ContainerAware } from '../core/container-aware';
-import { ILogger } from '../interface/logger-interface';
-import { LoggerService } from './logger-service';
+import { Component } from '../core/component';
+import { Inject } from '../core/inject';
+import { IApplicationConfig } from '../interface/config/application-config-interface';
+import { IDatabaseConfig } from '../interface/config/database-config-interface';
+import { ILoggerService } from '../interface/service/logger-service-interface';
 
-export class DatabaseService extends ContainerAware {
+@Component('service', 'database')
+export class DatabaseService {
     public connection?: Connection;
-    private logger: ILogger;
 
-    constructor(container: Container) {
-        super(container);
-        this.logger = new LoggerService(container, 'service', 'database');
-    }
+    @Inject('config', 'application')
+    private applicationConfig: IApplicationConfig;
+
+    @Inject('config', 'database')
+    private config: IDatabaseConfig;
+
+    @Inject('service', 'logger', 'service', 'database')
+    private logger: ILoggerService;
 
     public async start(): Promise<void> {
         let fileType = 'js';
 
-        if ('test' === this.container.config.application.context) {
+        if ('test' === this.applicationConfig.context) {
             fileType = 'ts';
         }
 
         const config: ConnectionOptions = {
-            database: this.container.config.database.database,
+            database: this.config.database,
             entities: [__dirname + '/../entity/*.' + fileType],
-            host: this.container.config.database.host,
+            host: this.config.host,
             synchronize: true,
             type: 'mongodb',
             useNewUrlParser: true,

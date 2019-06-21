@@ -1,4 +1,6 @@
-export class StringService {
+import { IStringService } from '../interface/service/string-service-interface';
+
+export class StringService implements IStringService {
     public camelize(text: string) {
         return text.replace(/^([A-Z])|[\s-_]+(\w)/g, (match, p1, p2, offset) => {
             if (p2) {

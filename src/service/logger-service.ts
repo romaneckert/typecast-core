@@ -1,10 +1,23 @@
 import * as nodePath from 'path';
-import { Container } from '../container';
-import { ContainerAware } from '../core/container-aware';
+import { Component } from '../core/component';
+import { Inject } from '../core/inject';
 import { Log } from '../entity/log';
-import { ILogger } from '../interface/logger-interface';
+import { IApplicationConfig } from '../interface/config/application-config-interface';
+import { IFileSystemService } from '../interface/service/file-system-service-interface';
+import { ILoggerService } from '../interface/service/logger-service-interface';
+import { IStringService } from '../interface/service/string-service-interface';
 
-export class LoggerService extends ContainerAware implements ILogger {
+@Component('service', 'logger')
+export class LoggerService implements ILoggerService {
+    @Inject('config', 'application')
+    private applicationConfig: IApplicationConfig;
+
+    @Inject('service', 'file-service')
+    private fileSystem: IFileSystemService;
+
+    @Inject('service', 'string')
+    private string: IStringService;
+
     private contextType: string;
     private contextName: string;
     private maxSizePerLogFile: number = 16 * 1024 * 1024;
@@ -12,8 +25,7 @@ export class LoggerService extends ContainerAware implements ILogger {
     private maxHistoryLength: number = 1000;
     private duplicateTime: number = 10000;
 
-    public constructor(container: Container, contextType: string, contextName: string) {
-        super(container);
+    constructor(contextType: string, contextName: string) {
         this.contextType = contextType;
         this.contextName = contextName;
     }
@@ -51,9 +63,7 @@ export class LoggerService extends ContainerAware implements ILogger {
     }
 
     public async removeAllLogFiles(): Promise<void> {
-        this.container.service.fs.remove(
-            nodePath.join(process.cwd(), 'var', this.container.config.application.context, 'log'),
-        );
+        this.fileSystem.remove(nodePath.join(process.cwd(), 'var', this.applicationConfig.context, 'log'));
     }
 
     private async log(code: number, message: string, data?: any): Promise<void> {
@@ -66,7 +76,7 @@ export class LoggerService extends ContainerAware implements ILogger {
         message = message.replace(/(\r?\n|\r)/gm, ' ');
 
         // string type cast data
-        data = this.container.service.string.cast(data);
+        data = this.string.cast(data);
 
         const log = new Log(code, date, this.contextType, this.contextName, message, data);
 
@@ -76,27 +86,23 @@ export class LoggerService extends ContainerAware implements ILogger {
     }
 
     private async saveToDB(log: Log): Promise<boolean> {
-        if (!this.container.initialized) {
-            return false;
-        }
-
-        await this.container.repository.log.save(log);
+        // await this.container.repository.log.save(log);
         return true;
     }
 
     private async writeLog(log: Log) {
         const logFilePaths = [
             nodePath.join(
-                this.container.config.application.basePath,
+                this.applicationConfig.rootPath,
                 'var',
-                this.container.config.application.context,
+                this.applicationConfig.context.toLocaleUpperCase(),
                 'log',
                 log.level + '.log',
             ),
             nodePath.join(
-                this.container.config.application.basePath,
+                this.applicationConfig.rootPath,
                 'var',
-                this.container.config.application.context,
+                this.applicationConfig.context,
                 'log',
                 log.contextType,
                 log.contextName,
@@ -112,24 +118,24 @@ export class LoggerService extends ContainerAware implements ILogger {
 
         for (const logFilePath of logFilePaths) {
             // check if log file exists and create if not
-            await this.container.service.fs.ensureFileExists(logFilePath);
+            await this.fileSystem.ensureFileExists(logFilePath);
 
             // check if log rotation is necessary
             // await this._rotateLogFile(logFile);
 
             // write line to log file
-            await this.container.service.fs.appendFile(logFilePath, output + '\n');
+            await this.fileSystem.appendFile(logFilePath, output + '\n');
         }
     }
 
     private writeToConsole(log: Log): void {
         // disabled, if log level less then notice and in mode production
-        if ('production' === this.container.config.application.context && log.code > 5) {
+        if ('production' === this.applicationConfig.context && log.code > 5) {
             return;
         }
 
         // disabled, if context in mode test
-        if ('test' === this.container.config.application.context) {
+        if ('test' === this.applicationConfig.context) {
             return;
         }
 

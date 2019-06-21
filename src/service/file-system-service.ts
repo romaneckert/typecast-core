@@ -1,7 +1,10 @@
 import * as nodeFs from 'fs';
 import * as nodePath from 'path';
+import { Component } from '../core/component';
+import { IFileSystemService } from '../interface/service/file-system-service-interface';
 
-export class FileSystemService {
+@Component('service', 'file-system')
+export class FileSystemService implements IFileSystemService {
     public async remove(path: nodeFs.PathLike): Promise<void> {
         if ((await this.isFile(path)) || (await this.isSymbolicLink(path))) {
             await nodeFs.promises.unlink(path);

@@ -1,12 +1,22 @@
 import * as crypto from 'crypto';
 import express from 'express';
 import * as jwt from 'jsonwebtoken';
-import { ContainerAware } from '../core/container-aware';
+import { Repository } from 'typeorm';
+import { Component } from '../core/component';
+import { Inject } from '../core/inject';
 import { User } from '../entity/user';
+import { IAuthConfig } from '../interface/config/auth-config-interface';
 
-export class AuthService extends ContainerAware {
+@Component('service', 'auth')
+export class AuthService {
+    @Inject('config', 'auth')
+    private config: IAuthConfig;
+
+    @Inject('repositoy', 'user')
+    private userRepository: Repository<User>;
+
     public async hashPassword(plainPassword: string): Promise<string> {
-        const hmac = crypto.createHmac('sha512', this.container.config.auth.secret);
+        const hmac = crypto.createHmac('sha512', this.config.secret);
         hmac.update(plainPassword);
         return hmac.digest('hex');
     }
@@ -43,15 +53,15 @@ export class AuthService extends ContainerAware {
                     roles: user.roles,
                 },
             },
-            this.container.config.auth.secret,
+            this.config.secret,
             {
-                expiresIn: this.container.config.auth.tokenExpiresIn,
+                expiresIn: this.config.tokenExpiresIn,
             },
         );
 
         // add json web token cookie
-        res.cookie(this.container.config.auth.tokenCookieName, token, {
-            expires: new Date(Date.now() + this.container.config.auth.tokenExpiresIn * 1000),
+        res.cookie(this.config.tokenCookieName, token, {
+            expires: new Date(Date.now() + this.config.tokenExpiresIn * 1000),
             httpOnly: true,
             sameSite: 'Strict',
             secure: true,
@@ -68,7 +78,7 @@ export class AuthService extends ContainerAware {
         res.locals.user = null;
 
         // clear token cookie
-        res.clearCookie(this.container.config.auth.tokenCookieName);
+        res.clearCookie(this.config.tokenCookieName);
     }
 
     public async verify(req: express.Request, res: express.Response): Promise<User | undefined> {
@@ -84,16 +94,14 @@ export class AuthService extends ContainerAware {
 
         // validate json web token cookie
         if (
-            'string' !== typeof req.cookies[this.container.config.auth.tokenCookieName] ||
-            0 === req.cookies[this.container.config.auth.tokenCookieName].length
+            'string' !== typeof req.cookies[this.config.tokenCookieName] ||
+            0 === req.cookies[this.config.tokenCookieName].length
         ) {
             return undefined;
         }
 
         // verify token
-        const data = Object(
-            jwt.verify(req.cookies[this.container.config.auth.tokenCookieName], this.container.config.auth.secret),
-        );
+        const data = Object(jwt.verify(req.cookies[this.config.tokenCookieName], this.config.secret));
 
         // validate user data
         if ('object' !== typeof data.user || null === data.user) {
@@ -111,7 +119,7 @@ export class AuthService extends ContainerAware {
         }
 
         // get user from db
-        const user = await this.container.repository.user.findOne({ email: data.user.email });
+        const user = await this.userRepository.findOne({ email: data.user.email });
 
         if (undefined === user) {
             return undefined;

@@ -1,22 +1,16 @@
 import express from 'express';
-import { Container } from '../../../container';
-import { ContainerAware } from '../../../core/container-aware';
 import { Form } from '../../../core/form';
+import { Inject } from '../../../core/inject';
+import { ILogger } from '../../../interface/service/logger-service-interface';
 import { IRouteHandler } from '../../../interface/route-handler-interface';
-import { LoggerService } from '../../../service/logger-service';
 import { EmailValidator } from '../../../validator/email-validator';
 
-export class TypecastUserPasswordResetHandler extends ContainerAware implements IRouteHandler {
-    private logger: LoggerService;
-
-    public constructor(container: Container) {
-        super(container);
-
-        this.logger = new LoggerService(container, 'handler', 'typecast-user-password-reset');
-    }
+export class TypecastUserPasswordResetHandler implements IRouteHandler {
+    @Inject('service', 'logger', 'handler', 'typecast-user-password-reset')
+    private logger: ILogger;
 
     public async handle(req: express.Request, res: express.Response): Promise<void> {
-        const form = await new Form(this.container, new EmailValidator()).handle(req);
+        const form = await new Form(new EmailValidator()).handle(req);
 
         if (!form.valid) {
             return res.render('typecast/user/password-reset', {

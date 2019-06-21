@@ -1,25 +1,34 @@
 import * as nodePath from 'path';
-import { Container } from '../container';
-import { ContainerAware } from '../core/container-aware';
-import { ILogger } from '../interface/logger-interface';
-import { LoggerService } from './logger-service';
+import { Component } from '../core/component';
+import { Inject } from '../core/inject';
+import { IApplicationConfig } from '../interface/config/application-config-interface';
+import { II18nConfig } from '../interface/config/i18n-config-interface';
+import { IFileSystemService } from '../interface/service/file-system-service-interface';
+import { ILoggerService } from '../interface/service/logger-service-interface';
 
-export class I18nService extends ContainerAware {
+@Component('service', 'i18n')
+export class I18nService {
     private catalog: { [key: string]: any } = {};
-    private logger: ILogger;
 
-    constructor(container: Container) {
-        super(container);
-        this.logger = new LoggerService(container, 'service', 'i18n');
-    }
+    @Inject('config', 'application')
+    private applicationConfig: IApplicationConfig;
+
+    @Inject('config', 'database')
+    private config: II18nConfig;
+
+    @Inject('service', 'logger', 'service', 'i18n')
+    private logger: ILoggerService;
+
+    @Inject('service', 'file-service')
+    private fileSystem: IFileSystemService;
 
     public async start() {
         const localePaths = [];
 
-        for (const applicationPath of this.container.config.application.applicationPaths) {
+        for (const applicationPath of this.applicationConfig.paths) {
             const localePath = nodePath.join(applicationPath, 'locale');
 
-            if (await this.container.service.fs.isDirectory(localePath)) {
+            if (await this.fileSystem.isDirectory(localePath)) {
                 localePaths.push(localePath);
             }
         }
@@ -31,8 +40,8 @@ export class I18nService extends ContainerAware {
 
     public translate(locale: string, key: string, data?: { [key: string]: any }) {
         // check if locale is in the list of predefined locales, if not fall back to default locale
-        if (-1 === this.container.config.i18n.locales.indexOf(locale)) {
-            locale = this.container.config.i18n.defaultLocale;
+        if (-1 === this.config.locales.indexOf(locale)) {
+            locale = this.config.defaultLocale;
         }
 
         if ('string' !== typeof key || 0 === key.length) {
@@ -61,26 +70,26 @@ export class I18nService extends ContainerAware {
 
         if ('string' === typeof translation) {
             this.logger.debug(
-                `the translation key '${key}' could not be found for the locale ${locale}, fallback to ${this.container.config.i18n.defaultLocale}`,
+                `the translation key '${key}' could not be found for the locale ${locale}, fallback to ${this.config.defaultLocale}`,
             );
 
-            return this.addData(this.container.config.i18n.defaultLocale, key, translation, data);
+            return this.addData(this.config.defaultLocale, key, translation, data);
         }
 
         this.logger.warning(
-            `the translation key '${key}' could not be found for the default locale ${this.container.config.i18n.defaultLocale}`,
+            `the translation key '${key}' could not be found for the default locale ${this.config.defaultLocale}`,
         );
 
         return key;
     }
 
     private async loadLocales(path: string, catalog: { [key: string]: any }) {
-        for (const fileName of await this.container.service.fs.readDirectory(path)) {
+        for (const fileName of await this.fileSystem.readDirectory(path)) {
             const absPath = nodePath.join(path, fileName);
 
-            if ((await this.container.service.fs.isFile(absPath)) && '.locale' === nodePath.parse(fileName).ext) {
-                catalog[nodePath.parse(fileName).name] = await this.container.service.fs.readFile(absPath);
-            } else if (await this.container.service.fs.isDirectory(absPath)) {
+            if ((await this.fileSystem.isFile(absPath)) && '.locale' === nodePath.parse(fileName).ext) {
+                catalog[nodePath.parse(fileName).name] = await this.fileSystem.readFile(absPath);
+            } else if (await this.fileSystem.isDirectory(absPath)) {
                 if (undefined === catalog[fileName]) {
                     catalog[fileName] = {};
                 }

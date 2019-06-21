@@ -1,17 +1,14 @@
 import { validate, ValidationError as ClassValidationError } from 'class-validator';
 import express from 'express';
-import { Container } from '../container';
-import { ContainerAware } from './container-aware';
 import { ValidationError } from './validation-error';
 
-export class Form extends ContainerAware {
+export class Form {
     public submitted: boolean = false;
     public valid: boolean = false;
     public errors: { [key: string]: ValidationError } | null = null;
     public data: any;
 
-    public constructor(container: Container, validator: any) {
-        super(container);
+    public constructor(validator: any) {
         this.data = validator;
     }
 

@@ -4,20 +4,27 @@ import express from 'express';
 import helmet from 'helmet';
 import * as https from 'https';
 import * as nodePath from 'path';
-import { Container } from '../container';
-import { ContainerAware } from '../core/container-aware';
+import { Component } from '../core/component';
+import { Inject } from '../core/inject';
 import { ErrorCatchHandler } from '../handler/error-catch-handler';
-import { ILogger } from '../interface/logger-interface';
+import { ILogger } from '../interface/service/logger-service-interface';
 import { AccessMiddleware } from '../middleware/access-middleware';
 import { ErrorMiddleware } from '../middleware/error-middleware';
 import { NotFoundMiddleware } from '../middleware/not-found-middleware';
 import { LoggerService } from './logger-service';
 import { Route } from './router/route';
 
-export class ServerService extends ContainerAware {
+@Component('service', 'server')
+export class ServerService {
     public routes: { [key: string]: Route } = {};
 
+    @Inject('service', 'logger', 'service', 'server')
     private logger: ILogger;
+
+    private applicationConfig: 
+
+
+
     private router: express.Application;
 
     private pathToKeyPem: string;
@@ -25,10 +32,7 @@ export class ServerService extends ContainerAware {
 
     private connection: any;
 
-    constructor(container: Container) {
-        super(container);
-
-        this.logger = new LoggerService(container, 'service', 'server');
+    constructor() {
         this.router = express();
 
         this.pathToKeyPem = nodePath.join(this.container.config.application.basePath, 'config/key.pem');

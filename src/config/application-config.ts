@@ -1,16 +1,20 @@
-import { IConfig } from '../interface/config-interface';
+import { Component } from '../core/component';
+import { IApplicationConfig } from '../interface/config/application-config-interface';
 
-export class ApplicationConfig implements IConfig {
-    public applicationPaths: string[] = [process.cwd()];
+@Component('config', 'application')
+export class ApplicationConfig implements IApplicationConfig {
     public allowedContexts: string[] = ['production', 'acceptance', 'staging', 'test', 'development'];
-    public basePath: string = process.cwd();
-    public baseUrl?: string = process.env.APP_BASE_URL;
+    public baseUrl: string;
     public buildDate: Date = new Date();
     public context: string = 'production';
-    public extensionPaths?: string[] = undefined;
+    public paths: string[] = [process.cwd()];
+    public rootPath: string = process.cwd();
 
     constructor() {
-        // detect context and write to this.context
+        // baseUrl
+        this.baseUrl = String(process.env.NODE_ENV);
+
+        // context
         const processEnv = String(process.env.NODE_ENV);
 
         if (-1 !== this.allowedContexts.indexOf(processEnv)) {
@@ -23,7 +27,7 @@ export class ApplicationConfig implements IConfig {
             throw new Error('baseUrl is empty');
         }
 
-        if (undefined !== this.extensionPaths && 0 < this.extensionPaths.length) {
+        if (undefined !== this.paths && 0 < this.paths.length) {
             throw new Error('extensionPaths is empty');
         }
     }
