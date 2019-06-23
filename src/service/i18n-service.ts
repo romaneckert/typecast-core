@@ -1,26 +1,23 @@
 import * as nodePath from 'path';
-import { Component } from '../core/component';
-import { Inject } from '../core/inject';
-import { IApplicationConfig } from '../interface/config/application-config-interface';
-import { II18nConfig } from '../interface/config/i18n-config-interface';
-import { IFileSystemService } from '../interface/service/file-system-service-interface';
-import { ILoggerService } from '../interface/service/logger-service-interface';
+import { ApplicationConfig } from '../config/application-config';
+import { I18nConfig } from '../config/i18n-config';
+import { Service } from '../decorator/service';
+import { FileSystemUtil } from '../util/file-system';
+import { LoggerService } from './logger-service';
 
-@Component('service', 'i18n')
+@Service()
 export class I18nService {
     private catalog: { [key: string]: any } = {};
 
-    @Inject('config', 'application')
-    private applicationConfig: IApplicationConfig;
+    private applicationConfig: ApplicationConfig;
+    private config: I18nConfig;
+    private logger: LoggerService;
 
-    @Inject('config', 'database')
-    private config: II18nConfig;
-
-    @Inject('service', 'logger', 'service', 'i18n')
-    private logger: ILoggerService;
-
-    @Inject('service', 'file-service')
-    private fileSystem: IFileSystemService;
+    public constructor(config: I18nConfig, applicationConfig: ApplicationConfig, logger: LoggerService) {
+        this.config = config;
+        this.applicationConfig = applicationConfig;
+        this.logger = logger;
+    }
 
     public async start() {
         const localePaths = [];
@@ -28,7 +25,7 @@ export class I18nService {
         for (const applicationPath of this.applicationConfig.paths) {
             const localePath = nodePath.join(applicationPath, 'locale');
 
-            if (await this.fileSystem.isDirectory(localePath)) {
+            if (await FileSystemUtil.isDirectory(localePath)) {
                 localePaths.push(localePath);
             }
         }
@@ -84,12 +81,12 @@ export class I18nService {
     }
 
     private async loadLocales(path: string, catalog: { [key: string]: any }) {
-        for (const fileName of await this.fileSystem.readDirectory(path)) {
+        for (const fileName of await FileSystemUtil.readDirectory(path)) {
             const absPath = nodePath.join(path, fileName);
 
-            if ((await this.fileSystem.isFile(absPath)) && '.locale' === nodePath.parse(fileName).ext) {
-                catalog[nodePath.parse(fileName).name] = await this.fileSystem.readFile(absPath);
-            } else if (await this.fileSystem.isDirectory(absPath)) {
+            if ((await FileSystemUtil.isFile(absPath)) && '.locale' === nodePath.parse(fileName).ext) {
+                catalog[nodePath.parse(fileName).name] = await FileSystemUtil.readFile(absPath);
+            } else if (await FileSystemUtil.isDirectory(absPath)) {
                 if (undefined === catalog[fileName]) {
                     catalog[fileName] = {};
                 }

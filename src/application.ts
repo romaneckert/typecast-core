@@ -1,18 +1,29 @@
-import { Bundle } from './bundle';
-import { Inject } from './core/inject';
-import { ILogger } from './interface/service/logger-service-interface';
-
-const bundles = [new Bundle()];
+import { Autoloader } from './core/autoloader';
+import { Container } from './core/container';
+import { DatabaseService } from './service/database-service';
+import { ServerService } from './service/server-service';
 
 export class Application {
-    @Inject('service', 'logger')
-    public logger: ILogger;
+    private autoloader: Autoloader;
+    private paths: string[];
 
-    constructor(paths: string[]) {
-        
+    constructor(paths?: string[]) {
+        if (undefined === paths) {
+            this.paths = [process.cwd()];
+        } else {
+            this.paths = paths;
+        }
+
+        this.autoloader = new Autoloader();
     }
 
-    start() {
-        this.logger.info('test');
+    public async start() {
+        await this.autoloader.load(this.paths);
+
+        const database = Container.get<DatabaseService>(DatabaseService);
+        database.start();
+
+        const server = Container.get<ServerService>(ServerService);
+        server.start();
     }
 }

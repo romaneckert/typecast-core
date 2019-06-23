@@ -1,21 +1,36 @@
 import * as nodePath from 'path';
 import * as pug from 'pug';
-import { ContainerAware } from '../core/container-aware';
+import { ApplicationConfig } from '../config/application-config';
+import { ServerConfig } from '../config/server-config';
+import { Service } from '../decorator/service';
+import { FileSystemUtil } from '../util/file-system';
 
-export class RendererService extends ContainerAware {
+@Service()
+export class RendererService {
+    private applicationConfig: ApplicationConfig;
+    private serverConfig: ServerConfig;
     private templates: { [key: string]: any } = {};
 
-    public async start() {
-        for (const applicationPath of this.container.config.application.applicationPaths) {
-            const viewPath = nodePath.join(applicationPath, 'view/template');
+    public constructor(applicationConfig: ApplicationConfig, serverConfig: ServerConfig) {
+        this.applicationConfig = applicationConfig;
+        this.serverConfig = serverConfig;
+    }
 
-            if (await this.container.service.fs.isDirectory(viewPath)) {
+    public async start() {
+        for (const path of this.applicationConfig.paths) {
+            const viewPath = nodePath.join(path, 'view/template');
+
+            if (await FileSystemUtil.isDirectory(viewPath)) {
                 await this.compileTemplates(viewPath);
             }
         }
     }
 
-    public async render(filePath: string, locals: { [key: string]: any }, callback: (val: any, template: any) => void) {
+    public async render(
+        filePath: string,
+        locals: { [key: string]: any },
+        callback: (val: any, template: any) => void,
+    ): Promise<void> {
         if ('function' !== typeof this.templates[filePath]) {
             throw new Error(`template ${filePath} does not exists`);
         }
@@ -26,19 +41,21 @@ export class RendererService extends ContainerAware {
 
         locals.view = {};
 
-        for (const [key, value] of Object.entries(this.container.config.server.viewHelper)) {
+        // TODO: fix
+        /*
+        for (const [key, value] of Object.entries(this.serverConfig.viewHelper)) {
             locals.view[key] = value.render.bind(value);
-        }
+        }*/
 
         callback(null, this.templates[filePath](locals, { cache: true }));
     }
 
     private async compileTemplates(path: string) {
-        if (await this.container.service.fs.isDirectory(path)) {
-            for (const fileName of await this.container.service.fs.readDirectory(path)) {
+        if (await FileSystemUtil.isDirectory(path)) {
+            for (const fileName of await FileSystemUtil.readDirectory(path)) {
                 await this.compileTemplates(nodePath.join(path, fileName));
             }
-        } else if (await this.container.service.fs.isFile(path)) {
+        } else if (await FileSystemUtil.isFile(path)) {
             this.templates[path] = pug.compileFile(path, {
                 filename: path,
             });

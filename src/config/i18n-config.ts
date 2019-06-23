@@ -1,8 +1,8 @@
-import { Component } from '../core/component';
-import { II18nConfig } from '../interface/config/i18n-config-interface';
+import { Config } from '../decorator/config';
+import { IConfig } from '../interface/config';
 
-@Component('config', 'i18n')
-export class I18nConfig implements II18nConfig {
+@Config()
+export class I18nConfig implements IConfig {
     public locales: string[] = ['en'];
     public defaultLocale: string = 'en';
 

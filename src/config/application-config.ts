@@ -1,8 +1,8 @@
-import { Component } from '../core/component';
-import { IApplicationConfig } from '../interface/config/application-config-interface';
+import { Config } from '../decorator/config';
+import { IConfig } from '../interface/config';
 
-@Component('config', 'application')
-export class ApplicationConfig implements IApplicationConfig {
+@Config()
+export class ApplicationConfig implements IConfig {
     public allowedContexts: string[] = ['production', 'acceptance', 'staging', 'test', 'development'];
     public baseUrl: string;
     public buildDate: Date = new Date();

@@ -1,22 +1,23 @@
 import { Connection, ConnectionOptions, createConnection } from 'typeorm';
-import { Component } from '../core/component';
-import { Inject } from '../core/inject';
-import { IApplicationConfig } from '../interface/config/application-config-interface';
-import { IDatabaseConfig } from '../interface/config/database-config-interface';
-import { ILoggerService } from '../interface/service/logger-service-interface';
 
-@Component('service', 'database')
+import { ApplicationConfig } from '../config/application-config';
+import { DatabaseConfig } from '../config/database-config';
+import { Service } from '../decorator/service';
+import { LoggerService } from './logger-service';
+
+@Service()
 export class DatabaseService {
     public connection?: Connection;
 
-    @Inject('config', 'application')
-    private applicationConfig: IApplicationConfig;
+    private applicationConfig: ApplicationConfig;
+    private config: DatabaseConfig;
+    private logger: LoggerService;
 
-    @Inject('config', 'database')
-    private config: IDatabaseConfig;
-
-    @Inject('service', 'logger', 'service', 'database')
-    private logger: ILoggerService;
+    public constructor(config: DatabaseConfig, applicationConfig: ApplicationConfig, logger: LoggerService) {
+        this.config = config;
+        this.applicationConfig = applicationConfig;
+        this.logger = logger;
+    }
 
     public async start(): Promise<void> {
         let fileType = 'js';

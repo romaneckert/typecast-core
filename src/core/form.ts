@@ -1,5 +1,7 @@
 import { validate, ValidationError as ClassValidationError } from 'class-validator';
 import express from 'express';
+
+import { StringUtil } from '../util/string';
 import { ValidationError } from './validation-error';
 
 export class Form {
@@ -62,7 +64,7 @@ export class Form {
         const cleanedConstraints: { [key: string]: string } = {};
 
         for (const [key, value] of Object.entries(constraints)) {
-            cleanedConstraints[this.container.service.string.decamelize(key)] = value;
+            cleanedConstraints[StringUtil.decamelize(key)] = value;
         }
 
         return cleanedConstraints;

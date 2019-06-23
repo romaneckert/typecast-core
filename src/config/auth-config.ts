@@ -1,9 +1,9 @@
 import * as crypto from 'crypto';
-import { Component } from '../core/component';
-import { IAuthConfig } from '../interface/config/auth-config-interface';
+import { Config } from '../decorator/config';
+import { IConfig } from '../interface/config';
 
-@Component('config', 'auth')
-export class AuthConfig implements IAuthConfig {
+@Config()
+export class AuthConfig implements IConfig {
     public tokenExpiresIn: number = 600;
     public tokenCookieName: string = '_t';
     public secret: string;

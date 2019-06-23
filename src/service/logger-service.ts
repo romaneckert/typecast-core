@@ -1,33 +1,28 @@
 import * as nodePath from 'path';
-import { Component } from '../core/component';
-import { Inject } from '../core/inject';
+
+import { ApplicationConfig } from '../config/application-config';
+import { Service } from '../decorator/service';
 import { Log } from '../entity/log';
-import { IApplicationConfig } from '../interface/config/application-config-interface';
-import { IFileSystemService } from '../interface/service/file-system-service-interface';
-import { ILoggerService } from '../interface/service/logger-service-interface';
-import { IStringService } from '../interface/service/string-service-interface';
+import { FileSystemUtil } from '../util/file-system';
+import { StringUtil } from '../util/string';
 
-@Component('service', 'logger')
-export class LoggerService implements ILoggerService {
-    @Inject('config', 'application')
-    private applicationConfig: IApplicationConfig;
+@Service()
+export class LoggerService {
+    private applicationConfig: ApplicationConfig;
 
-    @Inject('service', 'file-service')
-    private fileSystem: IFileSystemService;
-
-    @Inject('service', 'string')
-    private string: IStringService;
-
-    private contextType: string;
-    private contextName: string;
+    private contextType: string = '';
+    private contextName: string = '';
     private maxSizePerLogFile: number = 16 * 1024 * 1024;
     private maxLogRotationsPerType: number = 10;
     private maxHistoryLength: number = 1000;
     private duplicateTime: number = 10000;
 
-    constructor(contextType: string, contextName: string) {
-        this.contextType = contextType;
-        this.contextName = contextName;
+    constructor(applicationConfig: ApplicationConfig) {
+        this.applicationConfig = applicationConfig;
+    }
+
+    public async start(): Promise<void> {
+        // nothing todo
     }
 
     public async emergency(message: string, data?: any): Promise<void> {
@@ -63,7 +58,7 @@ export class LoggerService implements ILoggerService {
     }
 
     public async removeAllLogFiles(): Promise<void> {
-        this.fileSystem.remove(nodePath.join(process.cwd(), 'var', this.applicationConfig.context, 'log'));
+        FileSystemUtil.remove(nodePath.join(process.cwd(), 'var', this.applicationConfig.context, 'log'));
     }
 
     private async log(code: number, message: string, data?: any): Promise<void> {
@@ -76,7 +71,7 @@ export class LoggerService implements ILoggerService {
         message = message.replace(/(\r?\n|\r)/gm, ' ');
 
         // string type cast data
-        data = this.string.cast(data);
+        data = StringUtil.cast(data);
 
         const log = new Log(code, date, this.contextType, this.contextName, message, data);
 
@@ -95,14 +90,14 @@ export class LoggerService implements ILoggerService {
             nodePath.join(
                 this.applicationConfig.rootPath,
                 'var',
-                this.applicationConfig.context.toLocaleUpperCase(),
+                this.applicationConfig.context.toLowerCase(),
                 'log',
                 log.level + '.log',
             ),
             nodePath.join(
                 this.applicationConfig.rootPath,
                 'var',
-                this.applicationConfig.context,
+                this.applicationConfig.context.toLowerCase(),
                 'log',
                 log.contextType,
                 log.contextName,
@@ -118,13 +113,13 @@ export class LoggerService implements ILoggerService {
 
         for (const logFilePath of logFilePaths) {
             // check if log file exists and create if not
-            await this.fileSystem.ensureFileExists(logFilePath);
+            await FileSystemUtil.ensureFileExists(logFilePath);
 
             // check if log rotation is necessary
             // await this._rotateLogFile(logFile);
 
             // write line to log file
-            await this.fileSystem.appendFile(logFilePath, output + '\n');
+            await FileSystemUtil.appendFile(logFilePath, output + '\n');
         }
     }
 

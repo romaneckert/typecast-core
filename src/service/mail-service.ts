@@ -1,17 +1,18 @@
 import * as nodemailer from 'nodemailer';
 import * as querystring from 'querystring';
 import * as url from 'url';
-import { Component } from '../core/component';
-import { Inject } from '../core/inject';
-import { IMailConfig } from '../interface/config/mail-config-interface';
-import { IMailService } from '../interface/service/mail-service-interface';
+import { MailConfig } from '../config/mail-config';
+import { Service } from '../decorator/service';
 
-@Component('service', 'mail')
-export class MailService implements IMailService {
-    @Inject('config', 'mail')
-    private config: IMailConfig;
+@Service()
+export class MailService {
+    private config: MailConfig;
 
     private transporter: any;
+
+    public constructor(config: MailConfig) {
+        this.config = config;
+    }
 
     public async start() {
         const mailUrl = url.parse(String(this.config.url));

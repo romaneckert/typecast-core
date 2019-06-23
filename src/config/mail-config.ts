@@ -1,8 +1,8 @@
-import { Component } from '../core/component';
-import { IMailConfig } from '../interface/config/mail-config-interface';
+import { Config } from '../decorator/config';
+import { IConfig } from '../interface/config';
 
-@Component('config', 'mail')
-export class MailConfig implements IMailConfig {
+@Config()
+export class MailConfig implements IConfig {
     public defaultFrom: string = 'default@typecast';
     public connectionTimeout: number = 2000;
     public url: string;

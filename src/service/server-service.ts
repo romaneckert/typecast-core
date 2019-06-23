@@ -4,39 +4,52 @@ import express from 'express';
 import helmet from 'helmet';
 import * as https from 'https';
 import * as nodePath from 'path';
-import { Component } from '../core/component';
-import { Inject } from '../core/inject';
-import { ErrorCatchHandler } from '../handler/error-catch-handler';
-import { ILogger } from '../interface/service/logger-service-interface';
-import { AccessMiddleware } from '../middleware/access-middleware';
-import { ErrorMiddleware } from '../middleware/error-middleware';
-import { NotFoundMiddleware } from '../middleware/not-found-middleware';
+import { ApplicationConfig } from '../config/application-config';
+import { ServerConfig } from '../config/server-config';
+import { Service } from '../decorator/service';
+import { AccessMiddleware } from '../middleware/access';
+import { ErrorMiddleware } from '../middleware/error';
+import { NotFoundMiddleware } from '../middleware/not-found';
+import { ErrorCatchHandler } from '../core/error-catch';
+import { FileSystemUtil } from '../util/file-system';
 import { LoggerService } from './logger-service';
-import { Route } from './router/route';
+import { RendererService } from './renderer-service';
 
-@Component('service', 'server')
+@Service()
 export class ServerService {
-    public routes: { [key: string]: Route } = {};
-
-    @Inject('service', 'logger', 'service', 'server')
-    private logger: ILogger;
-
-    private applicationConfig: 
-
-
-
+    private logger: LoggerService;
+    private config: ServerConfig;
+    private applicationConfig: ApplicationConfig;
+    private renderer: RendererService;
     private router: express.Application;
+
+    private accessMiddleware: AccessMiddleware;
+    private errorMiddleware: ErrorMiddleware;
 
     private pathToKeyPem: string;
     private pathToCertPem: string;
 
     private connection: any;
 
-    constructor() {
+    constructor(
+        config: ServerConfig,
+        applicationConfig: ApplicationConfig,
+        logger: LoggerService,
+        renderer: RendererService,
+        accessMiddleware: AccessMiddleware,
+        errorMiddleware: ErrorMiddleware,
+    ) {
+        this.config = config;
+        this.applicationConfig = applicationConfig;
+        this.logger = logger;
+        this.renderer = renderer;
+        this.accessMiddleware = accessMiddleware;
+        this.errorMiddleware = errorMiddleware;
+
         this.router = express();
 
-        this.pathToKeyPem = nodePath.join(this.container.config.application.basePath, 'config/key.pem');
-        this.pathToCertPem = nodePath.join(this.container.config.application.basePath, 'config/cert.pem');
+        this.pathToKeyPem = nodePath.join(this.applicationConfig.rootPath, 'config/key.pem');
+        this.pathToCertPem = nodePath.join(this.applicationConfig.rootPath, 'config/cert.pem');
     }
 
     public async start(): Promise<void> {
@@ -45,36 +58,34 @@ export class ServerService {
         this.router.use(compression());
         this.router.use(bodyParser.urlencoded({ extended: false }));
 
-        for (const applicationPath of this.container.config.application.applicationPaths) {
-            const publicPath = nodePath.join(applicationPath, 'public');
+        for (const path of this.applicationConfig.paths) {
+            const publicPath = nodePath.join(path, 'public');
 
-            if (await this.container.service.fs.isDirectory(publicPath)) {
+            if (await FileSystemUtil.isDirectory(publicPath)) {
                 this.router.use(express.static(publicPath, { maxAge: '30 days' }));
             }
         }
 
         // register access middleware
-        const accessMiddleware = new AccessMiddleware(new LoggerService(this.container, 'middleware', 'access'));
-        this.router.use(accessMiddleware.handle.bind(accessMiddleware));
+        this.router.use(this.accessMiddleware.handle.bind(this.accessMiddleware));
 
-        this.registerRoutes();
+        // this.registerRoutes();
 
         // register error middleware
-        const errorMiddleware = new ErrorMiddleware(new LoggerService(this.container, 'middleware', 'error'));
-        this.router.use(errorMiddleware.handle.bind(errorMiddleware));
+        this.router.use(this.errorMiddleware.handle.bind(this.errorMiddleware));
 
         // register not found middleware
         const notFoundMiddleware = new NotFoundMiddleware();
         this.router.use(notFoundMiddleware.handle.bind(notFoundMiddleware));
 
-        this.router.engine('pug', this.container.service.renderer.render.bind(this.container.service.renderer));
+        this.router.engine('pug', this.renderer.render.bind(this.renderer));
 
         const viewPaths = [];
 
-        for (const applicationPath of this.container.config.application.applicationPaths) {
-            const viewPath = nodePath.join(applicationPath, 'view/template');
+        for (const path of this.applicationConfig.paths) {
+            const viewPath = nodePath.join(path, 'view/template');
 
-            if (await this.container.service.fs.isDirectory(viewPath)) {
+            if (await FileSystemUtil.isDirectory(viewPath)) {
                 viewPaths.push(viewPath);
             }
         }
@@ -85,24 +96,21 @@ export class ServerService {
         let server = null;
 
         // check certificates
-        if (
-            !(await this.container.service.fs.isFile(this.pathToKeyPem)) ||
-            !(await this.container.service.fs.isFile(this.pathToCertPem))
-        ) {
+        if (!(await FileSystemUtil.isFile(this.pathToKeyPem)) || !(await FileSystemUtil.isFile(this.pathToCertPem))) {
             await this.logger.warning(`.key and .pem files missing`, [this.pathToKeyPem, this.pathToCertPem]);
             server = this.router;
         } else {
             // start https server
             server = https.createServer(
                 {
-                    cert: await this.container.service.fs.readFile(this.pathToCertPem),
-                    key: await this.container.service.fs.readFile(this.pathToKeyPem),
+                    cert: await FileSystemUtil.readFile(this.pathToCertPem),
+                    key: await FileSystemUtil.readFile(this.pathToKeyPem),
                 },
                 this.router,
             );
         }
 
-        this.connection = server.listen(this.container.config.server.port);
+        this.connection = server.listen(this.config.port);
 
         await this.logger.notice('started');
     }
@@ -110,7 +118,7 @@ export class ServerService {
     public async render(filePath: string, locals: { [key: string]: any } = {}) {
         // set defaults
         if ('string' !== typeof locals.baseUrl || 0 === locals.baseUrl.length) {
-            locals.baseUrl = this.container.config.application.baseUrl;
+            locals.baseUrl = this.applicationConfig.baseUrl;
         }
 
         return new Promise((resolve, reject) => {
@@ -130,13 +138,14 @@ export class ServerService {
         await this.logger.notice('stopped');
     }
 
+    /*
     private registerRoutes() {
-        for (const route of Object.values(this.container.config.server.routes)) {
+        for (const route of Object.values(this.config.routes)) {
             this.routes[route.name] = route;
         }
 
         for (const route of Object.values(this.routes)) {
-            for (const middleware of this.container.config.server.middlewares) {
+            for (const middleware of this.config.middlewares) {
                 for (const method of route.methods) {
                     switch (method) {
                         case 'get':
@@ -166,5 +175,5 @@ export class ServerService {
                 }
             }
         }
-    }
+    }*/
 }

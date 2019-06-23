@@ -1,8 +1,8 @@
-import { Component } from '../core/component';
-import { IDatabaseConfig } from '../interface/config/database-config-interface';
+import { Config } from '../decorator/config';
+import { IConfig } from '../interface/config';
 
-@Component('config', 'database')
-export class DatabaseConfig implements IDatabaseConfig {
+@Config()
+export class DatabaseConfig implements IConfig {
     public host: string = 'localhost';
     public database?: string = process.env.DB_DATABASE;
 
