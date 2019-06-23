@@ -1,16 +1,16 @@
 import express from 'express';
-import { IRouteHandler } from '../interface/router-handler';
+import { IRoute } from '../interface/route';
 
 export class ErrorCatchHandler {
-    public routeHandler: IRouteHandler;
+    public route: IRoute;
 
-    constructor(routeHandler: IRouteHandler) {
-        this.routeHandler = routeHandler;
+    constructor(route: IRoute) {
+        this.route = route;
     }
 
     public async handle(req: express.Request, res: express.Response, next: (arg?: any) => void): Promise<void> {
         try {
-            return await this.routeHandler.handle(req, res, next);
+            return await this.route.handle(req, res, next);
         } catch (err) {
             next(err);
         }

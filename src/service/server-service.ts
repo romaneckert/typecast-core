@@ -6,17 +6,21 @@ import * as https from 'https';
 import * as nodePath from 'path';
 import { ApplicationConfig } from '../config/application-config';
 import { ServerConfig } from '../config/server-config';
+import { Container } from '../core/container';
+import { ErrorCatchHandler } from '../core/error-catch';
 import { Service } from '../decorator/service';
+import { IRoute } from '../interface/route';
 import { AccessMiddleware } from '../middleware/access';
 import { ErrorMiddleware } from '../middleware/error';
 import { NotFoundMiddleware } from '../middleware/not-found';
-import { ErrorCatchHandler } from '../core/error-catch';
 import { FileSystemUtil } from '../util/file-system';
 import { LoggerService } from './logger-service';
 import { RendererService } from './renderer-service';
 
 @Service()
 export class ServerService {
+    public routes: { [key: string]: IRoute };
+
     private logger: LoggerService;
     private config: ServerConfig;
     private applicationConfig: ApplicationConfig;
@@ -69,7 +73,7 @@ export class ServerService {
         // register access middleware
         this.router.use(this.accessMiddleware.handle.bind(this.accessMiddleware));
 
-        // this.registerRoutes();
+        this.registerRoutes();
 
         // register error middleware
         this.router.use(this.errorMiddleware.handle.bind(this.errorMiddleware));
@@ -138,9 +142,8 @@ export class ServerService {
         await this.logger.notice('stopped');
     }
 
-    /*
     private registerRoutes() {
-        for (const route of Object.values(this.config.routes)) {
+        for (const route of Object.values(Container.routes)) {
             this.routes[route.name] = route;
         }
 
@@ -161,7 +164,7 @@ export class ServerService {
             }
 
             for (const method of route.methods) {
-                const errorCatchHandler = new ErrorCatchHandler(route.handler);
+                const errorCatchHandler = new ErrorCatchHandler(route);
 
                 switch (method) {
                     case 'get':
@@ -175,5 +178,5 @@ export class ServerService {
                 }
             }
         }
-    }*/
+    }
 }

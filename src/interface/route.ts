@@ -1,6 +1,6 @@
 import express from 'express';
 
-export interface IRouteHandler {
+export interface IRoute {
     name: string;
     methods: string[];
     path: string;

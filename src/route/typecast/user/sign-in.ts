@@ -1,11 +1,11 @@
 import express from 'express';
 import { Form } from '../../../core/form';
 import { Route } from '../../../decorator/route';
-import { IRouteHandler } from '../../../interface/router-handler';
+import { IRoute } from '../../../interface/route';
 import { UserSignInValidator } from '../../../validator/user/sign-in-validator';
 
 @Route()
-export class TypecastUserSignInRoute implements IRouteHandler {
+export class TypecastUserSignInRoute implements IRoute {
     public name: '/typecast/user/sign-in';
     public methods: ['get'];
     public path: '/typecast/user/sign-in';

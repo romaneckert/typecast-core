@@ -1,30 +1,36 @@
+import { IRoute } from '../interface/route';
+
 export class Container {
-    public static config: any[] = [];
-    public static middleware: any[] = [];
-    public static route: any[] = [];
-    public static service: any[] = [];
-    public static viewHelper: any[] = [];
-    public static instances: { [key: string]: any } = {};
+    public static classes: { [key: string]: any } = {};
 
     public static get<T>(target: any): T {
-        if (!this.isMerged) {
-            this.mergeClasses();
-        }
-
-        let resolvedTarget = target;
+        let resolvedTarget;
+        let resolvedNamespace;
         let i: number = 0;
         let key: number = -1;
 
-        for (const option of [...this.config, ...this.middleware, ...this.route, ...this.service, ...this.viewHelper]) {
-            if (target.isPrototypeOf(option) || target === option) {
-                resolvedTarget = option;
-                key = i;
+        for (const [namespace, classesOfNamespace] of Object.entries(this.classes)) {
+            for (const option of classesOfNamespace) {
+                if (target.isPrototypeOf(option) || target === option) {
+                    resolvedTarget = option;
+                    resolvedNamespace = namespace;
+                    key = i;
+                    break;
+                }
+
+                i++;
             }
 
-            i++;
+            if (undefined !== resolvedTarget) {
+                break;
+            }
         }
 
-        if (-1 === key) {
+        if (undefined === resolvedNamespace) {
+            throw new Error(`can not find namespace ${resolvedNamespace}`);
+        }
+
+        if (undefined === resolvedTarget) {
             throw new Error(`can not find class`);
         }
 
@@ -40,59 +46,20 @@ export class Container {
             injections.push(Container.get<any>(param));
         }
 
-        this.instances[key] = new resolvedTarget(...injections);
+        if (undefined === this.instances[resolvedNamespace]) {
+            this.instances[resolvedNamespace] = {};
+        }
 
-        return this.instances[key];
+        return (this.instances[resolvedNamespace][key] = new resolvedTarget(...injections));
     }
 
-    private static isMerged: boolean = false;
-
-    private static mergeClasses() {
-        let key = 0;
-
-        for (const option of this.config) {
-            for (const optionToCheck of this.config) {
-                if (optionToCheck.isPrototypeOf(option)) {
-                    delete this.config[key];
-                }
-            }
-            key++;
+    public static get routes(): { [key: string]: IRoute } {
+        for (const option of this.classes.route) {
+            this.get(option);
         }
 
-        for (const option of this.middleware) {
-            for (const optionToCheck of this.middleware) {
-                if (optionToCheck.isPrototypeOf(option)) {
-                    delete this.middleware[key];
-                }
-            }
-            key++;
-        }
-
-        for (const option of this.route) {
-            for (const optionToCheck of this.route) {
-                if (optionToCheck.isPrototypeOf(option)) {
-                    delete this.route[key];
-                }
-            }
-            key++;
-        }
-
-        for (const option of this.service) {
-            for (const optionToCheck of this.service) {
-                if (optionToCheck.isPrototypeOf(option)) {
-                    delete this.service[key];
-                }
-            }
-            key++;
-        }
-
-        for (const option of this.viewHelper) {
-            for (const optionToCheck of this.viewHelper) {
-                if (optionToCheck.isPrototypeOf(option)) {
-                    delete this.viewHelper[key];
-                }
-            }
-            key++;
-        }
+        return this.instances.route;
     }
+
+    private static instances: { [key: string]: any } = {};
 }

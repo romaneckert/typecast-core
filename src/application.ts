@@ -20,10 +20,14 @@ export class Application {
     public async start() {
         await this.autoloader.load(this.paths);
 
+        console.log(Container);
+
         const database = Container.get<DatabaseService>(DatabaseService);
-        database.start();
+        await database.start();
+
+        console.log(database.connection.options);
 
         const server = Container.get<ServerService>(ServerService);
-        server.start();
+        await server.start();
     }
 }

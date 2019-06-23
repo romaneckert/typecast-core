@@ -1,10 +1,10 @@
 import express from 'express';
 import { ValidationError } from '../core/validation-error';
 import { Route } from '../decorator/route';
-import { IRouteHandler } from '../interface/router-handler';
+import { IRoute } from '../interface/route';
 
 @Route()
-export class IndexRoute implements IRouteHandler {
+export class IndexRoute implements IRoute {
     public name: '/';
     public methods: ['get'];
     public path: '/';

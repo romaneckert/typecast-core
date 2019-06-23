@@ -7,7 +7,7 @@ import { LoggerService } from './logger-service';
 
 @Service()
 export class DatabaseService {
-    public connection?: Connection;
+    public connection: Connection;
 
     private applicationConfig: ApplicationConfig;
     private config: DatabaseConfig;
@@ -38,7 +38,6 @@ export class DatabaseService {
         const connection = await createConnection(config);
 
         if (null === connection) {
-            this.connection = undefined;
             await this.logger.critical('can not connect to db');
         } else {
             this.connection = connection;

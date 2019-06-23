@@ -5,14 +5,15 @@ import { Repository } from 'typeorm';
 import { AuthConfig } from '../config/auth-config';
 import { Service } from '../decorator/service';
 import { User } from '../entity/user';
+import { DatabaseService } from './database-service';
 
 @Service()
 export class AuthService {
     private config: AuthConfig;
-
+    private database: DatabaseService;
     private userRepository: Repository<User>;
 
-    public constructor(config: AuthConfig, userRepository: Repository<User>) {
+    public constructor(config: AuthConfig, database: DatabaseService, userRepository: Repository<User>) {
         this.config = config;
     }
 

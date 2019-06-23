@@ -2,17 +2,21 @@ import { Container } from '../core/container';
 
 export const Service = (): ClassDecorator => {
     return target => {
+        if (undefined === Container.classes.service) {
+            Container.classes.service = [];
+        }
+
         let k = 0;
 
-        for (const option of Container.service) {
+        for (const option of Container.classes.service) {
             if (option.isPrototypeOf(target)) {
-                Container.service[k] = target;
+                Container.classes.service[k] = target;
                 return;
             }
 
             k++;
         }
 
-        Container.service.push(target);
+        Container.classes.service.push(target);
     };
 };

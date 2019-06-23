@@ -1,9 +1,9 @@
 import express from 'express';
 import { Route } from '../../../decorator/route';
-import { IRouteHandler } from '../../../interface/router-handler';
+import { IRoute } from '../../../interface/route';
 
 @Route()
-export class TypecastUserPasswordResetRoute implements IRouteHandler {
+export class TypecastUserPasswordResetRoute implements IRoute {
     public name: '/typecast/user/password-reset';
     public methods: ['get'];
     public path: '/typecast/user/password-reset';

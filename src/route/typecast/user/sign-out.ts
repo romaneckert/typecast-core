@@ -1,10 +1,10 @@
 import express from 'express';
 import { Route } from '../../../decorator/route';
-import { IRouteHandler } from '../../../interface/router-handler';
+import { IRoute } from '../../../interface/route';
 import { AuthService } from '../../../service/auth';
 
 @Route()
-export class TypecastUserSignOutRoute implements IRouteHandler {
+export class TypecastUserSignOutRoute implements IRoute {
     public name: '/typecast/user/sign-out';
     public methods: ['get'];
     public path: '/typecast/user/sign-out';

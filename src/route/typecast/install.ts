@@ -2,11 +2,11 @@ import express from 'express';
 import { Form } from '../../core/form';
 import { Route } from '../../decorator/route';
 import { User } from '../../entity/user';
-import { IRouteHandler } from '../../interface/router-handler';
+import { IRoute } from '../../interface/route';
 import { EmailValidator } from '../../validator/email-validator';
 
 @Route()
-export class TypecastInstallRoute implements IRouteHandler {
+export class TypecastInstallRoute implements IRoute {
     public name: '/typecast/install';
     public methods: ['get'];
     public path: '/typecast/install';

@@ -2,17 +2,20 @@ import { Container } from '../core/container';
 
 export const Config = (): ClassDecorator => {
     return target => {
-        let k = 0;
+        if (undefined === Container.classes.config) {
+            Container.classes.config = [];
+        }
 
-        for (const option of Container.config) {
+        let k = 0;
+        for (const option of Container.classes.config) {
             if (option.isPrototypeOf(target)) {
-                Container.config[k] = target;
+                Container.classes.config[k] = target;
                 return;
             }
 
             k++;
         }
 
-        Container.config.push(target);
+        Container.classes.config.push(target);
     };
 };
