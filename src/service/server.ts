@@ -1,8 +1,9 @@
 import bodyParser from 'body-parser';
 import compression from 'compression';
+import cookieParser from 'cookie-parser';
 import express from 'express';
 import helmet from 'helmet';
-import * as https from 'https';
+import https from 'https';
 import * as nodePath from 'path';
 import { ApplicationConfig } from '../config/application-config';
 import { ServerConfig } from '../config/server-config';
@@ -61,6 +62,7 @@ export class ServerService {
         this.router.enable('strict routing');
         this.router.use(helmet());
         this.router.use(compression());
+        this.router.use(cookieParser());
         this.router.use(bodyParser.urlencoded({ extended: false }));
 
         for (const path of this.applicationConfig.paths.slice(0).reverse()) {

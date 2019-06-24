@@ -14,10 +14,11 @@ export class PasswordValidator {
         message: 'typecast.error.password.min_length_8',
     })
     @MaxLength(64, {
-        message: 'jeneric.error.password.max_length_64',
+        message: 'typecast.error.password.max_length_64',
     })
     public password: string = '';
 
+    // TODO: validate password
     /*
     {
         validator: (password) => {
@@ -28,6 +29,6 @@ export class PasswordValidator {
 
             return true;
         },
-        message: 'jeneric.error.password.illegal_characters'
+        message: 'typecast.error.password.illegal_characters'
     }*/
 }

@@ -4,9 +4,10 @@ import { IConfig } from '../interface/config';
 
 @Config()
 export class AuthConfig implements IConfig {
-    public tokenExpiresIn: number = 600;
-    public tokenCookieName: string = '_t';
+    public redirectPath: string = '/typecast/user/sign-in';
     public secret: string;
+    public tokenCookieName: string = '_t';
+    public tokenExpiresIn: number = 600;
 
     constructor() {
         if (undefined === process.env.APP_SECRET) {
@@ -16,6 +17,7 @@ export class AuthConfig implements IConfig {
         }
     }
 
+    // TODO: optimize
     public validate() {
         if ('string' !== typeof this.secret || 10 > this.secret.length) {
             const exampleSecret = crypto.randomBytes(32).toString('hex');

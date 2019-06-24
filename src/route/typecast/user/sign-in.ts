@@ -1,5 +1,5 @@
 import express from 'express';
-import { Repository } from 'typeorm';
+import { Repository, AdvancedConsoleLogger } from 'typeorm';
 import { Form } from '../../../core/form';
 import { Route } from '../../../decorator/route';
 import { User } from '../../../entity/user';
@@ -54,7 +54,7 @@ export class TypecastUserSignInRoute implements IRoute {
             });
         }
 
-        if (await this.auth.verifyPassword(form.data.password, user.passwordHash)) {
+        if (!(await this.auth.verifyPassword(form.data.password, user.passwordHash))) {
             form.addError(
                 {
                     incorrect_username_or_password: 'typecast.error.user.incorrect_username_or_password',
@@ -67,7 +67,7 @@ export class TypecastUserSignInRoute implements IRoute {
             });
         }
 
-        if (!this.auth.signIn(req, res, user)) {
+        if (!(await this.auth.signIn(req, res, user))) {
             form.addError(
                 {
                     incorrect_username_or_password: 'typecast.error.data_process',

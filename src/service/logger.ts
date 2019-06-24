@@ -98,7 +98,7 @@ export class LoggerService {
             await this.logRepository.save(log);
         } catch (err) {
             // tslint:disable-next-line
-            //console.log(err);
+            console.log(err);
         }
 
         return true;

@@ -70,7 +70,8 @@ export class AuthService {
             expires: new Date(Date.now() + this.config.tokenExpiresIn * 1000),
             httpOnly: true,
             sameSite: 'Strict',
-            secure: true,
+            // TODO: set secure cookie
+            //secure: true,
         });
 
         // add user to req and res
