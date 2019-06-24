@@ -30,7 +30,7 @@ export class I18nService {
             }
         }
 
-        for (const localePath of localePaths.reverse()) {
+        for (const localePath of localePaths) {
             await this.loadLocales(localePath, this.catalog);
         }
     }
