@@ -1,14 +1,17 @@
 import * as nodePath from 'path';
-
+import { Repository } from 'typeorm';
 import { ApplicationConfig } from '../config/application-config';
+import { Container } from '../core/container';
 import { Service } from '../decorator/service';
 import { Log } from '../entity/log';
 import { FileSystemUtil } from '../util/file-system';
 import { StringUtil } from '../util/string';
+import { DatabaseService } from './database';
 
 @Service()
 export class LoggerService {
     private applicationConfig: ApplicationConfig;
+    private logRepository: Repository<Log>;
 
     private contextType: string = '';
     private contextName: string = '';
@@ -19,10 +22,6 @@ export class LoggerService {
 
     constructor(applicationConfig: ApplicationConfig) {
         this.applicationConfig = applicationConfig;
-    }
-
-    public async start(): Promise<void> {
-        // nothing todo
     }
 
     public async emergency(message: string, data?: any): Promise<void> {
@@ -62,6 +61,14 @@ export class LoggerService {
     }
 
     private async log(code: number, message: string, data?: any): Promise<void> {
+        if (0 === this.contextName.length) {
+            throw new Error('context name is empty');
+        }
+
+        if (0 === this.contextType.length) {
+            throw new Error('context type is empty');
+        }
+
         const date = new Date();
 
         // trim message
@@ -81,7 +88,19 @@ export class LoggerService {
     }
 
     private async saveToDB(log: Log): Promise<boolean> {
-        // await this.container.repository.log.save(log);
+        const database = await Container.get<DatabaseService>(DatabaseService);
+
+        try {
+            if (undefined === this.logRepository) {
+                this.logRepository = database.getRepository(Log);
+            }
+
+            await this.logRepository.save(log);
+        } catch (err) {
+            // tslint:disable-next-line
+            //console.log(err);
+        }
+
         return true;
     }
 
@@ -135,9 +154,19 @@ export class LoggerService {
         }
 
         const consoleOutput = `[${log.level}] [${log.contextType}/${log.contextName}] ${log.message} [${log.data}] [pid:${process.pid}]`;
+        const colors: { [key: number]: string } = {
+            0: '\x1b[31m',
+            1: '\x1b[31m',
+            2: '\x1b[31m',
+            3: '\x1b[31m',
+            4: '\x1b[33m',
+            5: '\x1b[34m',
+            6: '\x1b[34m',
+            7: '\x1b[37m',
+        };
 
         // tslint:disable-next-line
-        console.log(consoleOutput.replace(/\r?\n?/g, '').trim());
+        console.log(colors[log.code], consoleOutput.replace(/\r?\n?/g, '').trim(), '\x1b[0m');
     }
 
     private dateToString(date: Date): string {

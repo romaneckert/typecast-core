@@ -1,9 +1,10 @@
 import * as nodePath from 'path';
 import { ApplicationConfig } from '../config/application-config';
 import { ViewHelper } from '../decorator/view-helper';
+import { IViewHelper } from '../interface/view-helper';
 
 @ViewHelper()
-export class AssetViewHelper {
+export class AssetViewHelper implements IViewHelper {
     private applicationConfig: ApplicationConfig;
 
     public constructor(applicationConfig: ApplicationConfig) {

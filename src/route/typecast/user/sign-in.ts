@@ -1,18 +1,37 @@
 import express from 'express';
+import { Repository } from 'typeorm';
 import { Form } from '../../../core/form';
 import { Route } from '../../../decorator/route';
+import { User } from '../../../entity/user';
 import { IRoute } from '../../../interface/route';
+import { AuthService } from '../../../service/auth';
+import { DatabaseService } from '../../../service/database';
+import { LoggerService } from '../../../service/logger';
 import { UserSignInValidator } from '../../../validator/user/sign-in-validator';
 
 @Route()
 export class TypecastUserSignInRoute implements IRoute {
-    public name: '/typecast/user/sign-in';
-    public methods: ['get'];
-    public path: '/typecast/user/sign-in';
+    public name: string = '/typecast/user/sign-in';
+    public methods: string[] = ['get', 'post'];
+    public path: string = '/typecast/user/sign-in';
+
+    private auth: AuthService;
+    private logger: LoggerService;
+    private userRepository: Repository<User>;
+
+    public constructor(auth: AuthService, database: DatabaseService, logger: LoggerService) {
+        this.auth = auth;
+        this.logger = logger;
+        this.userRepository = database.getRepository(User);
+    }
 
     public async handle(req: express.Request, res: express.Response): Promise<void> {
-        /*
-        const form = await new Form(this.container, new UserSignInValidator()).handle(req);
+        // check if some users in db exists
+        if (0 === (await this.userRepository.count())) {
+            return res.redirect('/typecast/install');
+        }
+
+        const form = await new Form(new UserSignInValidator()).handle(req);
 
         if (!form.valid) {
             return res.render('typecast/user/sign-in', {
@@ -20,7 +39,7 @@ export class TypecastUserSignInRoute implements IRoute {
             });
         }
 
-        const user = await this.container.repository.user.findOne({ where: { email: form.data.email } });
+        const user = await this.userRepository.findOne({ where: { email: form.data.email } });
 
         if (undefined === user) {
             form.addError(
@@ -35,7 +54,7 @@ export class TypecastUserSignInRoute implements IRoute {
             });
         }
 
-        if (await this.container.service.auth.verifyPassword(form.data.password, user.passwordHash)) {
+        if (await this.auth.verifyPassword(form.data.password, user.passwordHash)) {
             form.addError(
                 {
                     incorrect_username_or_password: 'typecast.error.user.incorrect_username_or_password',
@@ -48,7 +67,7 @@ export class TypecastUserSignInRoute implements IRoute {
             });
         }
 
-        if (!this.container.service.auth.signIn(req, res, user)) {
+        if (!this.auth.signIn(req, res, user)) {
             form.addError(
                 {
                     incorrect_username_or_password: 'typecast.error.data_process',
@@ -61,7 +80,8 @@ export class TypecastUserSignInRoute implements IRoute {
             });
         }
 
+        this.logger.info(`user with id ${user.id} signed in`);
+
         return res.redirect('/typecast');
-        */
     }
 }

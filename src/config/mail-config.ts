@@ -16,7 +16,7 @@ export class MailConfig implements IConfig {
     }
 
     public validate() {
-        if ('string' === typeof this.url && 0 === this.url.length) {
+        if (0 === this.url.length) {
             throw new Error(`url not valid - have to be string - example: 'smtp://localhost:1025'`);
         }
     }

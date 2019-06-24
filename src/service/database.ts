@@ -1,21 +1,26 @@
-import { Connection, ConnectionOptions, createConnection } from 'typeorm';
+import { Connection, ConnectionOptions, createConnection, Repository } from 'typeorm';
 
 import { ApplicationConfig } from '../config/application-config';
 import { DatabaseConfig } from '../config/database-config';
 import { Service } from '../decorator/service';
-import { LoggerService } from './logger-service';
+import { LoggerService } from './logger';
 
 @Service()
 export class DatabaseService {
-    public connection: Connection;
+    public connected: boolean = false;
 
+    private connection: Connection;
     private applicationConfig: ApplicationConfig;
     private config: DatabaseConfig;
     private logger: LoggerService;
 
-    public constructor(config: DatabaseConfig, applicationConfig: ApplicationConfig, logger: LoggerService) {
-        this.config = config;
+    public constructor(
+        applicationConfig: ApplicationConfig,
+        config: DatabaseConfig,
+        logger: LoggerService,
+    ) {
         this.applicationConfig = applicationConfig;
+        this.config = config;
         this.logger = logger;
     }
 
@@ -40,9 +45,14 @@ export class DatabaseService {
         if (null === connection) {
             await this.logger.critical('can not connect to db');
         } else {
+            this.connected = true;
             this.connection = connection;
             await this.logger.notice('connected to db');
         }
+    }
+
+    public getRepository(type: any): Repository<any> {
+        return this.connection.getRepository(type);
     }
 
     public async stop(): Promise<boolean> {

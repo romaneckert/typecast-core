@@ -2,6 +2,7 @@ import * as nodePath from 'path';
 import * as pug from 'pug';
 import { ApplicationConfig } from '../config/application-config';
 import { ServerConfig } from '../config/server-config';
+import { Container } from '../core/container';
 import { Service } from '../decorator/service';
 import { FileSystemUtil } from '../util/file-system';
 
@@ -41,11 +42,12 @@ export class RendererService {
 
         locals.view = {};
 
-        // TODO: fix
-        /*
-        for (const [key, value] of Object.entries(this.serverConfig.viewHelper)) {
-            locals.view[key] = value.render.bind(value);
-        }*/
+        for (const viewHelper of Object.values(await Container.getViewHelpers())) {
+            let viewHelperName = viewHelper.constructor.name.replace('ViewHelper', '');
+            viewHelperName = viewHelperName.charAt(0).toLowerCase() + viewHelperName.slice(1);
+
+            locals.view[viewHelperName] = viewHelper.render.bind(viewHelper);
+        }
 
         callback(null, this.templates[filePath](locals, { cache: true }));
     }

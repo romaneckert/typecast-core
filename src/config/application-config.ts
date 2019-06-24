@@ -12,7 +12,7 @@ export class ApplicationConfig implements IConfig {
 
     constructor() {
         // baseUrl
-        this.baseUrl = String(process.env.NODE_ENV);
+        this.baseUrl = String(process.env.APP_BASE_URL);
 
         // context
         const processEnv = String(process.env.NODE_ENV);
@@ -27,8 +27,8 @@ export class ApplicationConfig implements IConfig {
             throw new Error('baseUrl is empty');
         }
 
-        if (undefined !== this.paths && 0 < this.paths.length) {
-            throw new Error('extensionPaths is empty');
+        if ('object' !== typeof this.paths || 0 === this.paths.length) {
+            throw new Error('paths is empty');
         }
     }
 }

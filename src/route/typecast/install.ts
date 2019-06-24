@@ -1,24 +1,49 @@
 import express from 'express';
+import { Repository, Server } from 'typeorm';
 import { Form } from '../../core/form';
 import { Route } from '../../decorator/route';
 import { User } from '../../entity/user';
 import { IRoute } from '../../interface/route';
+import { AuthService } from '../../service/auth';
+import { DatabaseService } from '../../service/database';
+import { I18nService } from '../../service/i18n';
+import { MailService } from '../../service/mail';
+import { ServerService } from '../../service/server';
 import { EmailValidator } from '../../validator/email-validator';
 
 @Route()
 export class TypecastInstallRoute implements IRoute {
-    public name: '/typecast/install';
-    public methods: ['get'];
-    public path: '/typecast/install';
+    public name: string = '/typecast/install';
+    public methods: string[] = ['get', 'post'];
+    public path: string = '/typecast/install';
+
+    private auth: AuthService;
+    private i18n: I18nService;
+    private mail: MailService;
+    private server: ServerService;
+    private userRepository: Repository<User>;
+
+    public constructor(
+        auth: AuthService,
+        database: DatabaseService,
+        i18n: I18nService,
+        mail: MailService,
+        server: ServerService,
+    ) {
+        this.auth = auth;
+        this.i18n = i18n;
+        this.mail = mail;
+        this.server = server;
+        this.userRepository = database.getRepository(User);
+    }
 
     public async handle(req: express.Request, res: express.Response): Promise<void> {
-        /*
         // check if some users in db exists
-        if (0 < (await this.container.repository.user.count())) {
+        if (0 < (await this.userRepository.count())) {
             return res.redirect('/typecast/user/sign-in');
         }
 
-        const form = await new Form(this.container, new EmailValidator()).handle(req);
+        const form = await new Form(new EmailValidator()).handle(req);
 
         if (!form.valid) {
             return res.render('typecast/install/user-creation', {
@@ -27,14 +52,14 @@ export class TypecastInstallRoute implements IRoute {
         }
 
         // check if user with email already exists
-        if (undefined !== (await this.container.repository.user.findOne({ where: { email: form.data.email } }))) {
+        if (undefined !== (await this.userRepository.findOne({ where: { email: form.data.email } }))) {
             return res.redirect('/typecast/install');
         }
 
         // generate password token
-        const passwordToken = await this.container.service.auth.generatePasswordToken();
+        const passwordToken = await this.auth.generatePasswordToken();
 
-        if (undefined !== (await this.container.repository.user.findOne({ where: { passwordToken } }))) {
+        if (undefined !== (await this.userRepository.findOne({ where: { passwordToken } }))) {
             throw new Error('user with password token already exists');
         }
 
@@ -44,22 +69,36 @@ export class TypecastInstallRoute implements IRoute {
         user.passwordTokenCreationDate = new Date();
         user.roles = ['admin', 'user'];
 
-        await this.container.repository.user.save(user);
+        await this.userRepository.save(user);
 
         // send email with confirm token
-        const html = await this.container.service.server.render('typecast/user/email/set-password', { user });
+        const html = await this.server.render('typecast/user/email/set-password', { user });
         const subject =
-            this.container.service.i18n.translate(res.locals.locale, 'application.title') +
+            this.i18n.translate(res.locals.locale, 'application.title') +
             ' | ' +
-            this.container.service.i18n.translate(res.locals.locale, 'typecast.user.email.password.subject');
+            this.i18n.translate(res.locals.locale, 'typecast.user.email.password.subject');
 
-        await this.container.service.mail.send({
-            html,
-            subject,
-            to: user.email,
-        });
+        try {
+            await this.mail.send({
+                html,
+                subject,
+                to: user.email,
+            });
+        } catch (err) {
+            await this.userRepository.remove(user);
+
+            form.addError(
+                {
+                    data_process: 'typecast.error.data_process',
+                },
+                'user',
+            );
+
+            return res.render('typecast/install/user-creation', {
+                form,
+            });
+        }
 
         return res.render('typecast/install/user-creation-success');
-        */
     }
 }

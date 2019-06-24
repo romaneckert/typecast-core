@@ -3,7 +3,7 @@ import { ApplicationConfig } from '../config/application-config';
 import { I18nConfig } from '../config/i18n-config';
 import { Service } from '../decorator/service';
 import { FileSystemUtil } from '../util/file-system';
-import { LoggerService } from './logger-service';
+import { LoggerService } from './logger';
 
 @Service()
 export class I18nService {

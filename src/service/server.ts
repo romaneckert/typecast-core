@@ -14,12 +14,12 @@ import { AccessMiddleware } from '../middleware/access';
 import { ErrorMiddleware } from '../middleware/error';
 import { NotFoundMiddleware } from '../middleware/not-found';
 import { FileSystemUtil } from '../util/file-system';
-import { LoggerService } from './logger-service';
-import { RendererService } from './renderer-service';
+import { LoggerService } from './logger';
+import { RendererService } from './renderer';
 
 @Service()
 export class ServerService {
-    public routes: { [key: string]: IRoute };
+    public routes: { [key: string]: IRoute } = {};
 
     private logger: LoggerService;
     private config: ServerConfig;
@@ -57,6 +57,7 @@ export class ServerService {
     }
 
     public async start(): Promise<void> {
+        this.renderer.start();
         this.router.enable('strict routing');
         this.router.use(helmet());
         this.router.use(compression());
@@ -73,7 +74,7 @@ export class ServerService {
         // register access middleware
         this.router.use(this.accessMiddleware.handle.bind(this.accessMiddleware));
 
-        this.registerRoutes();
+        await this.registerRoutes();
 
         // register error middleware
         this.router.use(this.errorMiddleware.handle.bind(this.errorMiddleware));
@@ -142,8 +143,8 @@ export class ServerService {
         await this.logger.notice('stopped');
     }
 
-    private registerRoutes() {
-        for (const route of Object.values(Container.routes)) {
+    private async registerRoutes() {
+        for (const route of Object.values(await Container.getRoutes())) {
             this.routes[route.name] = route;
         }
 

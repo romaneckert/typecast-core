@@ -1,13 +1,18 @@
+import * as dotenv from 'dotenv';
 import { Autoloader } from './core/autoloader';
 import { Container } from './core/container';
-import { DatabaseService } from './service/database-service';
-import { ServerService } from './service/server-service';
+import { DatabaseService } from './service/database';
+import { I18nService } from './service/i18n';
+import { MailService } from './service/mail';
+import { ServerService } from './service/server';
 
 export class Application {
     private autoloader: Autoloader;
     private paths: string[];
 
     constructor(paths?: string[]) {
+        dotenv.config();
+
         if (undefined === paths) {
             this.paths = [process.cwd()];
         } else {
@@ -20,14 +25,28 @@ export class Application {
     public async start() {
         await this.autoloader.load(this.paths);
 
-        console.log(Container);
+        for (const config of Object.values(await Container.getConfigs())) {
+            config.validate();
+        }
 
-        const database = Container.get<DatabaseService>(DatabaseService);
+        const database = await Container.get<DatabaseService>(DatabaseService);
         await database.start();
 
-        console.log(database.connection.options);
+        const i18n = await Container.get<I18nService>(I18nService);
+        await i18n.start();
 
-        const server = Container.get<ServerService>(ServerService);
+        const mail = await Container.get<MailService>(MailService);
+        await mail.start();
+
+        const server = await Container.get<ServerService>(ServerService);
         await server.start();
+    }
+
+    public async stop() {
+        const server = await Container.get<ServerService>(ServerService);
+        await server.stop();
+
+        const database = await Container.get<DatabaseService>(DatabaseService);
+        await database.stop();
     }
 }

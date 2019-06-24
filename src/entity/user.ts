@@ -1,5 +1,6 @@
-import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { Column, Entity, ObjectID, ObjectIdColumn, TableInheritance } from 'typeorm';
 
+// https://github.com/typeorm/typeorm/blob/master/docs/entity-inheritance.md
 @Entity()
 export class User {
     @ObjectIdColumn()
