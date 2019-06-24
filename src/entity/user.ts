@@ -1,4 +1,4 @@
-import { Column, Entity, ObjectID, ObjectIdColumn, TableInheritance } from 'typeorm';
+import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 
 // https://github.com/typeorm/typeorm/blob/master/docs/entity-inheritance.md
 @Entity()

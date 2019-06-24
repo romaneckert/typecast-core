@@ -9,7 +9,7 @@
         "build": "rm -rf dist && tsc && cp -rf package.json dist && cp -rf LICENSE dist && cp -rf README.md dist && cp -rf view dist && cp -rf public dist && cp -rf locale dist && cp -rf .env dist && cp -rf .npmignore dist",
         "format": "prettier --write 'src/**/*.ts' 'src/**/*.js'",
         "lint": "tslint -p tsconfig.json",
-        "test": "jest --config jestconfig.json --runInBand && npm run lint",
+        "test": "jest --config jest.config.js --runInBand && npm run lint",
         "preversion": "npm test",
         "version": "npm run format && git add -A src",
         "postversion": "git push && npm run build && cd dist && npm publish"
@@ -32,7 +32,7 @@
         "@types/helmet": "0.0.43",
         "@types/jest": "24.0.15",
         "@types/jsonwebtoken": "8.3.2",
-        "@types/node": "12.0.8",
+        "@types/node": "12.0.10",
         "@types/nodemailer": "^6.2.0",
         "@types/pug": "2.0.4",
         "gulp": "4.0.2",
@@ -43,7 +43,7 @@
         "node-sass": "4.12.0",
         "prettier": "^1.18.2",
         "ts-jest": "^24.0.2",
-        "tslint": "^5.17.0",
+        "tslint": "^5.18.0",
         "tslint-config-prettier": "^1.18.0",
         "typescript": "^3.5.2"
     },

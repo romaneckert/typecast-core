@@ -1,5 +1,4 @@
 import { Connection, ConnectionOptions, createConnection, Repository } from 'typeorm';
-
 import { ApplicationConfig } from '../config/application-config';
 import { DatabaseConfig } from '../config/database-config';
 import { Service } from '../decorator/service';
@@ -14,11 +13,7 @@ export class DatabaseService {
     private config: DatabaseConfig;
     private logger: LoggerService;
 
-    public constructor(
-        applicationConfig: ApplicationConfig,
-        config: DatabaseConfig,
-        logger: LoggerService,
-    ) {
+    public constructor(applicationConfig: ApplicationConfig, config: DatabaseConfig, logger: LoggerService) {
         this.applicationConfig = applicationConfig;
         this.config = config;
         this.logger = logger;

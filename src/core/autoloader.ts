@@ -21,7 +21,7 @@ export class Autoloader {
             if (await FileSystemUtil.isDirectory(filePath)) {
                 await this.import(filePath);
             } else if ((await FileSystemUtil.isFile(filePath)) && nodePath.parse(filePath).ext === '.js') {
-                import(filePath);
+                await import(filePath);
             }
         }
     }
