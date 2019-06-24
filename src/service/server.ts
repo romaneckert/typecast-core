@@ -87,7 +87,7 @@ export class ServerService {
 
         const viewPaths = [];
 
-        for (const path of this.applicationConfig.paths) {
+        for (const path of this.applicationConfig.paths.slice(0).reverse()) {
             const viewPath = nodePath.join(path, 'view/template');
 
             if (await FileSystemUtil.isDirectory(viewPath)) {
