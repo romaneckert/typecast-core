@@ -1,5 +1,6 @@
 var
 .env
 *.test.js
+*.test.d.ts
 *.map
 jest.config.js
