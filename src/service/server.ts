@@ -63,7 +63,7 @@ export class ServerService {
         this.router.use(compression());
         this.router.use(bodyParser.urlencoded({ extended: false }));
 
-        for (const path of this.applicationConfig.paths) {
+        for (const path of this.applicationConfig.paths.slice(0).reverse()) {
             const publicPath = nodePath.join(path, 'public');
 
             if (await FileSystemUtil.isDirectory(publicPath)) {

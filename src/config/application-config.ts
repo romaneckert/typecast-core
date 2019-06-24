@@ -7,7 +7,7 @@ export class ApplicationConfig implements IConfig {
     public baseUrl: string;
     public buildDate: Date = new Date();
     public context: string = 'production';
-    public paths: string[] = [process.cwd()];
+    public paths: string[];
     public rootPath: string = process.cwd();
 
     constructor() {

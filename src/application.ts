@@ -1,4 +1,5 @@
 import * as dotenv from 'dotenv';
+import { ApplicationConfig } from './config/application-config';
 import { Autoloader } from './core/autoloader';
 import { Container } from './core/container';
 import { DatabaseService } from './service/database';
@@ -24,6 +25,9 @@ export class Application {
 
     public async start() {
         await this.autoloader.load(this.paths);
+
+        const applicationConfig = await Container.get<ApplicationConfig>(ApplicationConfig);
+        applicationConfig.paths = this.paths;
 
         for (const config of Object.values(await Container.getConfigs())) {
             config.validate();
