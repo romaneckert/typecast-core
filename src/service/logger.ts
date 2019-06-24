@@ -10,11 +10,11 @@ import { DatabaseService } from './database';
 
 @Service()
 export class LoggerService {
+    public contextType: string = '';
+    public contextName: string = '';
+
     private applicationConfig: ApplicationConfig;
     private logRepository: Repository<Log>;
-
-    private contextType: string = '';
-    private contextName: string = '';
     private maxSizePerLogFile: number = 16 * 1024 * 1024;
     private maxLogRotationsPerType: number = 10;
     private maxHistoryLength: number = 1000;

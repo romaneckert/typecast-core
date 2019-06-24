@@ -7,7 +7,7 @@ import { MailService } from './service/mail';
 import { ServerService } from './service/server';
 
 export class Application {
-    private autoloader: Autoloader;
+    public autoloader: Autoloader;
     private paths: string[];
 
     constructor(paths?: string[]) {

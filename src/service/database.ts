@@ -20,15 +20,9 @@ export class DatabaseService {
     }
 
     public async start(): Promise<void> {
-        let fileType = 'js';
-
-        if ('test' === this.applicationConfig.context) {
-            fileType = 'ts';
-        }
-
         const config: ConnectionOptions = {
             database: this.config.database,
-            entities: [__dirname + '/../entity/*.' + fileType],
+            entities: [__dirname + '/../entity/*.js'],
             host: this.config.host,
             synchronize: true,
             type: 'mongodb',

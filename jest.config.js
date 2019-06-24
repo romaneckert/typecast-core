@@ -1,6 +1,4 @@
 module.exports = {
-    roots: ['<rootDir>/src'],
-    transform: {
-        '^.+\\.tsx?$': 'ts-jest',
-    },
+    coverageReporters: ['text'],
+    collectCoverage: true,
 };

@@ -2,4 +2,5 @@ node_modules
 /dist
 /var
 /public/assets/typecast/css
-/.env
+/.env.*
+!/.env.template

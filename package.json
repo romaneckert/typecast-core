@@ -5,11 +5,11 @@
     "scripts": {
         "gulp": "npx gulp",
         "start": "npm run build && cd dist && export NODE_ENV=production && node index.js",
-        "dev": "npm run build && cd dist && export NODE_ENV=development && node index.js",
-        "build": "rm -rf dist && tsc && cp -rf package.json dist && cp -rf LICENSE dist && cp -rf README.md dist && cp -rf view dist && cp -rf public dist && cp -rf locale dist && cp -rf .env dist && cp -rf .npmignore dist",
+        "dev": "npm run build && cp -rf .env.development dist/.env && cd dist && export NODE_ENV=development && node index.js",
+        "build": "rm -rf dist && tsc && cp -rf package.json dist && cp -rf LICENSE dist && cp -rf README.md dist && cp -rf view dist && cp -rf public dist && cp -rf locale dist && cp -rf .npmignore dist && cp -rf jest.config.js dist",
         "format": "prettier --write 'src/**/*.ts' 'src/**/*.js'",
         "lint": "tslint -p tsconfig.json",
-        "test": "jest --config jest.config.js --runInBand && npm run lint",
+        "test": "npm run build && cp -rf .env.test dist/.env && cd dist && jest --config jest.config.js --runInBand && cd ../ && npm run lint",
         "preversion": "npm test",
         "version": "npm run format && git add -A src",
         "postversion": "git push && npm run build && cd dist && npm publish"
