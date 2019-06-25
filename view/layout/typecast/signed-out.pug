@@ -7,7 +7,7 @@ block append head
 block body
     .typecast-page.typecast-page-panel
         .typecast-panel
-            a.typecast-logo.typecast-brand-name=view.translate(locale, 'application.title')
+            a.typecast-logo.typecast-brand-name(href=view.url('/typecast'))=view.translate(locale, 'application.title')
 
             .typecast-panel-content
                 block content
