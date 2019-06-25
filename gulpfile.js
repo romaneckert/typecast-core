@@ -27,7 +27,8 @@ function css() {
                 preserve: false,
             }),
         )
-        .pipe(gulp.dest('./public/assets/typecast/css'));
+        .pipe(gulp.dest('./public/assets/typecast/css'))
+        .pipe(gulp.dest('./dist/public/assets/typecast/css'));
 }
 
 function production() {

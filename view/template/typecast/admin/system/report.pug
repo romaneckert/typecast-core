@@ -1,0 +1,9 @@
+extends ../../../../layout/typecast/signed-in
+
+block append head
+    title=view.translate(locale, 'typecast.admin.system.report.title')
+    meta(name="description" content=view.translate(locale, 'typecast.admin.system.report.description'))
+
+block content
+
+    h1.h2=view.translate(locale, 'typecast.admin.system.report.headline')

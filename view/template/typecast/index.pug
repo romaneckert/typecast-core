@@ -1,16 +1,9 @@
 extends ../../layout/typecast/signed-in
 
 block append head
-    title=view.translate('typecast.index.title')
-    meta(name="description" content=view.translate('typecast.index.description'))
+    title=view.translate(locale, 'typecast.index.title')
+    meta(name="description" content=view.translate(locale, 'typecast.index.description'))
 
-block body
+block content
 
-    .typecast-toolbar-top
-        .typecast-toolbar-top-left
-
-        .typecast-toolbar-top-right
-            .typecast-toolbar-top-right-user=user.email
-
-
-    h1.h2=view.translate('typecast.index.headline')
+    h1.h2=view.translate(locale, 'typecast.index.headline')

@@ -6,3 +6,36 @@ block append head
 
 
 block body
+    .typecast-page.typecast-page-backend
+        .typecast-toolbar-top
+            .typecast-toolbar-top-left
+
+            .typecast-toolbar-top-right
+                a.typecast-toolbar-top-right-sign-out(href=view.url('/typecast/user/sign-out'))
+
+        .typecast-toolbar-left
+            .typecast-toolbar-left-brand-name=view.translate(locale, 'application.title') 
+
+            .typecast-toolbar-left-navigation
+                if typecast.module
+                    ul
+                        each level1data in typecast.module
+                            li 
+                                span=view.translate(locale, 'typecast.' + level1data.key + '.title')
+                                if level1data.children
+                                    ul
+                                        each level2data in level1data.children
+                                            if level2data.children
+                                                li.has-children
+                                                    a=view.translate(locale, 'typecast.' + level1data.key + '.' + level2data.key + '.title')
+                                                    ul
+                                                        each level3data in level2data.children
+                                                            li(style='display:none;')
+                                                                a(href=view.url(level3data.path))=view.translate(locale, 'typecast.' + level1data.key + '.' + level2data.key + '.' + level3data.key + '.title')
+                                            else 
+                                                li
+                                                    a(href=view.url(level3data.path))=view.translate(locale, 'typecast.' + level1data.key + '.' + level2data.key + '.' + level3data.key + '.title')
+
+        .typecast-content
+            block content        
+                h1.h2=view.translate(locale, 'typecast.index.headline')

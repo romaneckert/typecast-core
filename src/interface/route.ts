@@ -5,6 +5,9 @@ export interface IRoute {
     methods: string[];
     path: string;
     roles?: string[];
+    backendModuleMainKey?: string;
+    backendModuleSubKey?: string;
+    backendModuleTitleKey?: string;
 
     handle(req: express.Request, res: express.Response, next: () => void): Promise<void>;
 }

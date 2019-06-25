@@ -1,41 +1,49 @@
 body {
-  line-height: 20px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 13px;
-  font-weight: normal;
-  color: $color-dark-grey;
-  //background-color: $color-light-grey;
-  background-color: $color-dark-blue;
-  height: auto;
-  position: fixed;
-  width: 100%;
-  min-height: 100%;
-  padding:0px;
-  margin:0px;
+    line-height: 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: normal;
+    color: $color-dark-grey;
+    //background-color: $color-light-grey;
+    background-color: $color-dark-blue;
+    height: auto;
+    position: fixed;
+    width: 100%;
+    min-height: 100%;
+    padding: 0px;
+    margin: 0px;
 }
-input, button, label {
+input,
+button,
+label {
     font-family: 'Montserrat', sans-serif;
     font-size: 13px;
     font-weight: normal;
 }
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
     margin: 0px;
 }
-h1, .h1 {
+h1,
+.h1 {
     font-weight: 500;
     font-size: 24px;
     line-height: 30px;
     padding-bottom: 20px;
     color: $color-dark-grey;
 }
-h2, .h2 {
+h2,
+.h2 {
     font-weight: 500;
     font-size: 18px;
     line-height: 24px;
     padding-bottom: 20px;
     color: $color-dark-grey;
 }
-h3, .h3 {
+h3,
+.h3 {
     font-weight: 500;
     font-size: 16px;
     line-height: 20px;
@@ -43,7 +51,8 @@ h3, .h3 {
     color: $color-dark-grey;
 }
 
-h4, .h4 {
+h4,
+.h4 {
     font-weight: 500;
     font-size: 14px;
     line-height: 18px;
@@ -72,7 +81,7 @@ div {
 }
 form {
     box-sizing: border-box;
-    overflow:hidden;
+    overflow: hidden;
 }
 ul {
     padding: 0px 0px 10px 0px;
@@ -91,13 +100,13 @@ ul.typecast-errors {
         list-style-type: none;
 
         &:before {
-            content: "\f071";
+            content: '\f071';
             font-family: 'Font Awesome 5 Free';
             display: inline-block;
             font-size: 12px;
             font-weight: 900;
             padding-right: 6px;
             padding-left: 1px;
-          }
+        }
     }
 }

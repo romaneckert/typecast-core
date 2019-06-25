@@ -4,6 +4,7 @@ import { IMiddleware } from '../interface/middleware';
 import { AuthMiddleware } from '../middleware/auth';
 import { LocaleMiddleware } from '../middleware/locale';
 import { RolesMiddleware } from '../middleware/roles';
+import { TypecastMiddleware } from '../middleware/typecast';
 
 @Config()
 export class ServerConfig implements IConfig {
@@ -14,10 +15,12 @@ export class ServerConfig implements IConfig {
         authMiddleware: AuthMiddleware,
         localeMiddleware: LocaleMiddleware,
         rolesMiddleware: RolesMiddleware,
+        typecastMiddleware: TypecastMiddleware,
     ) {
         this.middlewares.push(authMiddleware);
         this.middlewares.push(localeMiddleware);
         this.middlewares.push(rolesMiddleware);
+        this.middlewares.push(typecastMiddleware);
     }
 
     public validate() {

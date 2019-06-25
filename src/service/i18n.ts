@@ -5,6 +5,7 @@ import { Service } from '../decorator/service';
 import { FileSystemUtil } from '../util/file-system';
 import { LoggerService } from './logger';
 
+// TODO: allow key.key1 and key.key1.key2
 @Service()
 export class I18nService {
     private catalog: { [key: string]: any } = {};
@@ -66,16 +67,12 @@ export class I18nService {
         }
 
         if ('string' === typeof translation) {
-            this.logger.debug(
-                `the translation key '${key}' could not be found for the locale ${locale}, fallback to ${this.config.defaultLocale}`,
-            );
+            this.logger.debug(`the translation key '${key}' could not be found for the locale ${locale}, fallback to ${this.config.defaultLocale}`);
 
             return this.addData(this.config.defaultLocale, key, translation, data);
         }
 
-        this.logger.warning(
-            `the translation key '${key}' could not be found for the default locale ${this.config.defaultLocale}`,
-        );
+        this.logger.warning(`the translation key '${key}' could not be found for the default locale ${this.config.defaultLocale}`);
 
         return key;
     }
