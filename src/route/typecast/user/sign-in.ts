@@ -1,5 +1,5 @@
 import express from 'express';
-import { Repository, AdvancedConsoleLogger } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Form } from '../../../core/form';
 import { Route } from '../../../decorator/route';
 import { User } from '../../../entity/user';

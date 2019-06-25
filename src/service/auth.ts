@@ -71,7 +71,7 @@ export class AuthService {
             httpOnly: true,
             sameSite: 'Strict',
             // TODO: set secure cookie
-            //secure: true,
+            // secure: true,
         });
 
         // add user to req and res
@@ -100,10 +100,7 @@ export class AuthService {
         }
 
         // validate json web token cookie
-        if (
-            'string' !== typeof req.cookies[this.config.tokenCookieName] ||
-            0 === req.cookies[this.config.tokenCookieName].length
-        ) {
+        if ('string' !== typeof req.cookies[this.config.tokenCookieName] || 0 === req.cookies[this.config.tokenCookieName].length) {
             return undefined;
         }
 
