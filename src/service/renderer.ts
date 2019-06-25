@@ -27,11 +27,7 @@ export class RendererService {
         }
     }
 
-    public async render(
-        filePath: string,
-        locals: { [key: string]: any },
-        callback: (val: any, template: any) => void,
-    ): Promise<void> {
+    public async render(filePath: string, locals: { [key: string]: any }, callback: (val: any, template: any) => void): Promise<void> {
         if ('function' !== typeof this.templates[filePath]) {
             throw new Error(`template ${filePath} does not exists`);
         }

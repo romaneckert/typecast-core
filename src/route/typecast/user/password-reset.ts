@@ -25,14 +25,7 @@ export class TypecastUserPasswordResetRoute implements IRoute {
     private server: ServerService;
     private userRepository: Repository<User>;
 
-    public constructor(
-        auth: AuthService,
-        database: DatabaseService,
-        i18n: I18nService,
-        logger: LoggerService,
-        mail: MailService,
-        server: ServerService,
-    ) {
+    public constructor(auth: AuthService, database: DatabaseService, i18n: I18nService, logger: LoggerService, mail: MailService, server: ServerService) {
         this.auth = auth;
         this.i18n = i18n;
         this.logger = logger;
@@ -83,10 +76,7 @@ export class TypecastUserPasswordResetRoute implements IRoute {
 
         // send email with confirm token
         const html = await this.server.render('typecast/user/email/set-password', { user });
-        const subject =
-            this.i18n.translate(res.locals.locale, 'application.title') +
-            ' | ' +
-            this.i18n.translate(res.locals.locale, 'typecast.user.email.password.subject');
+        const subject = this.i18n.translate(res.locals.locale, 'application.title') + ' | ' + this.i18n.translate(res.locals.locale, 'typecast.user.email.password.subject');
 
         await this.mail.send({
             html,

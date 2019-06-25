@@ -36,11 +36,7 @@ export class Form {
         this.errors = {};
 
         for (const validationError of Object.values(validationErrors)) {
-            this.errors[validationError.property] = new ValidationError(
-                validationError.property,
-                validationError.value,
-                this.cleanContraints(validationError.constraints),
-            );
+            this.errors[validationError.property] = new ValidationError(validationError.property, validationError.value, this.cleanContraints(validationError.constraints));
         }
 
         if (0 === Object.keys(this.errors).length) {

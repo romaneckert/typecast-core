@@ -11,12 +11,7 @@ export class ServerConfig implements IConfig {
     public port: number = 3000;
     public middlewares: IMiddleware[] = [];
 
-    public constructor(
-        authMiddleware: AuthMiddleware,
-        localeMiddleware: LocaleMiddleware,
-        rolesMiddleware: RolesMiddleware,
-        typecastMiddleware: TypecastMiddleware,
-    ) {
+    public constructor(authMiddleware: AuthMiddleware, localeMiddleware: LocaleMiddleware, rolesMiddleware: RolesMiddleware, typecastMiddleware: TypecastMiddleware) {
         this.middlewares.push(authMiddleware);
         this.middlewares.push(localeMiddleware);
         this.middlewares.push(rolesMiddleware);

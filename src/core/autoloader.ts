@@ -26,11 +26,7 @@ export class Autoloader {
 
             if (await FileSystemUtil.isDirectory(filePath)) {
                 await this.import(filePath);
-            } else if (
-                (await FileSystemUtil.isFile(filePath)) &&
-                nodePath.parse(filePath).ext === '.js' &&
-                -1 === nodePath.parse(filePath).name.indexOf('.test')
-            ) {
+            } else if ((await FileSystemUtil.isFile(filePath)) && nodePath.parse(filePath).ext === '.js' && -1 === nodePath.parse(filePath).name.indexOf('.test')) {
                 this.autoloadedFilesCounter++;
                 await import(filePath);
             }

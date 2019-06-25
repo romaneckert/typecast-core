@@ -23,13 +23,7 @@ export class TypecastInstallRoute implements IRoute {
     private server: ServerService;
     private userRepository: Repository<User>;
 
-    public constructor(
-        auth: AuthService,
-        database: DatabaseService,
-        i18n: I18nService,
-        mail: MailService,
-        server: ServerService,
-    ) {
+    public constructor(auth: AuthService, database: DatabaseService, i18n: I18nService, mail: MailService, server: ServerService) {
         this.auth = auth;
         this.i18n = i18n;
         this.mail = mail;
@@ -73,10 +67,7 @@ export class TypecastInstallRoute implements IRoute {
 
         // send email with confirm token
         const html = await this.server.render('typecast/user/email/set-password', { user });
-        const subject =
-            this.i18n.translate(res.locals.locale, 'application.title') +
-            ' | ' +
-            this.i18n.translate(res.locals.locale, 'typecast.user.email.password.subject');
+        const subject = this.i18n.translate(res.locals.locale, 'application.title') + ' | ' + this.i18n.translate(res.locals.locale, 'typecast.user.email.password.subject');
 
         try {
             await this.mail.send({

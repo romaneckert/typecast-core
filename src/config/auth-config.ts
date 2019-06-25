@@ -22,9 +22,7 @@ export class AuthConfig implements IConfig {
         if ('string' !== typeof this.secret || 10 > this.secret.length) {
             const exampleSecret = crypto.randomBytes(32).toString('hex');
 
-            throw new Error(
-                `secret not set or not valid - have to be string, minimum length 10 - example: ${exampleSecret}`,
-            );
+            throw new Error(`secret not set or not valid - have to be string, minimum length 10 - example: ${exampleSecret}`);
         }
     }
 }

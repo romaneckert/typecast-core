@@ -28,11 +28,7 @@ export class TypecastUserPasswordRoute implements IRoute {
         });
 
         // return password token expired after 24h
-        if (
-            undefined === user ||
-            undefined === user.passwordTokenCreationDate ||
-            new Date().valueOf() - user.passwordTokenCreationDate.valueOf() > 24 * 60 * 60 * 1000
-        ) {
+        if (undefined === user || undefined === user.passwordTokenCreationDate || new Date().valueOf() - user.passwordTokenCreationDate.valueOf() > 24 * 60 * 60 * 1000) {
             return res.render('typecast/user/password-token-expired');
         }
 

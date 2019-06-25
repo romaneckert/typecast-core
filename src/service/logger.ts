@@ -106,22 +106,8 @@ export class LoggerService {
 
     private async writeLog(log: Log) {
         const logFilePaths = [
-            nodePath.join(
-                this.applicationConfig.rootPath,
-                'var',
-                this.applicationConfig.context.toLowerCase(),
-                'log',
-                log.level + '.log',
-            ),
-            nodePath.join(
-                this.applicationConfig.rootPath,
-                'var',
-                this.applicationConfig.context.toLowerCase(),
-                'log',
-                log.contextType,
-                log.contextName,
-                log.level + '.log',
-            ),
+            nodePath.join(this.applicationConfig.rootPath, 'var', this.applicationConfig.context.toLowerCase(), 'log', log.level + '.log'),
+            nodePath.join(this.applicationConfig.rootPath, 'var', this.applicationConfig.context.toLowerCase(), 'log', log.contextType, log.contextName, log.level + '.log'),
         ];
 
         let output = '[' + this.dateToString(log.date) + '] ';
@@ -170,14 +156,6 @@ export class LoggerService {
     }
 
     private dateToString(date: Date): string {
-        return (
-            date.getFullYear() +
-            '-' +
-            ('0' + (date.getMonth() + 1)).slice(-2) +
-            '-' +
-            ('0' + date.getDate()).slice(-2) +
-            ' ' +
-            date.toTimeString().slice(0, 8)
-        );
+        return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + ' ' + date.toTimeString().slice(0, 8);
     }
 }
