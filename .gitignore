@@ -3,4 +3,4 @@ node_modules
 /var
 /public/assets/typecast/css
 /.env.*
-!/.env.template
+!/.env.example
