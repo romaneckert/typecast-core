@@ -8,6 +8,7 @@ export interface IRoute {
     backendModuleMainKey?: string;
     backendModuleSubKey?: string;
     backendModuleTitleKey?: string;
+    disabled?: boolean;
 
     handle(req: express.Request, res: express.Response, next: () => void): Promise<void>;
 }

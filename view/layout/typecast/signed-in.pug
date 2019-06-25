@@ -34,7 +34,7 @@ block body
                                                                 a(href=view.url(level3data.path))=view.translate(locale, 'typecast.' + level1data.key + '.' + level2data.key + '.' + level3data.key + '.title')
                                             else 
                                                 li
-                                                    a(href=view.url(level3data.path))=view.translate(locale, 'typecast.' + level1data.key + '.' + level2data.key + '.' + level3data.key + '.title')
+                                                    a(href=view.url(level2data.path))=view.translate(locale, 'typecast.' + level1data.key + '.' + level2data.key + '.title')
 
         .typecast-content
             block content        

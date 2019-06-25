@@ -27,7 +27,7 @@ export class TypecastMiddleware implements IMiddleware {
         };
 
         for (const [key, route] of await Object.entries(await Container.getRoutes())) {
-            if (undefined === route.backendModuleMainKey || undefined === route.backendModuleTitleKey) {
+            if (undefined === route.backendModuleMainKey || undefined === route.backendModuleTitleKey || true === route.disabled) {
                 continue;
             }
 
@@ -55,6 +55,16 @@ export class TypecastMiddleware implements IMiddleware {
                 this.typecastConfig.module[route.backendModuleMainKey].children[routeData.key] = routeData;
             }
         }
+
+        const orderedModules: { [key: string]: any } = {};
+        Object.keys(this.typecastConfig.module)
+            .sort()
+            .reverse()
+            .forEach(key => {
+                orderedModules[key] = this.typecastConfig.module[key];
+            });
+
+        this.typecastConfig.module = orderedModules;
 
         res.locals.typecast = this.typecastConfig;
 

@@ -11,6 +11,8 @@ export class IndexRoute implements IRoute {
     public methods: string[] = ['get'];
     public path: string = '/typecast';
     public roles: string[] = ['user'];
+    public backendModuleMainKey: string = 'main';
+    public backendModuleTitleKey: string = 'start';
 
     private logRepository: Repository<Log>;
 

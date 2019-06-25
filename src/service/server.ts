@@ -140,6 +140,9 @@ export class ServerService {
 
     private async registerRoutes() {
         for (const route of Object.values(await Container.getRoutes())) {
+            if (undefined !== route.disabled && true === route.disabled) {
+                continue;
+            }
             this.routes[route.name] = route;
         }
 
