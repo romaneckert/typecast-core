@@ -4,7 +4,7 @@ import { IRoute } from '../../../interface/route';
 import { AuthService } from '../../../service/auth';
 
 @Route()
-export class TypecastUserSignOutRoute implements IRoute {
+export class SignOutRoute implements IRoute {
     public name: string = '/typecast/user/sign-out';
     public methods: string[] = ['get'];
     public path: string = '/typecast/user/sign-out';

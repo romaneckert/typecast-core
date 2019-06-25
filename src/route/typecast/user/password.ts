@@ -9,7 +9,7 @@ import { DatabaseService } from '../../../service/database';
 import { PasswordValidator } from '../../../validator/password-validator';
 
 @Route()
-export class TypecastUserPasswordRoute implements IRoute {
+export class PasswordRoute implements IRoute {
     public name: string = '/typecast/user/password';
     public methods: string[] = ['get', 'post'];
     public path: string = '/typecast/user/password/:passwordToken';
