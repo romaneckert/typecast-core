@@ -105,7 +105,17 @@ export class AuthService {
         }
 
         // verify token
-        const data = Object(jwt.verify(req.cookies[this.config.tokenCookieName], this.config.secret));
+        let data;
+
+        try {
+            data = Object(jwt.verify(req.cookies[this.config.tokenCookieName], this.config.secret));
+        } catch (err) {
+            return undefined;
+        }
+
+        if (undefined === data) {
+            return data;
+        }
 
         // validate user data
         if ('object' !== typeof data.user || null === data.user) {
