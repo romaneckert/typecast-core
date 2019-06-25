@@ -35,24 +35,24 @@ export class AuthService {
         return crypto.randomBytes(32).toString('hex');
     }
 
-    public async signIn(req: express.Request, res: express.Response, user: User): Promise<boolean> {
+    public async generateJsonWebToken(user: User): Promise<string | undefined> {
         // validate user
         if ('object' !== typeof user || null === user) {
-            return false;
+            return undefined;
         }
 
         // validate user email
         if ('string' !== typeof user.email || 0 === user.email.length) {
-            return false;
+            return undefined;
         }
 
         // validate user roles
         if ('object' !== typeof user.roles || 0 === user.roles.length) {
-            return false;
+            return undefined;
         }
 
         // generate json web token
-        const token = jwt.sign(
+        return jwt.sign(
             {
                 user: {
                     email: user.email,
@@ -64,6 +64,14 @@ export class AuthService {
                 expiresIn: this.config.tokenExpiresIn,
             },
         );
+    }
+
+    public async signIn(res: express.Response, user: User): Promise<boolean> {
+        const token = this.generateJsonWebToken(user);
+
+        if (undefined === token) {
+            return false;
+        }
 
         // add json web token cookie
         res.cookie(this.config.tokenCookieName, token, {
@@ -140,7 +148,7 @@ export class AuthService {
         }
 
         // sign in user to refresh the json web token
-        this.signIn(req, res, user);
+        this.signIn(res, user);
 
         return user;
     }

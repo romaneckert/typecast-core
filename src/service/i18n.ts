@@ -4,6 +4,7 @@ import { I18nConfig } from '../config/i18n-config';
 import { Service } from '../decorator/service';
 import { FileSystemUtil } from '../util/file-system';
 import { LoggerService } from './logger';
+import { ValidationError } from '../core/validation-error';
 
 // TODO: allow key.key1 and key.key1.key2
 @Service()
@@ -34,6 +35,27 @@ export class I18nService {
         for (const localePath of localePaths) {
             await this.loadLocales(localePath, this.catalog);
         }
+    }
+
+    public translateErrors(locale: string, errors: { [key: string]: ValidationError } | null): { [key: string]: any } | null {
+        if (null === errors) {
+            return null;
+        }
+
+        const translatedErrors: { [key: string]: any } = {};
+
+        for (const [key, error] of Object.entries(errors)) {
+            translatedErrors[key] = {
+                errors: {},
+                property: error.property,
+            };
+
+            for (const [key2, error2] of Object.entries(error.errors)) {
+                translatedErrors[key].errors[key2] = this.translate(locale, error2);
+            }
+        }
+
+        return translatedErrors;
     }
 
     public translate(locale: string, key: string, data?: { [key: string]: any }) {

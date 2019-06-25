@@ -8,12 +8,13 @@ import * as nodePath from 'path';
 import { ApplicationConfig } from '../config/application-config';
 import { ServerConfig } from '../config/server-config';
 import { Container } from '../core/container';
-import { ErrorCatchHandler } from '../core/error-catch';
+import { ErrorCatchHandler } from '../core/handler';
 import { Service } from '../decorator/service';
 import { IRoute } from '../interface/route';
 import { AccessMiddleware } from '../middleware/access';
 import { ErrorMiddleware } from '../middleware/error';
 import { NotFoundMiddleware } from '../middleware/not-found';
+import { TypeMiddleware } from '../middleware/type';
 import { FileSystemUtil } from '../util/file-system';
 import { LoggerService } from './logger';
 import { RendererService } from './renderer';
@@ -56,6 +57,7 @@ export class ServerService {
         this.router.use(helmet());
         this.router.use(compression());
         this.router.use(cookieParser());
+        this.router.use(bodyParser.json());
         this.router.use(bodyParser.urlencoded({ extended: false }));
 
         for (const path of this.applicationConfig.paths.slice(0).reverse()) {
@@ -163,14 +165,14 @@ export class ServerService {
             }
 
             for (const method of route.methods) {
-                const errorCatchHandler = new ErrorCatchHandler(route);
+                const typeMiddleware = new TypeMiddleware(route);
 
                 switch (method) {
                     case 'get':
-                        this.router.get(route.path, errorCatchHandler.handle.bind(errorCatchHandler));
+                        this.router.get(route.path, typeMiddleware.handle.bind(typeMiddleware));
                         break;
                     case 'post':
-                        this.router.post(route.path, errorCatchHandler.handle.bind(errorCatchHandler));
+                        this.router.post(route.path, typeMiddleware.handle.bind(typeMiddleware));
                         break;
                     default:
                         throw new Error('method ' + method + ' is not supported');

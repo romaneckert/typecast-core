@@ -8,4 +8,8 @@ export class ValidationError {
         this.value = value;
         this.errors = errors;
     }
+
+    public translate(locale: string) {
+        console.log('translate');
+    }
 }
