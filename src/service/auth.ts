@@ -67,7 +67,7 @@ export class AuthService {
     }
 
     public async signIn(res: express.Response, user: User): Promise<boolean> {
-        const token = this.generateJsonWebToken(user);
+        const token = await this.generateJsonWebToken(user);
 
         if (undefined === token) {
             return false;

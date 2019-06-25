@@ -32,6 +32,13 @@ export class SignInRoute implements IRoute {
         const form = await new Form(new UserSignInValidator()).handle(req);
 
         if (!form.valid) {
+            form.addError(
+                {
+                    data_process: 'typecast.error.data_process',
+                },
+                'user',
+            );
+
             return res.status(500).json({
                 errors: this.i18n.translateErrors(res.locals.locale, form.errors),
             });

@@ -19,13 +19,6 @@ export class Form {
 
         // test if data is empty
         if ('object' !== typeof data || 0 === Object.keys(data).length) {
-            this.addError(
-                {
-                    data_process: 'typecast.error.data_process',
-                },
-                'user',
-            );
-
             return this;
         }
 
