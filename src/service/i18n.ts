@@ -84,14 +84,19 @@ export class I18nService {
             translation = null;
         }
 
-        if ('string' === typeof translation) {
-            return this.addData(locale, key, translation, data);
+        if ('string' !== typeof translation) {
+            this.logger.debug(`the translation key '${key}' could not be found for the locale ${locale}, fallback to ${this.config.defaultLocale}`);
+
+            // get translation for correct locale
+            try {
+                translation = key.split('.').reduce((o, i) => o[i], this.catalog[this.config.defaultLocale]);
+            } catch (err) {
+                translation = null;
+            }
         }
 
         if ('string' === typeof translation) {
-            this.logger.debug(`the translation key '${key}' could not be found for the locale ${locale}, fallback to ${this.config.defaultLocale}`);
-
-            return this.addData(this.config.defaultLocale, key, translation, data);
+            return this.addData(locale, key, translation, data);
         }
 
         this.logger.warning(`the translation key '${key}' could not be found for the default locale ${this.config.defaultLocale}`);
