@@ -8,11 +8,11 @@ export class ErrorCatchHandler {
         this.route = route;
     }
 
-    public async handle(req: express.Request, res: express.Response, next: (arg?: any) => void): Promise<void> {
+    public async handle(req: express.Request, res: express.Response, next: (arg?: any) => void): Promise<void | express.Response> {
         try {
             return await this.route.handle(req, res, next);
         } catch (err) {
-            next(err);
+            return next(err);
         }
     }
 }

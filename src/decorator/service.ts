@@ -1,6 +1,6 @@
 import { Container } from '../core/container';
 
-export const Service = (): ClassDecorator => {
+export const Service = (options?: { [key: string]: any }): ClassDecorator => {
     return target => {
         if (undefined === Container.classes.service) {
             Container.classes.service = [];
@@ -10,13 +10,19 @@ export const Service = (): ClassDecorator => {
 
         for (const option of Container.classes.service) {
             if (option.isPrototypeOf(target)) {
-                Container.classes.service[k] = target;
+                Container.classes.service[k] = {
+                    options,
+                    target,
+                };
                 return;
             }
 
             k++;
         }
 
-        Container.classes.service.push(target);
+        Container.classes.service.push({
+            options,
+            target,
+        });
     };
 };

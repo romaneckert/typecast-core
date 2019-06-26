@@ -1,6 +1,6 @@
 import { Container } from '../core/container';
 
-export const Config = (): ClassDecorator => {
+export const Config = (options?: { [key: string]: any }): ClassDecorator => {
     return target => {
         if (undefined === Container.classes.config) {
             Container.classes.config = [];
@@ -9,13 +9,19 @@ export const Config = (): ClassDecorator => {
         let k = 0;
         for (const option of Container.classes.config) {
             if (option.isPrototypeOf(target)) {
-                Container.classes.config[k] = target;
+                Container.classes.config[k] = {
+                    options,
+                    target,
+                };
                 return;
             }
 
             k++;
         }
 
-        Container.classes.config.push(target);
+        Container.classes.config.push({
+            options,
+            target,
+        });
     };
 };

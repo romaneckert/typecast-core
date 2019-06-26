@@ -10,7 +10,40 @@ import { I18nService } from '../../../service/i18n';
 import { LoggerService } from '../../../service/logger';
 import { UserSignInValidator } from '../../../validator/user/sign-in-validator';
 
-@Route()
+@Route({
+    openapi: {
+        post: {
+            consumes: ['application/json'],
+            description: 'User Sign In',
+            parameters: [
+                {
+                    description: 'user data for sign up',
+                    in: 'body',
+                    name: 'user',
+                    required: true,
+                    schema: {
+                        properties: {
+                            email: {
+                                type: 'string',
+                            },
+                            password: {
+                                type: 'string',
+                            },
+                        },
+                        required: ['email', 'password'],
+                        type: 'object',
+                    },
+                },
+            ],
+            produces: ['application/json'],
+            responses: {
+                '200': {
+                    description: 'response',
+                },
+            },
+        },
+    },
+})
 export class SignInRoute implements IRoute {
     public name: string = '/typecast/user/sign-in';
     public methods: string[] = ['get', 'post'];

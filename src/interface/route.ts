@@ -10,6 +10,6 @@ export interface IRoute {
     backendModuleTitleKey?: string;
     disabled?: boolean;
 
-    handle(req: express.Request, res: express.Response, next: () => void): Promise<void>;
+    handle(req: express.Request, res: express.Response, next: () => void): Promise<void | express.Response>;
     handleJson?(req: express.Request, res: express.Response, next: () => void): Promise<express.Response>;
 }

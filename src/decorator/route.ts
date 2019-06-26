@@ -1,6 +1,6 @@
 import { Container } from '../core/container';
 
-export const Route = (): ClassDecorator => {
+export const Route = (options?: { [key: string]: any }): ClassDecorator => {
     return target => {
         if (undefined === Container.classes.route) {
             Container.classes.route = [];
@@ -10,13 +10,19 @@ export const Route = (): ClassDecorator => {
 
         for (const option of Container.classes.route) {
             if (option.isPrototypeOf(target)) {
-                Container.classes.route[k] = target;
+                Container.classes.route[k] = {
+                    options,
+                    target,
+                };
                 return;
             }
 
             k++;
         }
 
-        Container.classes.route.push(target);
+        Container.classes.route.push({
+            options,
+            target,
+        });
     };
 };

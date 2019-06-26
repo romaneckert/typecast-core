@@ -1,6 +1,6 @@
 import { Container } from '../core/container';
 
-export const ViewHelper = (): ClassDecorator => {
+export const ViewHelper = (options?: { [key: string]: any }): ClassDecorator => {
     return target => {
         if (undefined === Container.classes.viewHelper) {
             Container.classes.viewHelper = [];
@@ -10,13 +10,19 @@ export const ViewHelper = (): ClassDecorator => {
 
         for (const option of Container.classes.viewHelper) {
             if (option.isPrototypeOf(target)) {
-                Container.classes.viewHelper[k] = target;
+                Container.classes.viewHelper[k] = {
+                    options,
+                    target,
+                };
                 return;
             }
 
             k++;
         }
 
-        Container.classes.viewHelper.push(target);
+        Container.classes.viewHelper.push({
+            options,
+            target,
+        });
     };
 };

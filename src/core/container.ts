@@ -10,15 +10,15 @@ export class Container {
             this.loggerClass = (await import('../service/logger')).LoggerService;
         }
 
-        let resolvedTarget;
+        let resolvedOption;
         let resolvedNamespace;
         let i: number = 0;
         let key: string = '';
 
         for (const [namespace, classesOfNamespace] of Object.entries(this.classes)) {
             for (const option of classesOfNamespace) {
-                if (target.isPrototypeOf(option) || target === option) {
-                    resolvedTarget = option;
+                if (target.isPrototypeOf(option.target) || target === option.target) {
+                    resolvedOption = option;
                     resolvedNamespace = namespace;
                     key = i + '_' + additionalKey;
                     break;
@@ -27,7 +27,7 @@ export class Container {
                 i++;
             }
 
-            if (undefined !== resolvedTarget) {
+            if (undefined !== resolvedOption) {
                 break;
             }
         }
@@ -40,7 +40,7 @@ export class Container {
             this.instances[resolvedNamespace] = {};
         }
 
-        if (undefined === resolvedTarget) {
+        if (undefined === resolvedOption) {
             throw new Error(`can not find class`);
         }
 
@@ -48,14 +48,14 @@ export class Container {
             return this.instances[resolvedNamespace][key];
         }
 
-        const params = Reflect.getMetadata('design:paramtypes', resolvedTarget) || [];
+        const params = Reflect.getMetadata('design:paramtypes', resolvedOption.target) || [];
 
         const injections = [];
 
         for (const param of params) {
             if (param.isPrototypeOf(this.loggerClass) || param === this.loggerClass) {
                 const contextType = resolvedNamespace;
-                const contextName = resolvedTarget.name
+                const contextName = resolvedOption.target.name
                     .replace('Service', '')
                     .replace('Route', '')
                     .replace('ViewHelper', '')
@@ -72,12 +72,15 @@ export class Container {
             }
         }
 
-        return (this.instances[resolvedNamespace][key] = new resolvedTarget(...injections));
+        const instance = new resolvedOption.target(...injections);
+        instance.__options = resolvedOption.options;
+
+        return (this.instances[resolvedNamespace][key] = instance);
     }
 
     public static async getConfigs(): Promise<{ [key: string]: IConfig }> {
         for (const option of this.classes.config) {
-            await this.get(option);
+            await this.get(option.target);
         }
 
         return this.instances.config;
@@ -85,7 +88,7 @@ export class Container {
 
     public static async getViewHelpers(): Promise<{ [key: string]: IViewHelper }> {
         for (const option of this.classes.viewHelper) {
-            await this.get(option);
+            await this.get(option.target);
         }
 
         return this.instances.viewHelper;
@@ -93,7 +96,7 @@ export class Container {
 
     public static async getRoutes(): Promise<{ [key: string]: IRoute }> {
         for (const option of this.classes.route) {
-            await this.get(option);
+            await this.get(option.target);
         }
 
         return this.instances.route;
