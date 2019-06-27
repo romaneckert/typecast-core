@@ -1,4 +1,5 @@
-import { Connection, ConnectionOptions, createConnection, Repository } from 'typeorm';
+import { Connection, createConnection, Repository } from 'typeorm';
+import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOptions';
 import { ApplicationConfig } from '../config/application-config';
 import { DatabaseConfig } from '../config/database-config';
 import { Service } from '../decorator/service';
@@ -20,10 +21,11 @@ export class DatabaseService {
     }
 
     public async start(): Promise<void> {
-        const config: ConnectionOptions = {
+        const config: MongoConnectionOptions = {
             database: this.config.database,
             entities: [__dirname + '/../entity/*.js'],
             host: this.config.host,
+            reconnectTries: 2,
             synchronize: true,
             type: 'mongodb',
             useNewUrlParser: true,

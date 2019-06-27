@@ -64,14 +64,16 @@ export class SignInRoute implements IRoute {
     public async handleJson(req: express.Request, res: express.Response): Promise<express.Response> {
         const form = await new Form(new UserSignInValidator()).handle(req);
 
-        if (!form.valid) {
+        if (!form.submitted) {
             form.addError(
                 {
                     data_process: 'typecast.error.data_process',
                 },
                 'user',
             );
+        }
 
+        if (!form.valid) {
             return res.status(500).json({
                 errors: this.i18n.translateErrors(res.locals.locale, form.errors),
             });

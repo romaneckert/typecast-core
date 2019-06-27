@@ -7,7 +7,7 @@ import { ValidationError } from './validation-error';
 export class Form {
     public submitted: boolean = false;
     public valid: boolean = false;
-    public errors: { [key: string]: ValidationError } | null = null;
+    public errors: { [key: string]: ValidationError } = {};
     public data: any;
 
     public constructor(validator: any) {
@@ -15,6 +15,8 @@ export class Form {
     }
 
     public async handle(req: express.Request): Promise<Form> {
+        this.errors = {};
+
         const data = req.body;
 
         // test if data is empty
@@ -33,15 +35,12 @@ export class Form {
 
         const validationErrors: ClassValidationError[] = await validate(this.data);
 
-        this.errors = {};
-
         for (const validationError of Object.values(validationErrors)) {
-            this.errors[validationError.property] = new ValidationError(validationError.property, validationError.value, this.cleanContraints(validationError.constraints));
+            this.addError(validationError.constraints, validationError.property, validationError.value);
         }
 
         if (0 === Object.keys(this.errors).length) {
             this.valid = true;
-            this.errors = null;
         }
 
         return this;
@@ -54,6 +53,16 @@ export class Form {
 
         this.errors[property] = new ValidationError(property, value, this.cleanContraints(constraints));
         this.valid = false;
+
+        const orderedErrors: { [key: string]: ValidationError } = {};
+        Object.keys(this.errors)
+            .sort()
+            .reverse()
+            .forEach(key => {
+                orderedErrors[key] = this.errors[key];
+            });
+
+        this.errors = orderedErrors;
     }
 
     private cleanContraints(constraints: { [key: string]: string }): { [key: string]: string } {
