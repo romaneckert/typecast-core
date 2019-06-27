@@ -14,7 +14,7 @@ export class ApiDoc implements IRoute {
 
     private applicationConfig: ApplicationConfig;
     private i18n: I18nService;
-    private swagger: any;
+    private openAPI: any;
 
     public constructor(applicationConfig: ApplicationConfig, i18n: I18nService) {
         this.applicationConfig = applicationConfig;
@@ -24,17 +24,17 @@ export class ApiDoc implements IRoute {
     public async handle(req: express.Request, res: express.Response): Promise<express.Response> {
         await this.generateDoc(res.locals.locale);
 
-        return res.json(this.swagger);
+        return res.json(this.openAPI);
     }
 
     private async generateDoc(locale: string): Promise<void> {
-        if (undefined !== this.swagger) {
+        if (undefined !== this.openAPI) {
             return;
         }
 
         const routes = await Container.getRoutes();
 
-        this.swagger = {
+        this.openAPI = {
             components: {
                 securitySchemes: {
                     bearerAuth: {
@@ -72,7 +72,7 @@ export class ApiDoc implements IRoute {
                 }
             }
 
-            this.swagger.paths[route.path] = options.openapi;
+            this.openAPI.paths[route.path] = options.openapi;
         }
     }
 }
