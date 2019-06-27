@@ -1,5 +1,7 @@
+import * as nodePath from 'path';
 import { Config } from '../decorator/config';
 import { IConfig } from '../interface/config';
+import { FileSystemUtil } from '../util/file-system';
 
 @Config()
 export class ApplicationConfig implements IConfig {
@@ -9,6 +11,7 @@ export class ApplicationConfig implements IConfig {
     public context: string = 'production';
     public paths: string[];
     public rootPath: string = process.cwd();
+    public version: string;
 
     constructor() {
         // baseUrl
@@ -20,6 +23,16 @@ export class ApplicationConfig implements IConfig {
         if (-1 !== this.allowedContexts.indexOf(processEnv)) {
             this.context = processEnv;
         }
+
+        const pathToPackageJson = nodePath.join(process.cwd(), 'package.json');
+
+        if (!FileSystemUtil.isFileSync(pathToPackageJson)) {
+            throw new Error(`${pathToPackageJson} does not exists`);
+        }
+
+        const data = JSON.parse(String(FileSystemUtil.readFileSync(pathToPackageJson)));
+
+        this.version = String(data.version);
     }
 
     public validate() {

@@ -13,32 +13,35 @@ import { UserSignInValidator } from '../../../validator/user/sign-in-validator';
 @Route({
     openapi: {
         post: {
-            consumes: ['application/json'],
-            description: 'User Sign In',
-            parameters: [
-                {
-                    description: 'user data for sign up',
-                    in: 'body',
-                    name: 'user',
-                    required: true,
-                    schema: {
-                        properties: {
-                            email: {
-                                type: 'string',
+            requestBody: {
+                content: {
+                    'application/json': {
+                        schema: {
+                            properties: {
+                                email: {
+                                    type: 'string',
+                                },
+                                password: {
+                                    type: 'string',
+                                },
                             },
-                            password: {
-                                type: 'string',
-                            },
+                            required: ['email', 'password'],
+                            type: 'object',
                         },
-                        required: ['email', 'password'],
-                        type: 'object',
                     },
                 },
-            ],
-            produces: ['application/json'],
+                required: true,
+            },
             responses: {
                 '200': {
-                    description: 'response',
+                    content: {
+                        'application/json': {
+                            example: {
+                                token: 'xyz',
+                            },
+                        },
+                    },
+                    description: '200',
                 },
             },
         },

@@ -33,33 +33,24 @@ export class ApiDoc implements IRoute {
         }
 
         const routes = await Container.getRoutes();
-        const baseUrl = url.parse(this.applicationConfig.baseUrl);
-
-        let scheme = 'http';
-
-        if (undefined !== baseUrl.protocol) {
-            scheme = baseUrl.protocol.replace(':', '');
-        }
 
         this.swagger = {
-            basePath: '',
-            consumes: ['application/json'],
-            host: baseUrl.host,
-            info: {
-                title: this.i18n.translate(locale, 'application.title'),
-                version: '1.0.0',
-            },
-            paths: {},
-            produces: ['application/json'],
-            schemes: [scheme],
-            securityDefinitions: {
-                jwt: {
-                    bearerFormat: 'JWT',
-                    scheme: 'bearer',
-                    type: 'http',
+            components: {
+                securitySchemes: {
+                    bearerAuth: {
+                        bearerFormat: 'JWT',
+                        scheme: 'bearer',
+                        type: 'http',
+                    },
                 },
             },
-            swagger: '2.0',
+            info: {
+                title: this.i18n.translate(locale, 'application.title'),
+                version: this.applicationConfig.version,
+            },
+            openapi: '3.0.0',
+            paths: {},
+            servers: [{ url: this.applicationConfig.baseUrl }],
         };
 
         for (const [key, route] of Object.entries(routes)) {

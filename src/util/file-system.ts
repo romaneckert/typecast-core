@@ -26,6 +26,18 @@ export class FileSystemUtil {
         return stats.isFile();
     }
 
+    public static isFileSync(path: string): boolean {
+        let stats = null;
+
+        try {
+            stats = nodeFs.lstatSync(path);
+        } catch (err) {
+            return false;
+        }
+
+        return stats.isFile();
+    }
+
     public static async isSymbolicLink(path: nodeFs.PathLike): Promise<boolean> {
         let stats = null;
 
@@ -86,6 +98,14 @@ export class FileSystemUtil {
         }
 
         return nodeFs.promises.readFile(path, options);
+    }
+
+    public static readFileSync(path: nodeFs.PathLike, options?: any): Buffer {
+        if (undefined === options) {
+            options = 'utf8';
+        }
+
+        return nodeFs.readFileSync(path, options);
     }
 
     public static async readDirectory(path: nodeFs.PathLike): Promise<string[]> {
