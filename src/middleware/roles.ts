@@ -47,6 +47,11 @@ export class RolesMiddleware implements IMiddleware {
             }
         }
 
+        // output json if header context type set to application/json
+        if (req.headers['content-type'] === 'application/json') {
+            return res.status(403).json();
+        }
+
         // redirect to redirect path / maybe sign in route
         return res.redirect(this.authConfig.redirectPath);
     }
