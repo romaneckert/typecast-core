@@ -1,16 +1,16 @@
 import express from 'express';
 import * as url from 'url';
-import { ApplicationConfig } from '../../../config/application-config';
-import { Container } from '../../../core/container';
-import { Route } from '../../../decorator/route';
-import { IRoute } from '../../../interface/route';
-import { I18nService } from '../../../service/i18n';
+import { ApplicationConfig } from '../../config/application-config';
+import { Container } from '../../core/container';
+import { Route } from '../../decorator/route';
+import { IRoute } from '../../interface/route';
+import { I18nService } from '../../service/i18n';
 
 @Route()
 export class ApiDoc implements IRoute {
-    public name: string = '/typecast/api/doc';
+    public name: string = '/api/doc';
     public methods: string[] = ['get'];
-    public path: string = '/typecast/api/doc';
+    public path: string = '/api/doc';
 
     private applicationConfig: ApplicationConfig;
     private i18n: I18nService;

@@ -1,14 +1,14 @@
 import express from 'express';
 import { Repository } from 'typeorm';
-import { Form } from '../../../../core/form';
-import { Route } from '../../../../decorator/route';
-import { User } from '../../../../entity/user';
-import { IRoute } from '../../../../interface/route';
-import { AuthService } from '../../../../service/auth';
-import { DatabaseService } from '../../../../service/database';
-import { I18nService } from '../../../../service/i18n';
-import { LoggerService } from '../../../../service/logger';
-import { UserSignInValidator } from '../../../../validator/user/sign-in-validator';
+import { Form } from '../../../core/form';
+import { Route } from '../../../decorator/route';
+import { User } from '../../../entity/user';
+import { IRoute } from '../../../interface/route';
+import { AuthService } from '../../../service/auth';
+import { DatabaseService } from '../../../service/database';
+import { I18nService } from '../../../service/i18n';
+import { LoggerService } from '../../../service/logger';
+import { UserSignInValidator } from '../../../validator/user/sign-in-validator';
 
 @Route({
     openapi: {
