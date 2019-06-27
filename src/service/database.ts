@@ -1,8 +1,10 @@
+import * as nodePath from 'path';
 import { Connection, createConnection, Repository } from 'typeorm';
 import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOptions';
 import { ApplicationConfig } from '../config/application-config';
 import { DatabaseConfig } from '../config/database-config';
 import { Service } from '../decorator/service';
+import { FileSystemUtil } from '../util/file-system';
 import { LoggerService } from './logger';
 
 @Service()
@@ -21,9 +23,19 @@ export class DatabaseService {
     }
 
     public async start(): Promise<void> {
+        const entityPaths = [];
+
+        for (const applicationPath of this.applicationConfig.paths) {
+            const entityPath = nodePath.join(applicationPath, 'entity');
+
+            if (await FileSystemUtil.isDirectory(entityPath)) {
+                entityPaths.push(nodePath.join(entityPath, '*.js'));
+            }
+        }
+
         const config: MongoConnectionOptions = {
             database: this.config.database,
-            entities: [__dirname + '/../entity/*.js'],
+            entities: entityPaths,
             host: this.config.host,
             reconnectTries: 2,
             synchronize: true,
