@@ -56,7 +56,26 @@ export class ServerService {
         this.router.use(helmet());
         this.router.use(compression());
         this.router.use(cookieParser());
-        this.router.use(bodyParser.json());
+        this.router.use(
+            bodyParser.json({
+                reviver: (key, value) => {
+                    let match;
+                    const regexIso8601 = /^(\d{4}|\+\d{6})(?:-(\d{2})(?:-(\d{2})(?:T(\d{2}):(\d{2}):(\d{2})\.(\d{1,})(Z|([\-+])(\d{2}):(\d{2}))?)?)?)?$/;
+
+                    if ('string' === typeof value) {
+                        match = value.match(regexIso8601);
+                    }
+
+                    if (match) {
+                        const milliseconds = Date.parse(match[0]);
+                        if (!isNaN(milliseconds)) {
+                            return new Date(milliseconds);
+                        }
+                    }
+                    return value;
+                },
+            }),
+        );
         this.router.use(bodyParser.urlencoded({ extended: false }));
 
         for (const path of this.applicationConfig.paths.slice(0).reverse()) {
