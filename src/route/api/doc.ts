@@ -52,6 +52,13 @@ export class ApiDoc implements IRoute {
             paths: {},
             produces: ['application/json'],
             schemes: [scheme],
+            securityDefinitions: {
+                jwt: {
+                    bearerFormat: 'JWT',
+                    scheme: 'bearer',
+                    type: 'http',
+                },
+            },
             swagger: '2.0',
         };
 
