@@ -102,13 +102,19 @@ export class AuthService {
             return undefined;
         }
 
-        // validate cookies
-        if ('object' !== typeof req.cookies || null === req.cookies) {
-            return undefined;
+        let token = null;
+
+        // try to get token from authorization header
+        if ('string' === typeof req.headers.authorization && 0 === req.headers.authorization.indexOf('Bearer ')) {
+            token = req.headers.authorization.replace('Bearer ', '');
         }
 
-        // validate json web token cookie
-        if ('string' !== typeof req.cookies[this.config.tokenCookieName] || 0 === req.cookies[this.config.tokenCookieName].length) {
+        // try to get token from cookie
+        if ('object' === typeof req.cookies && null !== req.cookies && 'string' === typeof req.cookies[this.config.tokenCookieName] && 0 < req.cookies[this.config.tokenCookieName].length) {
+            token = req.cookies[this.config.tokenCookieName];
+        }
+
+        if (token === null) {
             return undefined;
         }
 
