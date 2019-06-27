@@ -1,18 +1,19 @@
 import express from 'express';
+import { IMiddleware } from '../interface/middleware';
 import { IRoute } from '../interface/route';
 
-export class ErrorCatchHandler {
+export class HandleMiddleware implements IMiddleware {
     public route: IRoute;
 
     constructor(route: IRoute) {
         this.route = route;
     }
 
-    public async handle(req: express.Request, res: express.Response, next: (arg?: any) => void): Promise<void | express.Response> {
+    public async handle(req: express.Request, res: express.Response, next: (arg?: any) => void): Promise<any> {
         try {
             return await this.route.handle(req, res, next);
         } catch (err) {
-            return next(err);
+            next(err);
         }
     }
 }

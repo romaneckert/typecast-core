@@ -8,13 +8,12 @@ import * as nodePath from 'path';
 import { ApplicationConfig } from '../config/application-config';
 import { ServerConfig } from '../config/server-config';
 import { Container } from '../core/container';
-import { ErrorCatchHandler } from '../core/handler';
 import { Service } from '../decorator/service';
 import { IRoute } from '../interface/route';
 import { AccessMiddleware } from '../middleware/access';
 import { ErrorMiddleware } from '../middleware/error';
+import { HandleMiddleware } from '../middleware/handle';
 import { NotFoundMiddleware } from '../middleware/not-found';
-import { TypeMiddleware } from '../middleware/type';
 import { FileSystemUtil } from '../util/file-system';
 import { LoggerService } from './logger';
 import { RendererService } from './renderer';
@@ -165,14 +164,14 @@ export class ServerService {
             }
 
             for (const method of route.methods) {
-                const typeMiddleware = new TypeMiddleware(route);
+                const handleMiddleware = new HandleMiddleware(route);
 
                 switch (method) {
                     case 'get':
-                        this.router.get(route.path, typeMiddleware.handle.bind(typeMiddleware));
+                        this.router.get(route.path, handleMiddleware.handle.bind(handleMiddleware));
                         break;
                     case 'post':
-                        this.router.post(route.path, typeMiddleware.handle.bind(typeMiddleware));
+                        this.router.post(route.path, handleMiddleware.handle.bind(handleMiddleware));
                         break;
                     default:
                         throw new Error('method ' + method + ' is not supported');
