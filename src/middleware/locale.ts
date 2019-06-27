@@ -28,6 +28,11 @@ export class LocaleMiddleware implements IMiddleware {
             }
         }
 
+        // set default locale
+        if (!this.i18nConfig.locales.includes(locale)) {
+            locale = this.i18nConfig.defaultLocale;
+        }
+
         res.locals.locale = locale;
 
         return next();
