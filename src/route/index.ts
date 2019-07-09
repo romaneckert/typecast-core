@@ -1,10 +1,12 @@
 import express from 'express';
 import { Repository } from 'typeorm';
+import { Form } from '../core/form';
 import { ValidationError } from '../core/validation-error';
 import { Route } from '../decorator/route';
 import { Log } from '../entity/log';
 import { IRoute } from '../interface/route';
 import { DatabaseService } from '../service/database';
+import { UserSignInValidator } from '../validator/user/sign-in-validator';
 
 @Route()
 export class IndexRoute implements IRoute {
@@ -19,17 +21,13 @@ export class IndexRoute implements IRoute {
     }
 
     public async handle(req: express.Request, res: express.Response): Promise<void> {
-        const errors = [
-            new ValidationError('password', '', {
-                short: 'typecast.error.password.min_length_8',
-                special_chars: 'typecast.error.password.one_special_char_required',
-            }),
-        ];
-
+        const form = await new Form(new UserSignInValidator()).handle(req);
         const logs = await this.logRepository.find({ take: 10, order: { date: 'DESC' } });
 
+        await form.validate();
+
         return res.render('index', {
-            errors,
+            form,
             logs,
         });
     }

@@ -57,12 +57,7 @@ export class PasswordResetRoute implements IRoute {
         if (undefined !== (await this.userRepository.findOne({ where: { passwordToken } }))) {
             this.logger.error('password token already exists');
 
-            form.addError(
-                {
-                    data_process: 'typecast.error.data_process',
-                },
-                'user',
-            );
+            await form.error('user');
 
             return res.render('typecast/user/password-reset', {
                 form,

@@ -33,45 +33,56 @@ export class Form {
             }
         }
 
+        await this.validate();
+
+        return this;
+    }
+
+    public async validate(): Promise<void> {
         const validationErrors: ClassValidationError[] = await validate(this.data);
 
         for (const validationError of Object.values(validationErrors)) {
-            this.addError(validationError.constraints, validationError.property, validationError.value);
+            for (const [key, message] of Object.entries(validationError.constraints)) {
+                this.error(validationError.property, key, message, validationError.value);
+            }
         }
 
         if (0 === Object.keys(this.errors).length) {
             this.valid = true;
         }
-
-        return this;
     }
 
-    public addError(constraints: { [key: string]: string }, property: string, value: string = ''): void {
+    public async error(property: string, key: string = '', message: string = '', value: string = ''): Promise<void> {
         if (null === this.errors) {
             this.errors = {};
         }
 
-        this.errors[property] = new ValidationError(property, value, this.cleanContraints(constraints));
+        if ('string' !== typeof key || 0 === key.length) {
+            key = 'data_process';
+        }
+
+        if ('string' !== typeof message || 0 === message.length) {
+            message = 'typecast.error.data_process';
+        }
+
+        key = StringUtil.decamelize(key);
+
+        if (undefined === this.errors[property]) {
+            this.errors[property] = new ValidationError(property, value, { key: message });
+        } else {
+            this.errors[property].errors[key] = message;
+        }
+
         this.valid = false;
 
         const orderedErrors: { [key: string]: ValidationError } = {};
         Object.keys(this.errors)
             .sort()
             .reverse()
-            .forEach(key => {
-                orderedErrors[key] = this.errors[key];
+            .forEach(k => {
+                orderedErrors[k] = this.errors[k];
             });
 
         this.errors = orderedErrors;
-    }
-
-    private cleanContraints(constraints: { [key: string]: string }): { [key: string]: string } {
-        const cleanedConstraints: { [key: string]: string } = {};
-
-        for (const [key, value] of Object.entries(constraints)) {
-            cleanedConstraints[StringUtil.decamelize(key)] = value;
-        }
-
-        return cleanedConstraints;
     }
 }

@@ -78,12 +78,7 @@ export class InstallRoute implements IRoute {
         } catch (err) {
             await this.userRepository.remove(user);
 
-            form.addError(
-                {
-                    data_process: 'typecast.error.data_process',
-                },
-                'user',
-            );
+            await form.error('user', 'send_email', 'typecast.error.send_email');
 
             return res.render('typecast/install/user-creation', {
                 form,

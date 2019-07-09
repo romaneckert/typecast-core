@@ -21,12 +21,14 @@ export class MailService {
             connectionTimeout: this.config.connectionTimeout,
         });
 
-        this.transporter = nodemailer.createTransport(url.format(mailUrl), {
-            from: this.config.defaultFrom,
-        });
+        this.transporter = nodemailer.createTransport(url.format(mailUrl));
     }
 
-    public async send(options: { [key: string]: any }): Promise<boolean> {
+    public async send(options: { from?: string; to: string; subject: string; text?: string | undefined; html?: string | undefined }): Promise<boolean> {
+        if (undefined === options.from) {
+            options.from = this.config.defaultFrom;
+        }
+
         return this.transporter.sendMail(options);
     }
 }

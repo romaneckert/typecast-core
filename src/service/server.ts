@@ -135,7 +135,7 @@ export class ServerService {
         await this.logger.notice('started');
     }
 
-    public async render(filePath: string, locals: { [key: string]: any } = {}) {
+    public async render(filePath: string, locals: { [key: string]: any } = {}): Promise<string> {
         // set defaults
         if ('string' !== typeof locals.baseUrl || 0 === locals.baseUrl.length) {
             locals.baseUrl = this.applicationConfig.baseUrl;

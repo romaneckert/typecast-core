@@ -68,12 +68,7 @@ export class SignInRoute implements IRoute {
         const form = await new Form(new UserSignInValidator()).handle(req);
 
         if (!form.submitted) {
-            form.addError(
-                {
-                    data_process: 'typecast.error.data_process',
-                },
-                'user',
-            );
+            await form.error('user');
         }
 
         if (!form.valid) {
@@ -85,12 +80,7 @@ export class SignInRoute implements IRoute {
         const user = await this.userRepository.findOne({ where: { email: form.data.email } });
 
         if (undefined === user) {
-            form.addError(
-                {
-                    incorrect_username_or_password: 'typecast.error.user.incorrect_username_or_password',
-                },
-                'user',
-            );
+            await form.error('user', 'incorrect_username_or_password', 'typecast.error.user.incorrect_username_or_password');
 
             return res.status(500).json({
                 errors: this.i18n.translateErrors(res.locals.locale, form.errors),
@@ -98,12 +88,7 @@ export class SignInRoute implements IRoute {
         }
 
         if (!(await this.auth.verifyPassword(form.data.password, user.passwordHash))) {
-            form.addError(
-                {
-                    incorrect_username_or_password: 'typecast.error.user.incorrect_username_or_password',
-                },
-                'user',
-            );
+            await form.error('user', 'incorrect_username_or_password', 'typecast.error.user.incorrect_username_or_password');
 
             return res.status(500).json({
                 errors: this.i18n.translateErrors(res.locals.locale, form.errors),
@@ -113,12 +98,7 @@ export class SignInRoute implements IRoute {
         const token = await this.auth.generateJsonWebToken(user);
 
         if (undefined === token) {
-            form.addError(
-                {
-                    incorrect_username_or_password: 'typecast.error.data_process',
-                },
-                'user',
-            );
+            await form.error('user');
 
             return res.status(500).json({
                 errors: this.i18n.translateErrors(res.locals.locale, form.errors),

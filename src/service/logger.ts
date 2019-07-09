@@ -61,12 +61,16 @@ export class LoggerService {
     }
 
     private async log(code: number, message: string, data?: any): Promise<void> {
-        if (0 === this.contextName.length) {
-            throw new Error('context name is empty');
-        }
+        this.contextType = this.contextType.toLowerCase();
 
         if (0 === this.contextType.length) {
-            throw new Error('context type is empty');
+            this.contextType = 'undefined';
+        }
+
+        this.contextName = this.contextName.toLowerCase();
+
+        if (0 === this.contextName.length) {
+            this.contextName = 'undefined';
         }
 
         const date = new Date();
@@ -84,7 +88,7 @@ export class LoggerService {
 
         await this.saveToDB(log);
         await this.writeLog(log);
-        this.writeToConsole(log);
+        await this.writeToConsole(log);
     }
 
     private async saveToDB(log: Log): Promise<boolean> {
@@ -128,14 +132,9 @@ export class LoggerService {
         }
     }
 
-    private writeToConsole(log: Log): void {
+    private async writeToConsole(log: Log): Promise<void> {
         // disabled, if log level less then notice and in mode production
         if ('production' === this.applicationConfig.context && log.code > 5) {
-            return;
-        }
-
-        // disabled, if context in mode test
-        if ('test' === this.applicationConfig.context) {
             return;
         }
 
@@ -150,6 +149,11 @@ export class LoggerService {
             6: '\x1b[34m',
             7: '\x1b[37m',
         };
+
+        // disabled, if context in mode test
+        if ('test' === this.applicationConfig.context) {
+            return;
+        }
 
         // tslint:disable-next-line
         console.log(colors[log.code], consoleOutput.replace(/\r?\n?/g, '').trim(), '\x1b[0m');
