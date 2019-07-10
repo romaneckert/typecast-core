@@ -1,5 +1,10 @@
 mixin error(errors)
 
+    -
+        if(undefined === attributes.errors || Object.keys(attributes.errors).length === 0) {
+            delete attributes.errors;
+        }
+
     if attributes.errors
         ul.typecast-errors
             each validationError in attributes.errors

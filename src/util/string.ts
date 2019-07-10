@@ -1,6 +1,6 @@
 export class StringUtil {
     public static camelize(text: string) {
-        return text.replace(/^([A-Z])|[\s-_]+(\w)/g, (match, p1, p2, offset) => {
+        return text.replace(/^([A-Z])|[\s-_.]+(\w)/g, (match, p1, p2, offset) => {
             if (p2) {
                 return p2.toUpperCase();
             }
@@ -10,6 +10,7 @@ export class StringUtil {
 
     public static decamelize(text: string, separator: string = '-') {
         return text
+            .replace(/\s/g, '')
             .replace(/([a-z\d])([A-Z])/g, '$1' + separator + '$2')
             .replace(/([A-Z]+)([A-Z][a-z\d]+)/g, '$1' + separator + '$2')
             .replace(/_/g, separator)
@@ -18,11 +19,11 @@ export class StringUtil {
 
     public static cast(data: any) {
         if (null === data) {
-            return '';
+            return 'null';
         }
 
         if ('undefined' === typeof data) {
-            return '';
+            return 'undefined';
         }
 
         if (data instanceof Error) {
@@ -34,7 +35,7 @@ export class StringUtil {
 
             return JSON.stringify(data, (key, val) => {
                 // prevent cycles
-                if (typeof data === 'object') {
+                if (typeof val === 'object') {
                     if (cache.indexOf(val) !== -1) {
                         return;
                     }

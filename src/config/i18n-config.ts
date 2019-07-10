@@ -4,7 +4,7 @@ import { IConfig } from '../interface/config';
 @Config()
 export class I18nConfig implements IConfig {
     public locales: string[] = ['en', 'de'];
-    public defaultLocale: string = 'de';
+    public defaultLocale: string = 'en';
 
     public validate() {
         if (0 === this.locales.length) {

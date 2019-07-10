@@ -52,10 +52,8 @@ export class Log {
                 return 'notice';
             case 6:
                 return 'info';
-            case 7:
-                return 'debug';
             default:
-                return 'notice';
+                return 'debug';
         }
     }
 }

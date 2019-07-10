@@ -14,12 +14,6 @@ export class IndexRoute implements IRoute {
     public backendModuleMainKey: string = 'main';
     public backendModuleTitleKey: string = 'start';
 
-    private logRepository: Repository<Log>;
-
-    public constructor(database: DatabaseService) {
-        this.logRepository = database.getRepository(Log);
-    }
-
     public async handle(req: express.Request, res: express.Response): Promise<void> {
         return res.render('typecast/index');
     }

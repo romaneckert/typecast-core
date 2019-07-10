@@ -121,23 +121,19 @@ export class I18nService {
     }
 
     private addData(locale: string, key: string, value: string, data?: { [key: string]: any }): string {
-        if (undefined === data) {
-            return value;
-        }
-
         return value.replace(/{{(.+?)}}/g, match => {
             const property = match
                 .replace('{{', '')
                 .replace('}}', '')
                 .trim();
 
-            if ('string' === typeof data[property]) {
+            if ('object' === typeof data && 'string' === typeof data[property]) {
                 return data[property];
             }
 
             this.logger.warning(`the translation key '${key}' in locale ${locale} has no data for ${match}`);
 
-            return match;
+            return 'UNDEFINED';
         });
     }
 }

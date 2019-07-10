@@ -15,7 +15,7 @@ export class ApplicationConfig implements IConfig {
 
     constructor() {
         // baseUrl
-        this.baseUrl = String(process.env.APP_BASE_URL);
+        this.baseUrl = String(process.env.APP_BASE_URL).replace(/\/$/, '');
 
         // context
         const processEnv = String(process.env.NODE_ENV);

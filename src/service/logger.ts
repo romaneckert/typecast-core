@@ -82,6 +82,10 @@ export class LoggerService {
         message = message.replace(/(\r?\n|\r)/gm, ' ');
 
         // string type cast data
+        if (undefined === data) {
+            data = '';
+        }
+
         data = StringUtil.cast(data);
 
         const log = new Log(code, date, this.contextType, this.contextName, message, data);
@@ -138,7 +142,17 @@ export class LoggerService {
             return;
         }
 
-        const consoleOutput = `[${log.level}] [${log.contextType}/${log.contextName}] ${log.message} [${log.data}] [pid:${process.pid}]`;
+        const output = [];
+        output.push('[' + log.level + ']');
+        output.push('[' + log.contextType + '/' + log.contextName + ']');
+        output.push(log.message);
+
+        if (0 > log.data.length) {
+            output.push('[' + log.data + ']');
+        }
+
+        output.push('[pid:' + process.pid + ']');
+
         const colors: { [key: number]: string } = {
             0: '\x1b[31m',
             1: '\x1b[31m',
@@ -156,7 +170,14 @@ export class LoggerService {
         }
 
         // tslint:disable-next-line
-        console.log(colors[log.code], consoleOutput.replace(/\r?\n?/g, '').trim(), '\x1b[0m');
+        console.log(
+            colors[log.code],
+            output
+                .join(' ')
+                .replace(/\r?\n?/g, '')
+                .trim(),
+            '\x1b[0m',
+        );
     }
 
     private dateToString(date: Date): string {
