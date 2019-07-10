@@ -4,7 +4,7 @@
     "description": "",
     "scripts": {
         "gulp": "npx gulp",
-        "start": "npm run build && cd dist && export NODE_ENV=production && node index.js",
+        "start": "npm run build && cp -rf .env.production dist/.env && cd dist && export NODE_ENV=production && node index.js",
         "dev": "npm run build && cp -rf .env.development dist/.env && cd dist && export NODE_ENV=development && node index.js",
         "build": "rm -rf dist && tsc && cp -rf package.json dist && cp -rf LICENSE dist && cp -rf README.md dist && cp -rf view dist && cp -rf public dist && cp -rf locale dist && cp -rf .npmignore dist",
         "format": "prettier --write 'src/**/*.ts' 'src/**/*.js'",
