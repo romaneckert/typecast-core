@@ -36,8 +36,15 @@ export class ServerService {
 
     private connection: any;
 
-    constructor(config: ServerConfig, applicationConfig: ApplicationConfig, logger: LoggerService, renderer: RendererService, accessMiddleware: AccessMiddleware, errorMiddleware: ErrorMiddleware) {
-        this.config = config;
+    constructor(
+        serverConfig: ServerConfig,
+        applicationConfig: ApplicationConfig,
+        logger: LoggerService,
+        renderer: RendererService,
+        accessMiddleware: AccessMiddleware,
+        errorMiddleware: ErrorMiddleware,
+    ) {
+        this.config = serverConfig;
         this.applicationConfig = applicationConfig;
         this.logger = logger;
         this.renderer = renderer;

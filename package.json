@@ -4,12 +4,12 @@
     "description": "",
     "scripts": {
         "gulp": "npx gulp",
-        "start": "npm run build && cp -rf .env.production dist/.env.production && cd dist && export NODE_ENV=production && node index.js",
-        "dev": "npm run build && cp -rf .env.development dist/.env.development && cd dist && export NODE_ENV=development && node index.js",
-        "build": "rm -rf dist && tsc && cp -rf package.json dist && cp -rf LICENSE dist && cp -rf README.md dist && cp -rf view dist && cp -rf public dist && cp -rf locale dist && cp -rf .npmignore dist",
+        "start": "npm run build && cd dist && export NODE_ENV=production && node index.js",
+        "dev": "npm run build && cd dist && export NODE_ENV=development && node index.js",
+        "build": "rm -rf dist && tsc && cp -rf .env.* dist && cp -rf package.json dist && cp -rf jest.js.json dist && cp -rf LICENSE dist && cp -rf README.md dist && cp -rf view dist && cp -rf public dist && cp -rf locale dist && cp -rf .npmignore dist",
         "format": "prettier --write 'src/**/*.ts' 'src/**/*.js'",
         "lint": "tslint -p tsconfig.json",
-        "test": "npm run build && cp -rf .env.test dist/.env.test && cd dist && jest --runInBand && cd ../ && npm run lint",
+        "test": "npm run build && cd dist && jest --config jest.js.json --runInBand && cd ../ && npm run lint",
         "preversion": "npm test",
         "version": "npm run format && git add -A src",
         "postversion": "git push && npm run build && cd dist && npm publish"
@@ -23,17 +23,6 @@
     "license": "MIT",
     "bugs": {
         "url": "https://github.com/romaneckert/typecast-core/issues"
-    },
-    "jest": {
-        "testEnvironment": "node",
-        "transform": {
-            "^.+\\.ts$": "ts-jest"
-        },
-        "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts|js)$",
-        "collectCoverage": true,
-        "coverageReporters": [
-            "text"
-        ]
     },
     "homepage": "https://github.com/romaneckert/typecast-core#readme",
     "devDependencies": {

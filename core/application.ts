@@ -11,6 +11,7 @@ import { Container } from './container';
 
 export class Application {
     private paths: string[];
+    private autoloader: Autoloader;
 
     constructor(paths?: string[]) {
         if (undefined === paths) {
@@ -18,19 +19,20 @@ export class Application {
         } else {
             this.paths = paths;
         }
-    }
 
-    public async start() {
         const pathToDotEnv = nodePath.join(process.cwd(), '.env.' + String(process.env.NODE_ENV).toLowerCase());
 
-        if (!(await FileSystemUtil.isFile(pathToDotEnv))) {
+        if (!FileSystemUtil.isFileSync(pathToDotEnv)) {
             throw new Error(pathToDotEnv + ' does not exists.');
         }
 
         dotenv.config({ path: pathToDotEnv });
 
-        const autoloader = new Autoloader();
-        await autoloader.load(this.paths);
+        this.autoloader = new Autoloader();
+    }
+
+    public async start() {
+        await this.autoloader.load(this.paths);
 
         const applicationConfig = await Container.get<ApplicationConfig>(ApplicationConfig);
         applicationConfig.paths = this.paths;

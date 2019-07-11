@@ -12,6 +12,7 @@ export class ServerConfig {
     public middlewares: IMiddleware[] = [];
 
     public constructor(authMiddleware: AuthMiddleware, localeMiddleware: LocaleMiddleware, rolesMiddleware: RolesMiddleware, typecastMiddleware: TypecastMiddleware) {
+        
         // baseUrl
         this.baseUrl = String(process.env.APP_BASE_URL).replace(/\/$/, '');
 
