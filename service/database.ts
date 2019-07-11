@@ -39,11 +39,11 @@ export class DatabaseService {
         const connection = await createConnection(config);
 
         if (null === connection) {
-            await this.logger.critical('can not connect to db');
+            await this.logger.critical(`can not connect to db "${this.config.database}"`);
         } else {
             this.connected = true;
             this.connection = connection;
-            await this.logger.notice('connected to db');
+            await this.logger.notice(`connected to db "${this.config.database}"`);
         }
     }
 
