@@ -1,5 +1,5 @@
-import { Application } from '../application';
 import { MailConfig } from '../config/mail-config';
+import { Application } from '../core/application';
 import { Container } from '../core/container';
 import { MailService } from './mail';
 

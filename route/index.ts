@@ -1,7 +1,6 @@
 import express from 'express';
 import { Repository } from 'typeorm';
 import { Form } from '../core/form';
-import { ValidationError } from '../core/validation-error';
 import { Route } from '../decorator/route';
 import { Log } from '../entity/log';
 import { IRoute } from '../interface/route';

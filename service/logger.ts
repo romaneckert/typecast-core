@@ -1,6 +1,7 @@
 import * as nodePath from 'path';
 import { Repository } from 'typeorm';
 import { ApplicationConfig } from '../config/application-config';
+import { ContextConfig } from '../config/context-config';
 import { Container } from '../core/container';
 import { Service } from '../decorator/service';
 import { Log } from '../entity/log';
@@ -14,14 +15,18 @@ export class LoggerService {
     public contextName: string = '';
 
     private applicationConfig: ApplicationConfig;
+    private contextConfig: ContextConfig;
     private logRepository: Repository<Log>;
+
+    // TODO: add log rotation
     private maxSizePerLogFile: number = 16 * 1024 * 1024;
     private maxLogRotationsPerType: number = 10;
     private maxHistoryLength: number = 1000;
     private duplicateTime: number = 10000;
 
-    constructor(applicationConfig: ApplicationConfig) {
+    constructor(applicationConfig: ApplicationConfig, contextConfig: ContextConfig) {
         this.applicationConfig = applicationConfig;
+        this.contextConfig = contextConfig;
     }
 
     public async emergency(message: string, data?: any): Promise<void> {
@@ -57,7 +62,7 @@ export class LoggerService {
     }
 
     public async removeAllLogFiles(): Promise<void> {
-        FileSystemUtil.remove(nodePath.join(process.cwd(), 'var', this.applicationConfig.context, 'log'));
+        FileSystemUtil.remove(nodePath.join(process.cwd(), 'var', this.contextConfig.context, 'log'));
     }
 
     private async log(code: number, message: string, data?: any): Promise<void> {
@@ -114,8 +119,8 @@ export class LoggerService {
 
     private async writeLog(log: Log) {
         const logFilePaths = [
-            nodePath.join(this.applicationConfig.rootPath, 'var', this.applicationConfig.context.toLowerCase(), 'log', log.level + '.log'),
-            nodePath.join(this.applicationConfig.rootPath, 'var', this.applicationConfig.context.toLowerCase(), 'log', log.contextType, log.contextName, log.level + '.log'),
+            nodePath.join(this.applicationConfig.rootPath, 'var', this.contextConfig.context.toLowerCase(), 'log', log.level + '.log'),
+            nodePath.join(this.applicationConfig.rootPath, 'var', this.contextConfig.context.toLowerCase(), 'log', log.contextType, log.contextName, log.level + '.log'),
         ];
 
         let output = '[' + this.dateToString(log.date) + '] ';
@@ -138,7 +143,7 @@ export class LoggerService {
 
     private async writeToConsole(log: Log): Promise<void> {
         // disabled, if log level less then notice and in mode production
-        if ('production' === this.applicationConfig.context && log.code > 5) {
+        if (this.contextConfig.isProduction() && log.code > 5) {
             return;
         }
 
@@ -165,7 +170,7 @@ export class LoggerService {
         };
 
         // disabled, if context in mode test
-        if ('test' === this.applicationConfig.context) {
+        if (this.contextConfig.isTest()) {
             return;
         }
 

@@ -1,6 +1,7 @@
 import express from 'express';
 import * as url from 'url';
 import { ApplicationConfig } from '../../config/application-config';
+import { ServerConfig } from '../../config/server-config';
 import { Container } from '../../core/container';
 import { Route } from '../../decorator/route';
 import { IRoute } from '../../interface/route';
@@ -13,11 +14,13 @@ export class ApiDoc implements IRoute {
     public path: string = '/api/doc';
 
     private applicationConfig: ApplicationConfig;
+    private serverConfig: ServerConfig;
     private i18n: I18nService;
     private openAPI: any;
 
-    public constructor(applicationConfig: ApplicationConfig, i18n: I18nService) {
+    public constructor(applicationConfig: ApplicationConfig, serverConfig: ServerConfig, i18n: I18nService) {
         this.applicationConfig = applicationConfig;
+        this.serverConfig = serverConfig;
         this.i18n = i18n;
     }
 
@@ -50,7 +53,7 @@ export class ApiDoc implements IRoute {
             },
             openapi: '3.0.0',
             paths: {},
-            servers: [{ url: this.applicationConfig.baseUrl }],
+            servers: [{ url: this.serverConfig.baseUrl }],
         };
 
         for (const [key, route] of Object.entries(routes)) {

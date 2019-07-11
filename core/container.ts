@@ -1,4 +1,3 @@
-import { IConfig } from '../interface/config';
 import { IRoute } from '../interface/route';
 import { IViewHelper } from '../interface/view-helper';
 
@@ -78,7 +77,7 @@ export class Container {
         return (this.instances[resolvedNamespace][key] = instance);
     }
 
-    public static async getConfigs(): Promise<{ [key: string]: IConfig }> {
+    public static async getConfigs(): Promise<{ [key: string]: any }> {
         for (const option of this.classes.config) {
             await this.get(option.target);
         }

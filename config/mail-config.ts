@@ -1,8 +1,7 @@
 import { Config } from '../decorator/config';
-import { IConfig } from '../interface/config';
 
 @Config()
-export class MailConfig implements IConfig {
+export class MailConfig {
     public defaultFrom: string = 'default@typecast';
     public connectionTimeout: number = 2000;
     public url: string;

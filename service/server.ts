@@ -138,7 +138,7 @@ export class ServerService {
     public async render(filePath: string, locals: { [key: string]: any } = {}): Promise<string> {
         // set defaults
         if ('string' !== typeof locals.baseUrl || 0 === locals.baseUrl.length) {
-            locals.baseUrl = this.applicationConfig.baseUrl;
+            locals.baseUrl = this.config.baseUrl;
         }
 
         return new Promise((resolve, reject) => {

@@ -1,8 +1,7 @@
 import { Config } from '../decorator/config';
-import { IConfig } from '../interface/config';
 
 @Config()
-export class I18nConfig implements IConfig {
+export class I18nConfig {
     public locales: string[] = ['en', 'de'];
     public defaultLocale: string = 'en';
 

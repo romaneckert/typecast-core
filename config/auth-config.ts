@@ -1,9 +1,8 @@
 import * as crypto from 'crypto';
 import { Config } from '../decorator/config';
-import { IConfig } from '../interface/config';
 
 @Config()
-export class AuthConfig implements IConfig {
+export class AuthConfig {
     public redirectPath: string = '/typecast/user/sign-in';
     public secret: string;
     public tokenCookieName: string = '_t';

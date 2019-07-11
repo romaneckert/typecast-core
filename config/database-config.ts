@@ -1,8 +1,7 @@
 import { Config } from '../decorator/config';
-import { IConfig } from '../interface/config';
 
 @Config()
-export class DatabaseConfig implements IConfig {
+export class DatabaseConfig {
     public host: string = 'localhost';
     public database?: string = process.env.DB_DATABASE;
 
