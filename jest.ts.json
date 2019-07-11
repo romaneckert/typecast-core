@@ -1,9 +1,9 @@
 {
+    "testEnvironment": "node",
     "transform": {
-        "^.+\\test.ts$": "ts-jest"
+        "^.+\\.ts$": "ts-jest"
     },
-    "transformIgnorePatterns": ["node_modules"],
     "collectCoverage": true,
     "coverageReporters": ["text"],
-    "testPathIgnorePatterns": ["dist"]
+    "testPathIgnorePatterns": ["<rootDir>/dist/"]
 }
