@@ -1,5 +1,6 @@
 {
     "testEnvironment": "node",
     "collectCoverage": true,
-    "coverageReporters": ["text"]
+    "coverageReporters": ["text"],
+    "verbose": true
 }

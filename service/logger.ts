@@ -62,7 +62,7 @@ export class LoggerService {
     }
 
     public async removeAllLogFiles(): Promise<void> {
-        FileSystemUtil.remove(nodePath.join(process.cwd(), 'var', this.contextConfig.context, 'log'));
+        await FileSystemUtil.remove(nodePath.join(process.cwd(), 'var', this.contextConfig.context, 'log'));
     }
 
     private async log(code: number, message: string, data?: any): Promise<void> {

@@ -5,5 +5,6 @@
     },
     "collectCoverage": true,
     "coverageReporters": ["text"],
-    "testPathIgnorePatterns": ["<rootDir>/dist/"]
+    "testPathIgnorePatterns": ["<rootDir>/dist"],
+    "verbose": true
 }

@@ -2,6 +2,7 @@ import * as nodemailer from 'nodemailer';
 import * as querystring from 'querystring';
 import * as url from 'url';
 import { MailConfig } from '../config/mail-config';
+import { Container } from '../core/container';
 import { Service } from '../decorator/service';
 
 @Service()
@@ -10,11 +11,9 @@ export class MailService {
 
     private transporter: any;
 
-    public constructor(config: MailConfig) {
-        this.config = config;
-    }
-
     public async start() {
+        this.config = await Container.get<MailConfig>(MailConfig);
+
         const mailUrl = url.parse(String(this.config.url));
 
         mailUrl.search = querystring.stringify({

@@ -56,7 +56,7 @@ export class Application {
         await server.start();
     }
 
-    public async stop() {
+    public async stop(): Promise<void> {
         const server = await Container.get<ServerService>(ServerService);
         await server.stop();
 

@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Debug Jest Tests",
             "cwd": "${workspaceFolder}",
-            "args": ["--inspect-brk", "${workspaceRoot}/node_modules/.bin/jest", "--runInBand", "--config", "jest.ts.json"],
+            "args": ["--inspect-brk", "${workspaceRoot}/node_modules/.bin/jest", "--config", "jest.ts.json"],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
         }

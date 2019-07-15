@@ -2,7 +2,6 @@ var
 .env.development
 .env.production
 .env.test
-*.test.js
-*.test.d.ts
+/test
 *.map
 jest.js.json
