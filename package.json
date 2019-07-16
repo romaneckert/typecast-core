@@ -36,6 +36,7 @@
         "@types/node": "12.6.2",
         "@types/nodemailer": "^6.2.0",
         "@types/pug": "2.0.4",
+        "@types/smtp-server": "^3.5.1",
         "gulp": "4.0.2",
         "gulp-autoprefixer": "6.1.0",
         "gulp-sass": "4.0.2",
@@ -62,6 +63,7 @@
         "pug": "^2.0.4",
         "querystring": "^0.2.0",
         "reflect-metadata": "0.1.13",
+        "smtp-server": "^3.5.0",
         "typeorm": "0.2.18"
     }
 }
