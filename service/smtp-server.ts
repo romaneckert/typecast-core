@@ -1,32 +1,36 @@
 import { Service } from '../decorator/service';
 import { SMTPServer } from 'smtp-server';
-import { SMTPConfig } from '../config/smtp-config';
+import { SMTPServerConfig } from '../config/smtp-server-config';
 import { LoggerService } from './logger';
 
 @Service()
-export class SMTPService {
-    private config: SMTPConfig;
+export class SMTPServerService {
+    private config: SMTPServerConfig;
     private server: SMTPServer;
     private logger: LoggerService;
 
-    public constructor(config: SMTPConfig, logger: LoggerService) {
+    public constructor(config: SMTPServerConfig, logger: LoggerService) {
         this.config = config;
+        this.logger = logger;
+
         this.server = new SMTPServer({
-            name: 'localhost',
             onConnect: this.onConnect,
             onData: this.onData,
         });
-        this.logger = logger;
     }
 
     public async start(): Promise<void> {
         // https://github.com/normartin/ts-smtp-test/blob/master/src/smtp-test-server.ts
 
-        return new Promise((resolve, reject) => {
-            this.server.listen(this.config.port, 'localhost', async () => {
-                console.log(`started with port: ` + this.config.port);
-                await this.logger.notice(`started with port: ` + this.config.port);
+        console.log('promise before start');
+
+        await new Promise(resolve => {
+            console.log('promise start');
+
+            this.server.listen(this.config.port, 'localhost', () => {
+                this.logger.notice(`started with port: ` + this.config.port);
                 resolve();
+                console.log('resolve');
             });
         });
     }

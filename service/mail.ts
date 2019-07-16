@@ -1,5 +1,4 @@
 import * as nodemailer from 'nodemailer';
-import * as querystring from 'querystring';
 import * as url from 'url';
 import { MailConfig } from '../config/mail-config';
 import { Service } from '../decorator/service';
@@ -7,29 +6,25 @@ import { ContextConfig } from '../config/context-config';
 
 @Service()
 export class MailService {
-    private config: MailConfig;
+    private mailConfig: MailConfig;
     private contextConfig: ContextConfig;
 
     private transporter: any;
 
     public constructor(config: MailConfig, contextConfig: ContextConfig) {
-        this.config = config;
+        this.mailConfig = config;
         this.contextConfig = contextConfig;
     }
 
     public async start() {
-        // TODO: use single config settings
-        const mailUrl = url.parse(String(this.config.url));
-
         const options: any = {
-            connectionTimeout: this.config.connectionTimeout,
-            host: mailUrl.host,
-            port: mailUrl.port,
-            localAddress: mailUrl.host,
+            connectionTimeout: this.mailConfig.connectionTimeout,
+            host: this.mailConfig.host,
+            port: this.mailConfig.port,
         };
 
         // allow self signed smtp certificates for test smtp server
-        if (this.contextConfig.isTest()) {
+        if (!this.contextConfig.isProduction()) {
             options.tls = {
                 rejectUnauthorized: false,
             };
@@ -40,14 +35,9 @@ export class MailService {
 
     public async send(options: { from?: string; to: string; subject: string; text?: string | undefined; html?: string | undefined }): Promise<void> {
         if (undefined === options.from) {
-            options.from = this.config.defaultFrom;
+            options.from = this.mailConfig.defaultFrom;
         }
-        try {
-            setTimeout(async () => {
-                await this.transporter.sendMail(options);
-            }, 1000);
-        } catch (err) {
-            console.log(err);
-        }
+
+        await this.transporter.sendMail(options);
     }
 }

@@ -1,7 +1,7 @@
 import * as nodePath from 'path';
 import * as pug from 'pug';
 import { ApplicationConfig } from '../config/application-config';
-import { ServerConfig } from '../config/server-config';
+import { HTTPServerConfig } from '../config/http-server-config';
 import { Container } from '../core/container';
 import { Service } from '../decorator/service';
 import { FileSystemUtil } from '../util/file-system';
@@ -9,10 +9,10 @@ import { FileSystemUtil } from '../util/file-system';
 @Service()
 export class RendererService {
     private applicationConfig: ApplicationConfig;
-    private serverConfig: ServerConfig;
+    private serverConfig: HTTPServerConfig;
     private templates: { [key: string]: any } = {};
 
-    public constructor(applicationConfig: ApplicationConfig, serverConfig: ServerConfig) {
+    public constructor(applicationConfig: ApplicationConfig, serverConfig: HTTPServerConfig) {
         this.applicationConfig = applicationConfig;
         this.serverConfig = serverConfig;
     }

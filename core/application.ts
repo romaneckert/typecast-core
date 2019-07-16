@@ -4,12 +4,17 @@ import { ApplicationConfig } from '../config/application-config';
 import { DatabaseService } from '../service/database';
 import { I18nService } from '../service/i18n';
 import { MailService } from '../service/mail';
-import { ServerService } from '../service/server';
+import { HTTPServerService } from '../service/http-server';
 import { FileSystemUtil } from '../util/file-system';
 import { Autoloader } from './autoloader';
 import { Container } from './container';
 import { ContextConfig } from '../config/context-config';
-import { SMTPService } from '../service/smtp';
+import { SMTPServerService } from '../service/smtp-server';
+
+// kill process on unhandled promise rejection
+process.on('unhandledRejection', err => {
+    throw err;
+});
 
 export class Application {
     private paths: string[];
@@ -50,10 +55,10 @@ export class Application {
         const database = await Container.get<DatabaseService>(DatabaseService);
         await database.start();
 
-        // if (contextConfig.isTest()) {
-        const smtp = await Container.get<SMTPService>(SMTPService);
-        await smtp.start();
-        // }
+        if (contextConfig.isTest()) {
+            const smtp = await Container.get<SMTPServerService>(SMTPServerService);
+            await smtp.start();
+        }
 
         const i18n = await Container.get<I18nService>(I18nService);
         await i18n.start();
@@ -61,19 +66,20 @@ export class Application {
         const mail = await Container.get<MailService>(MailService);
         await mail.start();
 
-        const server = await Container.get<ServerService>(ServerService);
+        const server = await Container.get<HTTPServerService>(HTTPServerService);
         await server.start();
     }
 
     public async stop(): Promise<void> {
         const contextConfig = await Container.get<ContextConfig>(ContextConfig);
 
+        /*
         if (contextConfig.isTest()) {
-            const smtp = await Container.get<SMTPService>(SMTPService);
+            const smtp = await Container.get<SMTPServerService>(SMTPServerService);
             await smtp.stop();
-        }
+        }*/
 
-        const server = await Container.get<ServerService>(ServerService);
+        const server = await Container.get<HTTPServerService>(HTTPServerService);
         await server.stop();
 
         const database = await Container.get<DatabaseService>(DatabaseService);

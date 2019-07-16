@@ -3,6 +3,7 @@ import { Config } from '../decorator/config';
 import { FileSystemUtil } from '../util/file-system';
 
 @Config()
+// TODO: use getter for validation
 export class ApplicationConfig {
     public buildDate: Date = new Date();
     public paths: string[];

@@ -2,7 +2,7 @@ import axios from 'axios';
 import url from 'url';
 import * as nodePath from 'path';
 import { Application } from '../core/application';
-import { ServerConfig } from '../config/server-config';
+import { HTTPServerConfig } from '../config/http-server-config';
 import { Container } from '../core/container';
 import { I18nService } from '../service/i18n';
 import { LoggerService } from '../service/logger';
@@ -11,6 +11,7 @@ import { FileSystemUtil } from '../util/file-system';
 import { StringUtil } from '../util/string';
 import { ApplicationConfig } from '../config/application-config';
 import { DatabaseService } from '../service/database';
+import { SMTPServerService } from '../service/smtp-server';
 
 const app: Application = new Application();
 let database: DatabaseService;
@@ -19,7 +20,9 @@ beforeAll(async () => {
     await app.start();
     database = await Container.get<DatabaseService>(DatabaseService);
 });
-afterAll(async () => await app.stop());
+afterAll(async () => {
+    //await app.stop();
+});
 
 describe('service', () => {
     test('i18n', async () => {
@@ -66,6 +69,7 @@ describe('service', () => {
 
     test('mail', async () => {
         const mail = await Container.get<MailService>(MailService);
+        const smtp = await Container.get<SMTPServerService>(SMTPServerService);
 
         // test html mail
         await mail.send({
@@ -161,17 +165,17 @@ describe('util', () => {
 });
 describe('middleware', () => {
     test('not-found', async () => {
-        const serverConfig = await Container.get<ServerConfig>(ServerConfig);
+        const httpServerConfig = await Container.get<HTTPServerConfig>(HTTPServerConfig);
 
         try {
-            await axios.get(url.resolve(serverConfig.baseUrl, 'path-that-does-not-exists'));
+            await axios.get(url.resolve(httpServerConfig.baseUrl, 'path-that-does-not-exists'));
         } catch (err) {
             expect(err.response.status).toBe(404);
             expect(err.response.data.includes('<body>404</body>')).toBe(true);
         }
 
         try {
-            await axios.get(url.resolve(serverConfig.baseUrl, 'path-that-does-not-exists'), { headers: { 'Content-Type': 'application/json' } });
+            await axios.get(url.resolve(httpServerConfig.baseUrl, 'path-that-does-not-exists'), { headers: { 'Content-Type': 'application/json' } });
         } catch (err) {
             expect(err.response.status).toBe(404);
             expect(err.response.data.status).toBe(404);
@@ -180,19 +184,18 @@ describe('middleware', () => {
 });
 describe('route', () => {
     test('/', async () => {
-        const serverConfig = await Container.get<ServerConfig>(ServerConfig);
-        const response = await axios.get(serverConfig.baseUrl);
+        const httpServerConfig = await Container.get<HTTPServerConfig>(HTTPServerConfig);
+        const response = await axios.get(httpServerConfig.baseUrl);
         expect(response.data.includes('Welcome to Typecast')).toBe(true);
     });
 });
-
 describe('process', () => {
     test('setup project', async () => {
         // delete database to have a clean setup
         database.drop();
 
-        const serverConfig = await Container.get<ServerConfig>(ServerConfig);
-        const response = await axios.post(url.resolve(serverConfig.baseUrl, 'typecast/install'), { email: 'test@test.typecast' });
+        const httpServerConfig = await Container.get<HTTPServerConfig>(HTTPServerConfig);
+        const response = await axios.post(url.resolve(httpServerConfig.baseUrl, 'typecast/install'), { email: 'test@test.typecast' });
         expect(response.data.includes('Please create your password')).toBe(true);
         expect(response.data.includes('Click on the link in the email you received')).toBe(true);
     });

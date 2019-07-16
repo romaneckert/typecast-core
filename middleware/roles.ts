@@ -3,7 +3,7 @@ import { AuthConfig } from '../config/auth-config';
 import { Container } from '../core/container';
 import { Middleware } from '../decorator/middleware';
 import { IMiddleware } from '../interface/middleware';
-import { ServerService } from '../service/server';
+import { HTTPServerService } from '../service/http-server';
 
 @Middleware()
 export class RolesMiddleware implements IMiddleware {
@@ -59,7 +59,7 @@ export class RolesMiddleware implements IMiddleware {
     private async initRoutePathRoleMap() {
         this.routePathRoleMap = {};
 
-        const server = await Container.get<ServerService>(ServerService);
+        const server = await Container.get<HTTPServerService>(HTTPServerService);
 
         for (const [key, route] of Object.entries(server.routes)) {
             let roles: string[] = [];

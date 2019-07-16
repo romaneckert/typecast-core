@@ -6,7 +6,7 @@ import helmet from 'helmet';
 import https from 'https';
 import * as nodePath from 'path';
 import { ApplicationConfig } from '../config/application-config';
-import { ServerConfig } from '../config/server-config';
+import { HTTPServerConfig } from '../config/http-server-config';
 import { Container } from '../core/container';
 import { Service } from '../decorator/service';
 import { IRoute } from '../interface/route';
@@ -19,11 +19,11 @@ import { LoggerService } from './logger';
 import { RendererService } from './renderer';
 
 @Service()
-export class ServerService {
+export class HTTPServerService {
     public routes: { [key: string]: IRoute } = {};
 
     private logger: LoggerService;
-    private config: ServerConfig;
+    private config: HTTPServerConfig;
     private applicationConfig: ApplicationConfig;
     private renderer: RendererService;
     private router: express.Application;
@@ -37,7 +37,7 @@ export class ServerService {
     private connection: any;
 
     constructor(
-        serverConfig: ServerConfig,
+        serverConfig: HTTPServerConfig,
         applicationConfig: ApplicationConfig,
         logger: LoggerService,
         renderer: RendererService,
@@ -58,7 +58,7 @@ export class ServerService {
     }
 
     public async start(): Promise<void> {
-        this.renderer.start();
+        await this.renderer.start();
         this.router.enable('strict routing');
         this.router.use(helmet());
         this.router.use(compression());

@@ -6,7 +6,8 @@ import { RolesMiddleware } from '../middleware/roles';
 import { TypecastMiddleware } from '../middleware/typecast';
 
 @Config()
-export class ServerConfig {
+// TODO: use getter for validation
+export class HTTPServerConfig {
     public baseUrl: string;
     public port: number = 3000;
     public middlewares: IMiddleware[] = [];

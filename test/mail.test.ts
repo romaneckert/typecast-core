@@ -6,8 +6,8 @@ test('mail', async () => {
         authOptional: true,
     });
 
-    await new Promise((reject: any, resolve: any) => {
-        server.listen(3030, 'localhost', reject);
+    await new Promise((resolve: any, reject: any) => {
+        server.listen(3030, 'localhost', resolve);
     });
 
     const transporter = nodemailer.createTransport({
@@ -26,9 +26,7 @@ test('mail', async () => {
         html: '<b>Hello world?</b>', // html body
     });
 
-    console.log(info);
-
-    await new Promise((reject: any, resolve: any) => {
-        server.close(reject);
+    await new Promise((resolve: any, reject: any) => {
+        server.close(resolve);
     });
 });

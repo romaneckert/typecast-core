@@ -2,6 +2,7 @@ import * as crypto from 'crypto';
 import { Config } from '../decorator/config';
 
 @Config()
+// TODO: use getter for validation
 export class AuthConfig {
     public redirectPath: string = '/typecast/user/sign-in';
     public secret: string;

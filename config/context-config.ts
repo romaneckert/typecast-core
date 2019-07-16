@@ -1,6 +1,7 @@
 import { Config } from '../decorator/config';
 
 @Config()
+// TODO: use getter for validation
 export class ContextConfig {
     private _context: string = 'production';
     private allowedContexts: string[] = ['production', 'acceptance', 'staging', 'test', 'development'];

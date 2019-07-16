@@ -8,7 +8,7 @@ import { AuthService } from '../../service/auth';
 import { DatabaseService } from '../../service/database';
 import { I18nService } from '../../service/i18n';
 import { MailService } from '../../service/mail';
-import { ServerService } from '../../service/server';
+import { HTTPServerService } from '../../service/http-server';
 import { EmailValidator } from '../../validator/email-validator';
 
 @Route()
@@ -20,10 +20,10 @@ export class InstallRoute implements IRoute {
     private auth: AuthService;
     private i18n: I18nService;
     private mail: MailService;
-    private server: ServerService;
+    private server: HTTPServerService;
     private userRepository: Repository<User>;
 
-    public constructor(auth: AuthService, database: DatabaseService, i18n: I18nService, mail: MailService, server: ServerService) {
+    public constructor(auth: AuthService, database: DatabaseService, i18n: I18nService, mail: MailService, server: HTTPServerService) {
         this.auth = auth;
         this.i18n = i18n;
         this.mail = mail;
