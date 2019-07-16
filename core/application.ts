@@ -8,6 +8,8 @@ import { ServerService } from '../service/server';
 import { FileSystemUtil } from '../util/file-system';
 import { Autoloader } from './autoloader';
 import { Container } from './container';
+import { ContextConfig } from '../config/context-config';
+import { SMTPService } from '../service/smtp';
 
 export class Application {
     private paths: string[];
@@ -43,8 +45,15 @@ export class Application {
             }
         }
 
+        const contextConfig = await Container.get<ContextConfig>(ContextConfig);
+
         const database = await Container.get<DatabaseService>(DatabaseService);
         await database.start();
+
+        // if (contextConfig.isTest()) {
+        const smtp = await Container.get<SMTPService>(SMTPService);
+        await smtp.start();
+        // }
 
         const i18n = await Container.get<I18nService>(I18nService);
         await i18n.start();
@@ -57,6 +66,13 @@ export class Application {
     }
 
     public async stop(): Promise<void> {
+        const contextConfig = await Container.get<ContextConfig>(ContextConfig);
+
+        if (contextConfig.isTest()) {
+            const smtp = await Container.get<SMTPService>(SMTPService);
+            await smtp.stop();
+        }
+
         const server = await Container.get<ServerService>(ServerService);
         await server.stop();
 

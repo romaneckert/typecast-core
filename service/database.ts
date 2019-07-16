@@ -14,14 +14,12 @@ export class DatabaseService {
 
     private connection: Connection;
     private applicationConfig: ApplicationConfig;
-    private contextConfig: ContextConfig;
     private config: DatabaseConfig;
     private logger: LoggerService;
 
-    public constructor(applicationConfig: ApplicationConfig, config: DatabaseConfig, contextConfig: ContextConfig, logger: LoggerService) {
+    public constructor(applicationConfig: ApplicationConfig, config: DatabaseConfig, logger: LoggerService) {
         this.applicationConfig = applicationConfig;
         this.config = config;
-        this.contextConfig = contextConfig;
         this.logger = logger;
     }
 
@@ -49,6 +47,10 @@ export class DatabaseService {
 
     public getRepository(type: any): Repository<any> {
         return this.connection.getRepository(type);
+    }
+
+    public async drop(): Promise<void> {
+        await this.connection.dropDatabase();
     }
 
     public async stop(): Promise<boolean> {

@@ -10,10 +10,15 @@ import { MailService } from '../service/mail';
 import { FileSystemUtil } from '../util/file-system';
 import { StringUtil } from '../util/string';
 import { ApplicationConfig } from '../config/application-config';
+import { DatabaseService } from '../service/database';
 
-const app = new Application();
+const app: Application = new Application();
+let database: DatabaseService;
 
-beforeAll(async () => await app.start());
+beforeAll(async () => {
+    await app.start();
+    database = await Container.get<DatabaseService>(DatabaseService);
+});
 afterAll(async () => await app.stop());
 
 describe('service', () => {
@@ -174,11 +179,21 @@ describe('middleware', () => {
     });
 });
 describe('route', () => {
-    describe('/typecast/install', () => {});
-
     test('/', async () => {
         const serverConfig = await Container.get<ServerConfig>(ServerConfig);
         const response = await axios.get(serverConfig.baseUrl);
         expect(response.data.includes('Welcome to Typecast')).toBe(true);
+    });
+});
+
+describe('process', () => {
+    test('setup project', async () => {
+        // delete database to have a clean setup
+        database.drop();
+
+        const serverConfig = await Container.get<ServerConfig>(ServerConfig);
+        const response = await axios.post(url.resolve(serverConfig.baseUrl, 'typecast/install'), { email: 'test@test.typecast' });
+        expect(response.data.includes('Please create your password')).toBe(true);
+        expect(response.data.includes('Click on the link in the email you received')).toBe(true);
     });
 });

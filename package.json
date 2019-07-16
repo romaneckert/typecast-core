@@ -9,7 +9,7 @@
         "build": "rm -rf dist && tsc && cp -rf .env.* dist && cp -rf package.json dist && cp -rf jest.js.json dist && cp -rf LICENSE dist && cp -rf README.md dist && cp -rf view dist && cp -rf public dist && cp -rf locale dist && cp -rf .npmignore dist",
         "format": "prettier --write 'src/**/*.ts' 'src/**/*.js'",
         "lint": "tslint -p tsconfig.json",
-        "test": "npm run build && cd dist && jest --config jest.js.json --runInBand && cd ../ && npm run lint",
+        "test": "npm run build && cd dist && jest --runInBand --config jest.js.json && cd ../ && npm run lint",
         "preversion": "npm test",
         "version": "npm run format && git add -A src",
         "postversion": "git push && npm run build && cd dist && npm publish"
@@ -36,6 +36,7 @@
         "@types/node": "12.6.2",
         "@types/nodemailer": "^6.2.0",
         "@types/pug": "2.0.4",
+        "@types/smtp-server": "3.5.1",
         "gulp": "4.0.2",
         "gulp-autoprefixer": "6.1.0",
         "gulp-sass": "4.0.2",
@@ -62,6 +63,7 @@
         "pug": "^2.0.4",
         "querystring": "^0.2.0",
         "reflect-metadata": "0.1.13",
+        "smtp-server": "3.5.0",
         "typeorm": "0.2.18"
     }
 }
