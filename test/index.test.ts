@@ -21,7 +21,7 @@ beforeAll(async () => {
     database = await Container.get<DatabaseService>(DatabaseService);
 });
 afterAll(async () => {
-    //await app.stop();
+    await app.stop();
 });
 
 describe('service', () => {

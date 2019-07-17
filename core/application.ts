@@ -73,11 +73,10 @@ export class Application {
     public async stop(): Promise<void> {
         const contextConfig = await Container.get<ContextConfig>(ContextConfig);
 
-        /*
         if (contextConfig.isTest()) {
             const smtp = await Container.get<SMTPServerService>(SMTPServerService);
             await smtp.stop();
-        }*/
+        }
 
         const server = await Container.get<HTTPServerService>(HTTPServerService);
         await server.stop();

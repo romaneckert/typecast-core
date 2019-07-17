@@ -14,32 +14,31 @@ export class SMTPServerService {
         this.logger = logger;
 
         this.server = new SMTPServer({
-            onConnect: this.onConnect,
-            onData: this.onData,
+            authOptional: true,
+            // onConnect: this.onConnect,
+            // onData: this.onData,
         });
     }
 
     public async start(): Promise<void> {
         // https://github.com/normartin/ts-smtp-test/blob/master/src/smtp-test-server.ts
 
-        console.log('promise before start');
-
         await new Promise(resolve => {
-            console.log('promise start');
-
             this.server.listen(this.config.port, 'localhost', () => {
+                // TODO: await on logger
                 this.logger.notice(`started with port: ` + this.config.port);
                 resolve();
-                console.log('resolve');
             });
         });
     }
 
     public async stop() {
-        console.log('smtp server stopped');
-
         return new Promise((resolve, reject) => {
-            this.server.close(resolve);
+            this.server.close(() => {
+                // TODO: await on logger
+                this.logger.notice('stopped');
+                resolve();
+            });
         });
     }
 
