@@ -19,11 +19,11 @@ let database: DatabaseService;
 beforeAll(async () => {
     await app.start();
     database = await Container.get<DatabaseService>(DatabaseService);
+    
 });
 afterAll(async () => {
     await app.stop();
 });
-
 describe('service', () => {
     test('i18n', async () => {
         const i18n = await Container.get<I18nService>(I18nService);
@@ -68,8 +68,9 @@ describe('service', () => {
     });
 
     test('mail', async () => {
+
         const mail = await Container.get<MailService>(MailService);
-        const smtp = await Container.get<SMTPServerService>(SMTPServerService);
+        // const smtp = await Container.get<SMTPServerService>(SMTPServerService);
 
         // test html mail
         await mail.send({
@@ -192,7 +193,7 @@ describe('route', () => {
 describe('process', () => {
     test('setup project', async () => {
         // delete database to have a clean setup
-        database.drop();
+        await database.drop();
 
         const httpServerConfig = await Container.get<HTTPServerConfig>(HTTPServerConfig);
         const response = await axios.post(url.resolve(httpServerConfig.baseUrl, 'typecast/install'), { email: 'test@test.typecast' });

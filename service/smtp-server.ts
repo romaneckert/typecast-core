@@ -5,12 +5,12 @@ import { LoggerService } from './logger';
 
 @Service()
 export class SMTPServerService {
-    private config: SMTPServerConfig;
+    private smtpServerConfig: SMTPServerConfig;
     private server: SMTPServer;
     private logger: LoggerService;
 
     public constructor(config: SMTPServerConfig, logger: LoggerService) {
-        this.config = config;
+        this.smtpServerConfig = config;
         this.logger = logger;
 
         this.server = new SMTPServer({
@@ -22,31 +22,33 @@ export class SMTPServerService {
 
     public async start(): Promise<void> {
         // https://github.com/normartin/ts-smtp-test/blob/master/src/smtp-test-server.ts
-
+        /*
         await new Promise(resolve => {
-            this.server.listen(this.config.port, 'localhost', () => {
+            this.server.listen(this.smtpServerConfig.port, 'localhost', () => {
                 // TODO: await on logger
-                this.logger.notice(`started with port: ` + this.config.port);
+                // this.logger.notice(`started with port: ` + this.config.port);
                 resolve();
             });
-        });
+        });*/
     }
 
     public async stop() {
-        return new Promise((resolve, reject) => {
+        await new Promise(resolve => {
             this.server.close(() => {
                 // TODO: await on logger
-                this.logger.notice('stopped');
+                // this.logger.notice('stopped');
                 resolve();
             });
         });
     }
 
     private onData(stream: any, session: any, callback: any) {
+        // tslint:disable-next-line
         console.log('in');
     }
 
     private onConnect(session: any, callback: any) {
+        // tslint:disable-next-line
         console.log(session);
 
         if (session.remoteAddress !== '127.0.0.1') {

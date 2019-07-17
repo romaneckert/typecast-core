@@ -2,7 +2,6 @@ import * as nodePath from 'path';
 import { Connection, createConnection, Repository } from 'typeorm';
 import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOptions';
 import { ApplicationConfig } from '../config/application-config';
-import { ContextConfig } from '../config/context-config';
 import { DatabaseConfig } from '../config/database-config';
 import { Service } from '../decorator/service';
 import { FileSystemUtil } from '../util/file-system';

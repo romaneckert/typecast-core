@@ -71,15 +71,15 @@ export class Application {
     }
 
     public async stop(): Promise<void> {
+        const server = await Container.get<HTTPServerService>(HTTPServerService);
+        await server.stop();
+
         const contextConfig = await Container.get<ContextConfig>(ContextConfig);
 
         if (contextConfig.isTest()) {
             const smtp = await Container.get<SMTPServerService>(SMTPServerService);
             await smtp.stop();
         }
-
-        const server = await Container.get<HTTPServerService>(HTTPServerService);
-        await server.stop();
 
         const database = await Container.get<DatabaseService>(DatabaseService);
         await database.stop();
