@@ -13,6 +13,22 @@ const httpServer = http.createServer((req, res) => {
 
 let transporter: any;
 
+function testError() {
+    throw new Error('test');
+}
+
+class Test {
+    public async test() {
+        await this.deep();
+    }
+
+    public async deep() {
+        await new Promise((resolve, reject) => {
+            testError();
+        });
+    }
+}
+
 beforeAll(async () => {
     httpServer.listen(8080);
 
@@ -27,6 +43,9 @@ beforeAll(async () => {
             rejectUnauthorized: false,
         },
     });
+
+    const t = new Test();
+    await t.test();
 });
 
 afterAll(async () => {

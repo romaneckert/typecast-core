@@ -22,14 +22,17 @@ export class SMTPServerService {
 
     public async start(): Promise<void> {
         // https://github.com/normartin/ts-smtp-test/blob/master/src/smtp-test-server.ts
-        /*
-        await new Promise(resolve => {
-            this.server.listen(this.smtpServerConfig.port, 'localhost', () => {
-                // TODO: await on logger
-                // this.logger.notice(`started with port: ` + this.config.port);
-                resolve();
-            });
-        });*/
+        await new Promise((resolve, reject) => {
+            try {
+                this.server.listen(this.smtpServerConfig.port, 'localhost', () => {
+                    // TODO: await on logger
+                    // this.logger.notice(`started with port: ` + this.config.port);
+                    resolve();
+                });
+            } catch (err) {
+                reject(err);
+            }
+        });
     }
 
     public async stop() {

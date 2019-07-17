@@ -160,7 +160,9 @@ export class HTTPServerService {
     }
 
     public async stop() {
-        await this.connection.close();
+        if (undefined !== this.connection) {
+            await this.connection.close();
+        }
 
         await this.logger.notice('stopped');
     }

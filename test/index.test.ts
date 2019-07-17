@@ -12,6 +12,7 @@ import { StringUtil } from '../util/string';
 import { ApplicationConfig } from '../config/application-config';
 import { DatabaseService } from '../service/database';
 import { SMTPServerService } from '../service/smtp-server';
+import { SMTPServerConfig } from '../config/smtp-server-config';
 
 const app: Application = new Application();
 let database: DatabaseService;
@@ -19,11 +20,17 @@ let database: DatabaseService;
 beforeAll(async () => {
     await app.start();
     database = await Container.get<DatabaseService>(DatabaseService);
-    
 });
 afterAll(async () => {
     await app.stop();
 });
+
+describe('config', () => {
+    test('smtp-server', async () => {
+        const smtpServerConfig = await Container.get<SMTPServerConfig>(SMTPServerConfig);
+    });
+});
+
 describe('service', () => {
     test('i18n', async () => {
         const i18n = await Container.get<I18nService>(I18nService);
@@ -68,9 +75,8 @@ describe('service', () => {
     });
 
     test('mail', async () => {
-
         const mail = await Container.get<MailService>(MailService);
-        // const smtp = await Container.get<SMTPServerService>(SMTPServerService);
+        const smtp = await Container.get<SMTPServerService>(SMTPServerService);
 
         // test html mail
         await mail.send({
