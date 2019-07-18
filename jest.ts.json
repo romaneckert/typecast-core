@@ -4,6 +4,20 @@
         "^.+\\.ts$": "ts-jest"
     },
     "collectCoverage": true,
+    "collectCoverageFrom": [
+        "<rootDir>/config/**",
+        "<rootDir>/core/**",
+        "<rootDir>/decorator/**",
+        "<rootDir>/entity/**",
+        "<rootDir>/error/**",
+        "<rootDir>/interface/**",
+        "<rootDir>/middleware/**",
+        "<rootDir>/route/**",
+        "<rootDir>/service/**",
+        "<rootDir>/util/**",
+        "<rootDir>/validator/**",
+        "<rootDir>/view-helper/**"
+    ],
     "coverageReporters": ["text"],
     "testPathIgnorePatterns": ["<rootDir>/dist"],
     "verbose": true

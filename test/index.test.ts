@@ -114,6 +114,7 @@ describe('service', () => {
         });
     });
 });
+
 describe('util', () => {
     describe('file-system', () => {
         test('remove', async () => {
@@ -180,14 +181,6 @@ describe('util', () => {
             expect(StringUtil.decamelize(' CamelizedString')).toBe('camelized-string');
             expect(StringUtil.decamelize(' camelized   String')).toBe('camelized-string');
             expect(StringUtil.decamelize('1CamelizedString')).toBe('1-camelized-string');
-        });
-        test('isNumeric', () => {
-            expect(StringUtil.isNumber(null)).toBe(false);
-            expect(StringUtil.isNumber(undefined)).toBe(false);
-            expect(StringUtil.isNumber('test')).toBe(false);
-            expect(StringUtil.isNumber('test string')).toBe(false);
-            expect(StringUtil.isNumber('123 123')).toBe(false);
-            expect(StringUtil.isNumber('123')).toBe(true);
         });
     });
 });

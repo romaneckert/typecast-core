@@ -17,14 +17,6 @@ export class StringUtil {
             .toLowerCase();
     }
 
-    public static isNumber(val: string | null | undefined) {
-        if (null === val || undefined === val) {
-            return false;
-        }
-
-        return !Number.isNaN(Number(val));
-    }
-
     public static cast(data: any) {
         if (null === data) {
             return 'null';

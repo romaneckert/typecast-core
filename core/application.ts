@@ -1,3 +1,4 @@
+import './string';
 import * as dotenv from 'dotenv';
 import * as nodePath from 'path';
 import { ApplicationConfig } from '../config/application-config';
