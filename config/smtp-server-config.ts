@@ -1,14 +1,14 @@
 import { Config } from '../decorator/config';
+import { EnvironmentVariableError } from '../error/environment-variable';
+import { StringUtil } from '../util/string';
 
 @Config()
 export class SMTPServerConfig {
-    private _port: number = Number(process.env.SMTP_SERVER_PORT);
-
     public get port(): number {
-        if (Number.isNaN(this._port) || 0 > this._port || 65536 < this._port) {
-            throw new Error(`port not set or not valid - Environment Variable: SMTP_SERVER_PORT - example: 25`);
+        if (!StringUtil.isNumber(process.env.SMTP_SERVER_PORT)) {
+            throw new EnvironmentVariableError('SMTP_SERVER_PORT', '25');
         }
 
-        return this._port;
+        return Number(process.env.SMTP_SERVER_PORT);
     }
 }

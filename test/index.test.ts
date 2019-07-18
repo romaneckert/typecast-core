@@ -13,6 +13,7 @@ import { ApplicationConfig } from '../config/application-config';
 import { DatabaseService } from '../service/database';
 import { SMTPServerService } from '../service/smtp-server';
 import { SMTPServerConfig } from '../config/smtp-server-config';
+import { EnvironmentVariableError } from '../error/environment-variable';
 
 const app: Application = new Application();
 let database: DatabaseService;
@@ -24,13 +25,25 @@ beforeAll(async () => {
 afterAll(async () => {
     await app.stop();
 });
-
 describe('config', () => {
     test('smtp-server', async () => {
+        let error;
+        const defaultPort = process.env.SMTP_SERVER_PORT;
+
         const smtpServerConfig = await Container.get<SMTPServerConfig>(SMTPServerConfig);
+        process.env.SMTP_SERVER_PORT = undefined;
+
+        try {
+            const port = smtpServerConfig.port;
+        } catch (err) {
+            error = err;
+        }
+
+        expect(error instanceof EnvironmentVariableError).toBe(true);
+
+        process.env.SMTP_SERVER_PORT = defaultPort;
     });
 });
-
 describe('service', () => {
     test('i18n', async () => {
         const i18n = await Container.get<I18nService>(I18nService);
@@ -167,6 +180,14 @@ describe('util', () => {
             expect(StringUtil.decamelize(' CamelizedString')).toBe('camelized-string');
             expect(StringUtil.decamelize(' camelized   String')).toBe('camelized-string');
             expect(StringUtil.decamelize('1CamelizedString')).toBe('1-camelized-string');
+        });
+        test('isNumeric', () => {
+            expect(StringUtil.isNumber(null)).toBe(false);
+            expect(StringUtil.isNumber(undefined)).toBe(false);
+            expect(StringUtil.isNumber('test')).toBe(false);
+            expect(StringUtil.isNumber('test string')).toBe(false);
+            expect(StringUtil.isNumber('123 123')).toBe(false);
+            expect(StringUtil.isNumber('123')).toBe(true);
         });
     });
 });
