@@ -7,7 +7,7 @@ import https from 'https';
 import * as nodePath from 'path';
 import { ApplicationConfig } from '../config/application-config';
 import { HTTPServerConfig } from '../config/http-server-config';
-import { Container } from '../core/container';
+import Container from '../core/container';
 import { Service } from '../decorator/service';
 import { IRoute } from '../interface/route';
 import { AccessMiddleware } from '../middleware/access';
@@ -37,14 +37,14 @@ export class HTTPServerService {
     private connection: any;
 
     constructor(
-        serverConfig: HTTPServerConfig,
+        httpServerConfig: HTTPServerConfig,
         applicationConfig: ApplicationConfig,
         logger: LoggerService,
         renderer: RendererService,
         accessMiddleware: AccessMiddleware,
         errorMiddleware: ErrorMiddleware,
     ) {
-        this.config = serverConfig;
+        this.config = httpServerConfig;
         this.applicationConfig = applicationConfig;
         this.logger = logger;
         this.renderer = renderer;

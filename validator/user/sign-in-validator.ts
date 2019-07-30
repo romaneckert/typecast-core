@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 import { EmailValidator } from '../email-validator';
 
 export class UserSignInValidator extends EmailValidator {

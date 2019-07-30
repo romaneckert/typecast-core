@@ -1,4 +1,4 @@
-import { Container } from '../core/container';
+import Container from '../core/container';
 
 export const Route = (options?: { [key: string]: any }): ClassDecorator => {
     return target => {

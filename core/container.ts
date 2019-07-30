@@ -1,7 +1,7 @@
 import { IRoute } from '../interface/route';
 import { IViewHelper } from '../interface/view-helper';
 
-export class Container {
+export default class Container {
     public static classes: { [key: string]: any } = {};
 
     public static async get<T>(target: any, additionalKey: string = ''): Promise<T> {
@@ -52,6 +52,9 @@ export class Container {
         const injections = [];
 
         for (const param of params) {
+            if (undefined === param) {
+                console.log(resolvedOption.target);
+            }
 
             if (param.isPrototypeOf(this.loggerClass) || param === this.loggerClass) {
                 const contextType = resolvedNamespace;

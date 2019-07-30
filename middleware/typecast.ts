@@ -1,5 +1,5 @@
 import express from 'express';
-import { Container } from '../core/container';
+import Container from '../core/container';
 import { Middleware } from '../decorator/middleware';
 import { IMiddleware } from '../interface/middleware';
 

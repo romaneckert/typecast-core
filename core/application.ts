@@ -1,13 +1,13 @@
 import * as dotenv from 'dotenv';
 import * as nodePath from 'path';
+import { Autoloader } from './autoloader';
+import Container from './container';
 import { ApplicationConfig } from '../config/application-config';
 import { DatabaseService } from '../service/database';
 import { I18nService } from '../service/i18n';
 import { MailService } from '../service/mail';
 import { HTTPServerService } from '../service/http-server';
 import { FileSystemUtil } from '../util/file-system';
-import { Autoloader } from './autoloader';
-import { Container } from './container';
 import { ContextConfig } from '../config/context-config';
 import { SMTPServerService } from '../service/smtp-server';
 
@@ -34,7 +34,7 @@ export class Application {
         this.autoloader = new Autoloader();
     }
 
-    public async start() {
+    public async start(): Promise<void> {
         await this.autoloader.load(this.paths);
 
         const applicationConfig = await Container.get<ApplicationConfig>(ApplicationConfig);

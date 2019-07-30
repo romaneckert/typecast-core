@@ -1,6 +1,6 @@
 import express from 'express';
 import { AuthConfig } from '../config/auth-config';
-import { Container } from '../core/container';
+import Container from '../core/container';
 import { Middleware } from '../decorator/middleware';
 import { IMiddleware } from '../interface/middleware';
 import { HTTPServerService } from '../service/http-server';

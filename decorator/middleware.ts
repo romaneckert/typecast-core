@@ -1,4 +1,4 @@
-import { Container } from '../core/container';
+import Container from '../core/container';
 
 export const Middleware = (options?: { [key: string]: any }): ClassDecorator => {
     return target => {
