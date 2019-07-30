@@ -1,28 +1,22 @@
 import * as crypto from 'crypto';
 import { Config } from '../decorator/config';
+import EnvironmentVariable from '../core/environment-variable';
+import { EnvironmentVariableError } from '../error/environment-variable';
 
 @Config()
-// TODO: use getter for validation
 export class AuthConfig {
     public redirectPath: string = '/typecast/user/sign-in';
-    public secret: string;
     public tokenCookieName: string = '_t';
     public tokenExpiresIn: number = 600;
 
-    constructor() {
-        if (undefined === process.env.APP_SECRET) {
-            this.secret = '';
-        } else {
-            this.secret = process.env.APP_SECRET;
-        }
-    }
+    public get secret(): string {
+        const example = crypto.randomBytes(32).toString('hex');
+        const secret = EnvironmentVariable.get('APP_SECRET', example);
 
-    // TODO: optimize
-    public validate() {
-        if ('string' !== typeof this.secret || 10 > this.secret.length) {
-            const exampleSecret = crypto.randomBytes(32).toString('hex');
-
-            throw new Error(`secret not set or not valid - have to be string, minimum length 10 - example: ${exampleSecret}`);
+        if (10 > secret.length) {
+            throw new EnvironmentVariableError('APP_SECRET', example);
         }
+
+        return secret;
     }
 }

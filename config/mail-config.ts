@@ -1,15 +1,9 @@
 import { Config } from '../decorator/config';
 import EnvironmentVariable from '../core/environment-variable';
+import { IsString } from 'class-validator';
 
 @Config()
 export class MailConfig {
-
-    private _host = {
-        environmentVariable: 'MAIL_HOST',
-        example: 'localhost',
-        default: 'localhost'
-    }
-
     public get host(): string {
         return EnvironmentVariable.get('MAIL_HOST', 'localhost');
     }

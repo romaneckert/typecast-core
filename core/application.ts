@@ -20,12 +20,8 @@ export class Application {
     private paths: string[];
     private autoloader: Autoloader;
 
-    constructor(paths?: string[]) {
-        if (undefined === paths) {
-            this.paths = [process.cwd()];
-        } else {
-            this.paths = paths;
-        }
+    constructor(paths: string[] = [process.cwd()]) {
+        this.paths = paths;
 
         const pathToDotEnv = nodePath.join(process.cwd(), '.env.' + String(process.env.NODE_ENV).toLowerCase());
 

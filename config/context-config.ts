@@ -1,23 +1,19 @@
 import { Config } from '../decorator/config';
+import EnvironmentVariable from '../core/environment-variable';
+import { EnvironmentVariableError } from '../error/environment-variable';
 
 @Config()
-// TODO: use getter for validation
 export class ContextConfig {
-    private _context: string = 'production';
-    private allowedContexts: string[] = ['production', 'acceptance', 'staging', 'test', 'development'];
-
-    public constructor() {
-        const processEnv = String(process.env.NODE_ENV);
-
-        if (-1 !== this.allowedContexts.indexOf(processEnv)) {
-            this._context = processEnv;
-        } else {
-            throw new Error('context is not valid');
-        }
-    }
+    public allowedContexts: string[] = ['production', 'acceptance', 'staging', 'test', 'development'];
 
     public get context(): string {
-        return this._context;
+        const context = EnvironmentVariable.get('NODE_ENV', 'production');
+
+        if (-1 === this.allowedContexts.indexOf(context)) {
+            throw new EnvironmentVariableError('NODE_ENV', 'production | acceptance | staging | test | development');
+        }
+
+        return context;
     }
 
     public isProduction() {
