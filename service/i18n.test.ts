@@ -1,5 +1,5 @@
 import { Application } from '../core/application';
-import { I18nService } from './i18n';
+import I18nService from './i18n';
 import Container from '../core/container';
 
 const app: Application = new Application();

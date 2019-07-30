@@ -3,6 +3,7 @@
     "transform": {
         "^.+\\.ts$": "ts-jest"
     },
+    "bail": true,
     "collectCoverage": true,
     "collectCoverageFrom": [
         "<rootDir>/config/**",
@@ -20,5 +21,7 @@
     ],
     "coverageReporters": ["text"],
     "testPathIgnorePatterns": ["<rootDir>/dist"],
-    "verbose": true
+    "verbose": true,
+    "errorOnDeprecated": true,
+    "resetModules": true
 }

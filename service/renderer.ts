@@ -1,6 +1,6 @@
 import * as nodePath from 'path';
 import * as pug from 'pug';
-import { ApplicationConfig } from '../config/application-config';
+import ApplicationConfig from '../config/application-config';
 import { HTTPServerConfig } from '../config/http-server-config';
 import Container from '../core/container';
 import { Service } from '../decorator/service';

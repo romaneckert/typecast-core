@@ -1,6 +1,6 @@
 import * as nodePath from 'path';
 import { Repository } from 'typeorm';
-import { ApplicationConfig } from '../config/application-config';
+import ApplicationConfig from '../config/application-config';
 import { ContextConfig } from '../config/context-config';
 import Container from '../core/container';
 import { Service } from '../decorator/service';

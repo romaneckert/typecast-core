@@ -2,7 +2,7 @@ import { Config } from '../decorator/config';
 import EnvironmentVariable from '../core/environment-variable';
 
 @Config()
-export class ApplicationConfig {
+export default class ApplicationConfig {
     public buildDate: Date = new Date();
     public paths: string[] = [process.cwd()];
 

@@ -2,5 +2,8 @@
     "testEnvironment": "node",
     "collectCoverage": true,
     "coverageReporters": ["text"],
-    "verbose": true
+    "verbose": true,
+    "bail": true,
+    "errorOnDeprecated": true,
+    "resetModules": true
 }

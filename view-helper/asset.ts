@@ -1,5 +1,5 @@
 import * as nodePath from 'path';
-import { ApplicationConfig } from '../config/application-config';
+import ApplicationConfig from '../config/application-config';
 import { ViewHelper } from '../decorator/view-helper';
 import { IViewHelper } from '../interface/view-helper';
 
