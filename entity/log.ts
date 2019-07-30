@@ -2,7 +2,7 @@ import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 
 // https://github.com/typeorm/typeorm/blob/master/docs/entity-inheritance.md
 @Entity()
-export class Log {
+export default class Log {
     @ObjectIdColumn()
     public id: ObjectID;
 

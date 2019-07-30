@@ -52,10 +52,6 @@ export default class Container {
         const injections = [];
 
         for (const param of params) {
-            if (undefined === param) {
-                console.log(resolvedOption.target);
-            }
-
             if (param.isPrototypeOf(this.loggerClass) || param === this.loggerClass) {
                 const contextType = resolvedNamespace;
                 const contextName = resolvedOption.target.name

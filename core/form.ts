@@ -4,7 +4,7 @@ import express from 'express';
 import { StringUtil } from '../util/string';
 import { ValidationError } from './validation-error';
 
-export class Form {
+export default class Form {
     public submitted: boolean = false;
     public valid: boolean = false;
     public errors: { [key: string]: ValidationError } = {};

@@ -1,8 +1,8 @@
 import express from 'express';
 import { Repository } from 'typeorm';
-import { Form } from '../../../core/form';
+import Form from '../../../core/form';
 import { Route } from '../../../decorator/route';
-import { User } from '../../../entity/user';
+import User from '../../../entity/user';
 import { IRoute } from '../../../interface/route';
 import { AuthService } from '../../../service/auth';
 import { DatabaseService } from '../../../service/database';

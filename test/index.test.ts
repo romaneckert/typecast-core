@@ -6,7 +6,7 @@ import { HTTPServerConfig } from '../config/http-server-config';
 import Container from '../core/container';
 import { DatabaseService } from '../service/database';
 import { SMTPServerConfig } from '../config/smtp-server-config';
-import { EnvironmentVariableError } from '../error/environment-variable';
+import EnvironmentVariableError from '../error/environment-variable';
 
 const app: Application = new Application();
 let database: DatabaseService;

@@ -1,6 +1,6 @@
 import { Config } from '../decorator/config';
 import EnvironmentVariable from '../core/environment-variable';
-import { EnvironmentVariableError } from '../error/environment-variable';
+import EnvironmentVariableError from '../error/environment-variable';
 
 @Config()
 export class ContextConfig {

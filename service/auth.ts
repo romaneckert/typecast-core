@@ -4,7 +4,7 @@ import * as jwt from 'jsonwebtoken';
 import { Repository } from 'typeorm';
 import { AuthConfig } from '../config/auth-config';
 import { Service } from '../decorator/service';
-import { User } from '../entity/user';
+import User from '../entity/user';
 import { DatabaseService } from './database';
 
 @Service()

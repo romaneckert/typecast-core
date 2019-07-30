@@ -1,4 +1,4 @@
-import { EnvironmentVariableError } from '../error/environment-variable';
+import EnvironmentVariableError from '../error/environment-variable';
 
 // TODO: add cache
 export default class EnvironmentVariable {
