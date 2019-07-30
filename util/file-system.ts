@@ -1,7 +1,7 @@
 import * as nodeFs from 'fs';
 import * as nodePath from 'path';
 
-export class FileSystemUtil {
+export default class FileSystemUtil {
     public static async remove(path: nodeFs.PathLike): Promise<void> {
         if ((await this.isFile(path)) || (await this.isSymbolicLink(path))) {
             await nodeFs.promises.unlink(path);

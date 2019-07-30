@@ -5,9 +5,9 @@ import { ContextConfig } from '../config/context-config';
 import Container from '../core/container';
 import { Service } from '../decorator/service';
 import Log from '../entity/log';
-import { FileSystemUtil } from '../util/file-system';
+import FileSystemUtil from '../util/file-system';
 import { StringUtil } from '../util/string';
-import { DatabaseService } from './database';
+import DatabaseService from './database';
 
 @Service()
 export class LoggerService {

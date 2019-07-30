@@ -1,6 +1,6 @@
 import express from 'express';
 import { Route } from '../../decorator/route';
-import { IRoute } from '../../interface/route';
+import IRoute from '../../interface/route';
 
 @Route()
 export class IndexRoute implements IRoute {

@@ -1,5 +1,5 @@
 import * as nodePath from 'path';
-import { FileSystemUtil } from '../util/file-system';
+import FileSystemUtil from '../util/file-system';
 
 export class Autoloader {
     public autoloadedFilesCounter = 0;

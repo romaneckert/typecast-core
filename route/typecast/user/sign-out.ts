@@ -1,7 +1,7 @@
 import express from 'express';
 import { Route } from '../../../decorator/route';
-import { IRoute } from '../../../interface/route';
-import { AuthService } from '../../../service/auth';
+import IRoute from '../../../interface/route';
+import AuthService from '../../../service/auth';
 
 @Route()
 export class SignOutRoute implements IRoute {

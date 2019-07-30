@@ -4,11 +4,11 @@ import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOp
 import ApplicationConfig from '../config/application-config';
 import { DatabaseConfig } from '../config/database-config';
 import { Service } from '../decorator/service';
-import { FileSystemUtil } from '../util/file-system';
+import FileSystemUtil from '../util/file-system';
 import { LoggerService } from './logger';
 
 @Service()
-export class DatabaseService {
+export default class DatabaseService {
     public connected: boolean = false;
 
     private connection: Connection;

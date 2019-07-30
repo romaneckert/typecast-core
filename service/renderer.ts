@@ -4,10 +4,10 @@ import ApplicationConfig from '../config/application-config';
 import { HTTPServerConfig } from '../config/http-server-config';
 import Container from '../core/container';
 import { Service } from '../decorator/service';
-import { FileSystemUtil } from '../util/file-system';
+import FileSystemUtil from '../util/file-system';
 
 @Service()
-export class RendererService {
+export default class RendererService {
     private applicationConfig: ApplicationConfig;
     private serverConfig: HTTPServerConfig;
     private templates: { [key: string]: any } = {};

@@ -1,6 +1,6 @@
 import * as nodePath from 'path';
 import Container from '../core/container';
-import { FileSystemUtil } from './file-system';
+import FileSystemUtil from './file-system';
 import ApplicationConfig from '../config/application-config';
 
 test('remove', async () => {

@@ -1,5 +1,5 @@
-import { IRoute } from '../interface/route';
-import { IViewHelper } from '../interface/view-helper';
+import IRoute from '../interface/route';
+import IViewHelper from '../interface/view-helper';
 
 export default class Container {
     public static classes: { [key: string]: any } = {};

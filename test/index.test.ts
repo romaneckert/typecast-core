@@ -4,7 +4,7 @@ import * as nodePath from 'path';
 import { Application } from '../core/application';
 import { HTTPServerConfig } from '../config/http-server-config';
 import Container from '../core/container';
-import { DatabaseService } from '../service/database';
+import DatabaseService from '../service/database';
 import { SMTPServerConfig } from '../config/smtp-server-config';
 import EnvironmentVariableError from '../error/environment-variable';
 

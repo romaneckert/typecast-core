@@ -5,10 +5,10 @@ import { Repository } from 'typeorm';
 import { AuthConfig } from '../config/auth-config';
 import { Service } from '../decorator/service';
 import User from '../entity/user';
-import { DatabaseService } from './database';
+import DatabaseService from './database';
 
 @Service()
-export class AuthService {
+export default class AuthService {
     private config: AuthConfig;
     private userRepository: Repository<User>;
 

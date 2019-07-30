@@ -1,5 +1,5 @@
 import { ViewHelper } from '../decorator/view-helper';
-import { IViewHelper } from '../interface/view-helper';
+import IViewHelper from '../interface/view-helper';
 import I18nService from '../service/i18n';
 
 @ViewHelper()
