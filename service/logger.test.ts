@@ -1,4 +1,4 @@
-import { Application } from '../core/application';
+import Application from '../core/application';
 import Container from '../core/container';
 import LoggerService from './logger';
 

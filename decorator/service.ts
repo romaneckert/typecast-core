@@ -1,6 +1,6 @@
 import Container from '../core/container';
 
-export const Service = (options?: { [key: string]: any }): ClassDecorator => {
+export default function Service(options?: { [key: string]: any }): ClassDecorator {
     return target => {
         if (undefined === Container.classes.service) {
             Container.classes.service = [];
@@ -25,4 +25,4 @@ export const Service = (options?: { [key: string]: any }): ClassDecorator => {
             target,
         });
     };
-};
+}

@@ -1,7 +1,9 @@
 import express from 'express';
-import { IMiddleware } from '../interface/middleware';
+import IMiddleware from '../interface/middleware';
 import IRoute from '../interface/route';
+import Middleware from '../decorator/middleware';
 
+@Middleware()
 export default class HandleMiddleware implements IMiddleware {
     public route: IRoute;
 

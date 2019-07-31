@@ -1,5 +1,5 @@
 import express from 'express';
-import { Middleware } from '../decorator/middleware';
+import Middleware from '../decorator/middleware';
 import LoggerService from '../service/logger';
 
 @Middleware()

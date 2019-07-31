@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 import * as nodePath from 'path';
-import { Autoloader } from './autoloader';
+import Autoloader from './autoloader';
 import Container from './container';
 import ApplicationConfig from '../config/application-config';
 import DatabaseService from '../service/database';
@@ -16,7 +16,7 @@ process.on('unhandledRejection', err => {
     throw err;
 });
 
-export class Application {
+export default class Application {
     private paths: string[];
     private autoloader: Autoloader;
 

@@ -1,6 +1,6 @@
 import express from 'express';
 import { Repository } from 'typeorm';
-import { Route } from '../../../../decorator/route';
+import Route from '../../../../decorator/route';
 import Log from '../../../../entity/log';
 import IRoute from '../../../../interface/route';
 import DatabaseService from '../../../../service/database';

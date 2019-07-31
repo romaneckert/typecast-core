@@ -1,7 +1,7 @@
 import * as nodePath from 'path';
 import FileSystemUtil from '../util/file-system';
 
-export class Autoloader {
+export default class Autoloader {
     public autoloadedFilesCounter = 0;
 
     public async load(paths: string[]): Promise<void> {

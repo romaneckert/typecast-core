@@ -8,7 +8,7 @@ import * as nodePath from 'path';
 import ApplicationConfig from '../config/application-config';
 import HTTPServerConfig from '../config/http-server-config';
 import Container from '../core/container';
-import { Service } from '../decorator/service';
+import Service from '../decorator/service';
 import IRoute from '../interface/route';
 import AccessMiddleware from '../middleware/access';
 import ErrorMiddleware from '../middleware/error';

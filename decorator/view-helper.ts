@@ -1,6 +1,6 @@
 import Container from '../core/container';
 
-export const ViewHelper = (options?: { [key: string]: any }): ClassDecorator => {
+export default function ViewHelper(options?: { [key: string]: any }): ClassDecorator {
     return target => {
         if (undefined === Container.classes.viewHelper) {
             Container.classes.viewHelper = [];
@@ -25,4 +25,4 @@ export const ViewHelper = (options?: { [key: string]: any }): ClassDecorator => 
             target,
         });
     };
-};
+}

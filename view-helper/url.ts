@@ -1,9 +1,9 @@
-import { ViewHelper } from '../decorator/view-helper';
+import ViewHelper from '../decorator/view-helper';
 import IViewHelper from '../interface/view-helper';
 import HTTPServerService from '../service/http-server';
 
 @ViewHelper()
-export class UrlViewHelper implements IViewHelper {
+export default class UrlViewHelper implements IViewHelper {
     private server: HTTPServerService;
 
     public constructor(server: HTTPServerService) {

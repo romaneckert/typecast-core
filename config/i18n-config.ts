@@ -1,4 +1,4 @@
-import { Config } from '../decorator/config';
+import Config from '../decorator/config';
 
 @Config()
 export default class I18nConfig {

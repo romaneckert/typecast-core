@@ -1,7 +1,7 @@
 import express from 'express';
 import Container from '../core/container';
-import { Middleware } from '../decorator/middleware';
-import { IMiddleware } from '../interface/middleware';
+import Middleware from '../decorator/middleware';
+import IMiddleware from '../interface/middleware';
 
 @Middleware()
 export default class TypecastMiddleware implements IMiddleware {

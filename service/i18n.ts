@@ -2,7 +2,7 @@ import * as nodePath from 'path';
 import ApplicationConfig from '../config/application-config';
 import I18nConfig from '../config/i18n-config';
 import ValidationError from '../core/validation-error';
-import { Service } from '../decorator/service';
+import Service from '../decorator/service';
 import FileSystemUtil from '../util/file-system';
 import LoggerService from './logger';
 

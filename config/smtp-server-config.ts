@@ -1,4 +1,4 @@
-import { Config } from '../decorator/config';
+import Config from '../decorator/config';
 import EnvironmentVariable from '../core/environment-variable';
 
 @Config()

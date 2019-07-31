@@ -1,6 +1,6 @@
 import Container from '../core/container';
 
-export const Middleware = (options?: { [key: string]: any }): ClassDecorator => {
+export default function Middleware(options?: { [key: string]: any }): ClassDecorator {
     return target => {
         if (undefined === Container.classes.middleware) {
             Container.classes.middleware = [];
@@ -25,4 +25,4 @@ export const Middleware = (options?: { [key: string]: any }): ClassDecorator => 
             target,
         });
     };
-};
+}

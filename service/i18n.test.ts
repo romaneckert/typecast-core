@@ -1,4 +1,4 @@
-import { Application } from '../core/application';
+import Application from '../core/application';
 import I18nService from './i18n';
 import Container from '../core/container';
 

@@ -1,7 +1,7 @@
 import express from 'express';
 import I18nConfig from '../config/i18n-config';
-import { Middleware } from '../decorator/middleware';
-import { IMiddleware } from '../interface/middleware';
+import Middleware from '../decorator/middleware';
+import IMiddleware from '../interface/middleware';
 
 @Middleware()
 export default class LocaleMiddleware implements IMiddleware {

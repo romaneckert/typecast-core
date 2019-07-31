@@ -1,6 +1,6 @@
 import * as nodemailer from 'nodemailer';
 import MailConfig from '../config/mail-config';
-import { Service } from '../decorator/service';
+import Service from '../decorator/service';
 import ContextConfig from '../config/context-config';
 
 @Service()

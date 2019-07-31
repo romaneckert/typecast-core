@@ -1,5 +1,5 @@
-import { Config } from '../decorator/config';
-import { IMiddleware } from '../interface/middleware';
+import Config from '../decorator/config';
+import IMiddleware from '../interface/middleware';
 import AuthMiddleware from '../middleware/auth';
 import LocaleMiddleware from '../middleware/locale';
 import RolesMiddleware from '../middleware/roles';

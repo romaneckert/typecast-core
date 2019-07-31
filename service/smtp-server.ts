@@ -1,4 +1,4 @@
-import { Service } from '../decorator/service';
+import Service from '../decorator/service';
 import { SMTPServer } from 'smtp-server';
 import SMTPServerConfig from '../config/smtp-server-config';
 import LoggerService from './logger';

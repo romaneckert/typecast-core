@@ -3,7 +3,7 @@ import { Repository } from 'typeorm';
 import ApplicationConfig from '../config/application-config';
 import ContextConfig from '../config/context-config';
 import Container from '../core/container';
-import { Service } from '../decorator/service';
+import Service from '../decorator/service';
 import Log from '../entity/log';
 import FileSystemUtil from '../util/file-system';
 import StringUtil from '../util/string';

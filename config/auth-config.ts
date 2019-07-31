@@ -1,5 +1,5 @@
 import * as crypto from 'crypto';
-import { Config } from '../decorator/config';
+import Config from '../decorator/config';
 import EnvironmentVariable from '../core/environment-variable';
 import EnvironmentVariableError from '../error/environment-variable';
 

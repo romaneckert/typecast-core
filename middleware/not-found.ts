@@ -1,6 +1,6 @@
 import express from 'express';
-import { Middleware } from '../decorator/middleware';
-import { IMiddleware } from '../interface/middleware';
+import Middleware from '../decorator/middleware';
+import IMiddleware from '../interface/middleware';
 
 @Middleware()
 export default class NotFoundMiddleware implements IMiddleware {
