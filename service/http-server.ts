@@ -6,20 +6,20 @@ import helmet from 'helmet';
 import https from 'https';
 import * as nodePath from 'path';
 import ApplicationConfig from '../config/application-config';
-import { HTTPServerConfig } from '../config/http-server-config';
+import HTTPServerConfig from '../config/http-server-config';
 import Container from '../core/container';
 import { Service } from '../decorator/service';
 import IRoute from '../interface/route';
-import { AccessMiddleware } from '../middleware/access';
-import { ErrorMiddleware } from '../middleware/error';
-import { HandleMiddleware } from '../middleware/handle';
-import { NotFoundMiddleware } from '../middleware/not-found';
+import AccessMiddleware from '../middleware/access';
+import ErrorMiddleware from '../middleware/error';
+import HandleMiddleware from '../middleware/handle';
+import NotFoundMiddleware from '../middleware/not-found';
 import FileSystemUtil from '../util/file-system';
-import { LoggerService } from './logger';
+import LoggerService from './logger';
 import RendererService from './renderer';
 
 @Service()
-export class HTTPServerService {
+export default class HTTPServerService {
     public routes: { [key: string]: IRoute } = {};
 
     private logger: LoggerService;

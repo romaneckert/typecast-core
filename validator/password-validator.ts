@@ -1,6 +1,6 @@
 import { Matches, MaxLength, MinLength } from 'class-validator';
 
-export class PasswordValidator {
+export default class PasswordValidator {
     @Matches(/\d/, {
         message: 'typecast.error.password.one_number_required',
     })

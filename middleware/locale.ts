@@ -1,10 +1,10 @@
 import express from 'express';
-import { I18nConfig } from '../config/i18n-config';
+import I18nConfig from '../config/i18n-config';
 import { Middleware } from '../decorator/middleware';
 import { IMiddleware } from '../interface/middleware';
 
 @Middleware()
-export class LocaleMiddleware implements IMiddleware {
+export default class LocaleMiddleware implements IMiddleware {
     private i18nConfig: I18nConfig;
 
     public constructor(i18nConfig: I18nConfig) {

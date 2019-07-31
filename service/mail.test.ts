@@ -1,7 +1,7 @@
 import { Application } from '../core/application';
 import Container from '../core/container';
-import { MailService } from './mail';
-import { SMTPServerService } from './smtp-server';
+import MailService from './mail';
+import SMTPServerService from './smtp-server';
 
 const app: Application = new Application();
 

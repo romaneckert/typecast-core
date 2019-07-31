@@ -4,7 +4,7 @@ import EnvironmentVariable from '../core/environment-variable';
 import EnvironmentVariableError from '../error/environment-variable';
 
 @Config()
-export class AuthConfig {
+export default class AuthConfig {
     public redirectPath: string = '/typecast/user/sign-in';
     public tokenCookieName: string = '_t';
     public tokenExpiresIn: number = 600;

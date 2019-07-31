@@ -1,10 +1,10 @@
 import * as nodemailer from 'nodemailer';
-import { MailConfig } from '../config/mail-config';
+import MailConfig from '../config/mail-config';
 import { Service } from '../decorator/service';
-import { ContextConfig } from '../config/context-config';
+import ContextConfig from '../config/context-config';
 
 @Service()
-export class MailService {
+export default class MailService {
     private mailConfig: MailConfig;
     private contextConfig: ContextConfig;
 

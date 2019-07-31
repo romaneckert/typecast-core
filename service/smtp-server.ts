@@ -1,10 +1,10 @@
 import { Service } from '../decorator/service';
 import { SMTPServer } from 'smtp-server';
-import { SMTPServerConfig } from '../config/smtp-server-config';
-import { LoggerService } from './logger';
+import SMTPServerConfig from '../config/smtp-server-config';
+import LoggerService from './logger';
 
 @Service()
-export class SMTPServerService {
+export default class SMTPServerService {
     private smtpServerConfig: SMTPServerConfig;
     private server: SMTPServer;
     private logger: LoggerService;

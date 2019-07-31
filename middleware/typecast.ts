@@ -4,7 +4,7 @@ import { Middleware } from '../decorator/middleware';
 import { IMiddleware } from '../interface/middleware';
 
 @Middleware()
-export class TypecastMiddleware implements IMiddleware {
+export default class TypecastMiddleware implements IMiddleware {
     private typecastConfig: { [key: string]: any };
 
     public async handle(req: express.Request, res: express.Response, next: () => void) {

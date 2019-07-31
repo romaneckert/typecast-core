@@ -1,4 +1,4 @@
-import { StringUtil } from './string';
+import StringUtil from './string';
 
 test('cast', () => {
     expect(StringUtil.cast(null)).toBe('null');

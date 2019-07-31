@@ -7,10 +7,10 @@ import IRoute from '../../../interface/route';
 import AuthService from '../../../service/auth';
 import DatabaseService from '../../../service/database';
 import I18nService from '../../../service/i18n';
-import { LoggerService } from '../../../service/logger';
-import { MailService } from '../../../service/mail';
-import { HTTPServerService } from '../../../service/http-server';
-import { EmailValidator } from '../../../validator/email-validator';
+import LoggerService from '../../../service/logger';
+import MailService from '../../../service/mail';
+import HTTPServerService from '../../../service/http-server';
+import EmailValidator from '../../../validator/email-validator';
 
 @Route()
 export class PasswordResetRoute implements IRoute {

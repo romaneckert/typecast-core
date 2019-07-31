@@ -5,11 +5,11 @@ import Container from './container';
 import ApplicationConfig from '../config/application-config';
 import DatabaseService from '../service/database';
 import I18nService from '../service/i18n';
-import { MailService } from '../service/mail';
-import { HTTPServerService } from '../service/http-server';
+import MailService from '../service/mail';
+import HTTPServerService from '../service/http-server';
 import FileSystemUtil from '../util/file-system';
-import { ContextConfig } from '../config/context-config';
-import { SMTPServerService } from '../service/smtp-server';
+import ContextConfig from '../config/context-config';
+import SMTPServerService from '../service/smtp-server';
 
 // kill process on unhandled promise rejection
 process.on('unhandledRejection', err => {

@@ -3,7 +3,7 @@ import EnvironmentVariable from '../core/environment-variable';
 import EnvironmentVariableError from '../error/environment-variable';
 
 @Config()
-export class ContextConfig {
+export default class ContextConfig {
     public allowedContexts: string[] = ['production', 'acceptance', 'staging', 'test', 'development'];
 
     public get context(): string {

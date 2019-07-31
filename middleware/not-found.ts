@@ -3,7 +3,7 @@ import { Middleware } from '../decorator/middleware';
 import { IMiddleware } from '../interface/middleware';
 
 @Middleware()
-export class NotFoundMiddleware implements IMiddleware {
+export default class NotFoundMiddleware implements IMiddleware {
     public async handle(req: express.Request, res: express.Response): Promise<void | express.Response> {
         if (['application/json'].includes(String(req.headers['content-type']))) {
             return res.status(404).json({

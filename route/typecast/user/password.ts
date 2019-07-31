@@ -6,7 +6,7 @@ import User from '../../../entity/user';
 import IRoute from '../../../interface/route';
 import AuthService from '../../../service/auth';
 import DatabaseService from '../../../service/database';
-import { PasswordValidator } from '../../../validator/password-validator';
+import PasswordValidator from '../../../validator/password-validator';
 
 @Route()
 export class PasswordRoute implements IRoute {

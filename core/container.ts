@@ -6,7 +6,7 @@ export default class Container {
 
     public static async get<T>(target: any, additionalKey: string = ''): Promise<T> {
         if (undefined === this.loggerClass) {
-            this.loggerClass = (await import('../service/logger')).LoggerService;
+            this.loggerClass = await import('../service/logger');
         }
 
         let resolvedOption;

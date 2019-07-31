@@ -1,6 +1,6 @@
 import { Application } from '../core/application';
 import Container from '../core/container';
-import { LoggerService } from './logger';
+import LoggerService from './logger';
 
 const app: Application = new Application();
 

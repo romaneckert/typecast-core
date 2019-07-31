@@ -1,5 +1,4 @@
 import axios from 'axios';
-import url from 'url';
 import { Application } from '../core/application';
 
 const app: Application = new Application();

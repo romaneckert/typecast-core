@@ -2,7 +2,7 @@ import { Config } from '../decorator/config';
 import EnvironmentVariable from '../core/environment-variable';
 
 @Config()
-export class DatabaseConfig {
+export default class DatabaseConfig {
     public get database(): string {
         return EnvironmentVariable.get('DB_DATABASE', 'typecast');
     }

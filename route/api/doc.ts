@@ -1,6 +1,6 @@
 import express from 'express';
 import ApplicationConfig from '../../config/application-config';
-import { HTTPServerConfig } from '../../config/http-server-config';
+import HTTPServerConfig from '../../config/http-server-config';
 import Container from '../../core/container';
 import { Route } from '../../decorator/route';
 import IRoute from '../../interface/route';

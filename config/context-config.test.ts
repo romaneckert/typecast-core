@@ -1,6 +1,6 @@
 import { Application } from '../core/application';
 import Container from '../core/container';
-import { ContextConfig } from './context-config';
+import ContextConfig from './context-config';
 
 const app: Application = new Application();
 let contextConfig: ContextConfig;

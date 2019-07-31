@@ -1,13 +1,13 @@
 import { Config } from '../decorator/config';
 import { IMiddleware } from '../interface/middleware';
-import { AuthMiddleware } from '../middleware/auth';
-import { LocaleMiddleware } from '../middleware/locale';
-import { RolesMiddleware } from '../middleware/roles';
-import { TypecastMiddleware } from '../middleware/typecast';
+import AuthMiddleware from '../middleware/auth';
+import LocaleMiddleware from '../middleware/locale';
+import RolesMiddleware from '../middleware/roles';
+import TypecastMiddleware from '../middleware/typecast';
 import EnvironmentVariable from '../core/environment-variable';
 
 @Config()
-export class HTTPServerConfig {
+export default class HTTPServerConfig {
     public middlewares: IMiddleware[] = [];
 
     public constructor(authMiddleware: AuthMiddleware, localeMiddleware: LocaleMiddleware, rolesMiddleware: RolesMiddleware, typecastMiddleware: TypecastMiddleware) {

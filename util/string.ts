@@ -1,4 +1,4 @@
-export class StringUtil {
+export default class StringUtil {
     public static camelize(text: string) {
         return text.replace(/^([A-Z])|[\s-_.]+(\w)/g, (match, p1, p2, offset) => {
             if (p2) {

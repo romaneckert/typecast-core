@@ -2,7 +2,7 @@ import express from 'express';
 import { IMiddleware } from '../interface/middleware';
 import IRoute from '../interface/route';
 
-export class HandleMiddleware implements IMiddleware {
+export default class HandleMiddleware implements IMiddleware {
     public route: IRoute;
 
     constructor(route: IRoute) {

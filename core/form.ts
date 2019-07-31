@@ -1,8 +1,8 @@
 import { validate, ValidationError as ClassValidationError } from 'class-validator';
 import express from 'express';
 
-import { StringUtil } from '../util/string';
-import { ValidationError } from './validation-error';
+import StringUtil from '../util/string';
+import ValidationError from './validation-error';
 
 export default class Form {
     public submitted: boolean = false;

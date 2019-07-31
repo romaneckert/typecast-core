@@ -1,9 +1,9 @@
 import express from 'express';
 import { Middleware } from '../decorator/middleware';
-import { LoggerService } from '../service/logger';
+import LoggerService from '../service/logger';
 
 @Middleware()
-export class ErrorMiddleware {
+export default class ErrorMiddleware {
     private logger: LoggerService;
 
     public constructor(logger: LoggerService) {
