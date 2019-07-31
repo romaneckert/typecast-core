@@ -1,16 +1,10 @@
-import Application from '../core/application';
 import Container from '../core/container';
 import ContextConfig from './context-config';
 
-const app: Application = new Application();
 let contextConfig: ContextConfig;
 
 beforeAll(async () => {
-    await app.start();
     contextConfig = await Container.get<ContextConfig>(ContextConfig);
-});
-afterAll(async () => {
-    await app.stop();
 });
 
 test('invalid', async () => {
