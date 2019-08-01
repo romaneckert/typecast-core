@@ -1,6 +1,6 @@
 {
     "name": "@typecast/core",
-    "version": "0.0.56",
+    "version": "0.0.57",
     "description": "",
     "scripts": {
         "gulp": "npx gulp",
