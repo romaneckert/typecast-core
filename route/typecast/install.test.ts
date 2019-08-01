@@ -1,6 +1,6 @@
 import axios from 'axios';
 import url from 'url';
-import Application from '../../core/application';
+import Application from '../../application';
 import Container from '../../core/container';
 import HTTPServerConfig from '../../config/http-server-config';
 import DatabaseService from '../../service/database';

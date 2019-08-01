@@ -11,6 +11,6 @@
         "strictPropertyInitialization": false,
         "esModuleInterop": true
     },
-    "include": ["config", "service", "validator", "view-helper", "middleware", "core", "entity", "util", "interface", "route", "index.ts"],
+    "include": ["config", "service", "validator", "view-helper", "middleware", "core", "entity", "util", "interface", "route", "index.ts", "application.ts"],
     "exclude": ["node_modules"]
 }

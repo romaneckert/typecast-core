@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Application from '../core/application';
+import Application from '../application';
 
 const app: Application = new Application();
 

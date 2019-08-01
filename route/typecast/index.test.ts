@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Application from '../../core/application';
+import Application from '../../application';
 import Container from '../../core/container';
 import HTTPServerConfig from '../../config/http-server-config';
 

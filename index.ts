@@ -1,4 +1,4 @@
-import Application from './core/application';
+import Application from './application';
 
 (async () => {
     const app = new Application();

@@ -1,5 +1,5 @@
 import Container from '../core/container';
-import Application from '../core/application';
+import Application from '../application';
 import DatabaseConfig from './database-config';
 
 const app: Application = new Application();

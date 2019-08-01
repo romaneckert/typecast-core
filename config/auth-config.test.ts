@@ -1,6 +1,6 @@
 import Container from '../core/container';
 import AuthConfig from './auth-config';
-import Application from '../core/application';
+import Application from '../application';
 
 const app: Application = new Application();
 let authConfig: AuthConfig;

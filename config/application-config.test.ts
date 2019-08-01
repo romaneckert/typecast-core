@@ -1,6 +1,6 @@
 import * as nodePath from 'path';
 import Container from '../core/container';
-import Application from '../core/application';
+import Application from '../application';
 import ApplicationConfig from './application-config';
 import FileSystemUtil from '../util/file-system';
 
