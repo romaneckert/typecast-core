@@ -4,6 +4,7 @@ import Application from '../../core/application';
 import Container from '../../core/container';
 import HTTPServerConfig from '../../config/http-server-config';
 import DatabaseService from '../../service/database';
+
 const app: Application = new Application();
 let database: DatabaseService;
 

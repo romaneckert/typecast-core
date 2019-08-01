@@ -13,7 +13,7 @@ import HTTPServerService from '../../../service/http-server';
 import EmailValidator from '../../../validator/email-validator';
 
 @Route()
-export class PasswordResetRoute implements IRoute {
+export default class PasswordResetRoute implements IRoute {
     public name: string = '/typecast/user/password-reset';
     public methods: string[] = ['get', 'post'];
     public path: string = '/typecast/user/password-reset';

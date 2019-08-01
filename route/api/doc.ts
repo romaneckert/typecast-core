@@ -7,7 +7,7 @@ import IRoute from '../../interface/route';
 import I18nService from '../../service/i18n';
 
 @Route()
-export class ApiDoc implements IRoute {
+export default class ApiDoc implements IRoute {
     public name: string = '/api/doc';
     public methods: string[] = ['get'];
     public path: string = '/api/doc';

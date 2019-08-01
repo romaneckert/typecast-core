@@ -40,12 +40,6 @@ export default class Application {
         const applicationConfig = await Container.get<ApplicationConfig>(ApplicationConfig);
         applicationConfig.paths = this.paths;
 
-        for (const config of Object.values(await Container.getConfigs())) {
-            if ('function' === typeof config.validate) {
-                config.validate();
-            }
-        }
-
         const contextConfig = await Container.get<ContextConfig>(ContextConfig);
 
         const database = await Container.get<DatabaseService>(DatabaseService);

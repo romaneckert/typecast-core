@@ -47,7 +47,7 @@ import UserSignInValidator from '../../../validator/user/sign-in-validator';
         },
     },
 })
-export class SignInRoute implements IRoute {
+export default class SignInRoute implements IRoute {
     public name: string = '/api/user/sign-in';
     public methods: string[] = ['get', 'post'];
     public path: string = '/api/user/sign-in';

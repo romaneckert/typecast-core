@@ -6,7 +6,7 @@ import IRoute from '../../../../interface/route';
 import DatabaseService from '../../../../service/database';
 
 @Route()
-export class ReportRoute implements IRoute {
+export default class ReportRoute implements IRoute {
     public name: string = '/typecast/admin/system/report';
     public methods: string[] = ['get'];
     public path: string = '/typecast/admin/system/report';

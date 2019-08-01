@@ -12,7 +12,7 @@ import HTTPServerService from '../../service/http-server';
 import EmailValidator from '../../validator/email-validator';
 
 @Route()
-export class InstallRoute implements IRoute {
+export default class InstallRoute implements IRoute {
     public name: string = '/typecast/install';
     public methods: string[] = ['get', 'post'];
     public path: string = '/typecast/install';

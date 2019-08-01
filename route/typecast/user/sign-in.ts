@@ -11,7 +11,7 @@ import LoggerService from '../../../service/logger';
 import UserSignInValidator from '../../../validator/user/sign-in-validator';
 
 @Route()
-export class SignInRoute implements IRoute {
+export default class SignInRoute implements IRoute {
     public name: string = '/typecast/user/sign-in';
     public methods: string[] = ['get', 'post'];
     public path: string = '/typecast/user/sign-in';

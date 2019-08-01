@@ -2,6 +2,7 @@ import axios from 'axios';
 import Application from '../../core/application';
 import Container from '../../core/container';
 import HTTPServerConfig from '../../config/http-server-config';
+
 const app: Application = new Application();
 
 beforeAll(async () => {

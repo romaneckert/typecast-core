@@ -3,7 +3,7 @@ import Route from '../../decorator/route';
 import IRoute from '../../interface/route';
 
 @Route()
-export class IndexRoute implements IRoute {
+export default class IndexRoute implements IRoute {
     public name: string = '/typecast';
     public methods: string[] = ['get'];
     public path: string = '/typecast';

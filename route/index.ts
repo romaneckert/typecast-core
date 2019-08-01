@@ -8,7 +8,7 @@ import DatabaseService from '../service/database';
 import UserSignInValidator from '../validator/user/sign-in-validator';
 
 @Route()
-export class IndexRoute implements IRoute {
+export default class IndexRoute implements IRoute {
     public name: string = '/';
     public methods: string[] = ['get', 'post'];
     public path: string = '/';
