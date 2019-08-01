@@ -1,24 +1,32 @@
 import { Config } from '../decorator/config';
+import EnvironmentVariable from '../core/environment-variable';
 
 @Config()
-// TODO: use getter for validation
 export class MailConfig {
-    public host?: string = process.env.MAIL_HOST;
-    public port?: number = Number(process.env.MAIL_PORT);
-    public defaultFrom?: string = process.env.MAIL_DEFAULT_FROM;
-    public connectionTimeout: number = 2000;
 
-    public validate() {
-        if ('string' !== typeof this.host || 0 === this.host.length) {
-            throw new Error(`host not set or not valid - Environment Variable: MAIL_HOST - example: localhost`);
-        }
+    private _host = {
+        environmentVariable: 'MAIL_HOST',
+        example: 'localhost',
+        default: 'localhost'
+    }
 
-        if ('number' !== typeof this.port) {
-            throw new Error(`port not set or not valid - Environment Variable: MAIL_PORT - example: 25`);
-        }
+    public get host(): string {
+        return EnvironmentVariable.get('MAIL_HOST', 'localhost');
+    }
 
-        if ('string' !== typeof this.defaultFrom || 0 === this.defaultFrom.length) {
-            throw new Error(`defaultFrom not set or not valid - Environment Variable: MAIL_DEFAULT_FROM - example: noreply@domain.com`);
+    public get port(): number {
+        return EnvironmentVariable.get('MAIL_PORT', 25);
+    }
+
+    public get defaultFrom(): string {
+        return EnvironmentVariable.get('MAIL_DEFAULT_FROM', 'noreply@typecast');
+    }
+
+    public get connectionTimeout(): number {
+        try {
+            return EnvironmentVariable.get('MAIL_CONNECTION_TIMEOUT', 2000);
+        } catch (err) {
+            return 2000;
         }
     }
 }
