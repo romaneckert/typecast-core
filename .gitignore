@@ -2,5 +2,6 @@ node_modules
 /dist
 /var
 /public/assets/typecast/css
+/coverage
 /.env.*
 !/.env.example

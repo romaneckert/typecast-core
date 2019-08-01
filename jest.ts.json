@@ -19,7 +19,7 @@
         "<rootDir>/validator/**",
         "<rootDir>/view-helper/**"
     ],
-    "coverageReporters": ["text"],
+    "coverageReporters": ["json-summary", "text"],
     "testPathIgnorePatterns": ["<rootDir>/dist"],
     "verbose": true,
     "errorOnDeprecated": true,

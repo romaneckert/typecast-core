@@ -1,4 +1,3 @@
 # @typecast/core
 
-[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
-
+![code style: prettier](./badges/badge-prettier.svg) ![code coverage statements](./badges/badge-statements.svg) ![code coverage branches](./badges/badge-branches.svg) ![code coverage functions](./badges/badge-functions.svg) ![code coverage functions](./badges/badge-lines.svg)
