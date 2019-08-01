@@ -16,7 +16,7 @@ export default class Container {
 
         for (const [namespace, classesOfNamespace] of Object.entries(this.classes)) {
             for (const option of classesOfNamespace) {
-                if (target.isPrototypeOf(option.target) || target === option.target) {
+                if (option.target.isPrototypeOf(target) || target === option.target) {
                     resolvedOption = option;
                     resolvedNamespace = namespace;
                     key = i + '_' + additionalKey;
