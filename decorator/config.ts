@@ -8,7 +8,7 @@ export default function Config(options?: { [key: string]: any }): ClassDecorator
 
         let k = 0;
         for (const option of Container.classes.config) {
-            if (option.isPrototypeOf(target)) {
+            if (target.isPrototypeOf(option)) {
                 Container.classes.config[k] = {
                     options,
                     target,
