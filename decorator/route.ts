@@ -9,7 +9,7 @@ export default function Route(options?: { [key: string]: any }): ClassDecorator 
         let k = 0;
 
         for (const option of Container.classes.route) {
-            if (target.isPrototypeOf(option)) {
+            if (target.isPrototypeOf(option.target)) {
                 Container.classes.route[k] = {
                     options,
                     target,

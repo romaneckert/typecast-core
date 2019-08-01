@@ -9,7 +9,7 @@ export default function Middleware(options?: { [key: string]: any }): ClassDecor
         let k = 0;
 
         for (const option of Container.classes.middleware) {
-            if (target.isPrototypeOf(option)) {
+            if (target.isPrototypeOf(option.target)) {
                 Container.classes.middleware[k] = {
                     options,
                     target,

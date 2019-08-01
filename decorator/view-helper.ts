@@ -9,7 +9,7 @@ export default function ViewHelper(options?: { [key: string]: any }): ClassDecor
         let k = 0;
 
         for (const option of Container.classes.viewHelper) {
-            if (target.isPrototypeOf(option)) {
+            if (target.isPrototypeOf(option.target)) {
                 Container.classes.viewHelper[k] = {
                     options,
                     target,
