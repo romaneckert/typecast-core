@@ -185,6 +185,9 @@ export default class HTTPServerService {
                         case 'post':
                             this.router.post(route.path, middleware.handle.bind(middleware));
                             break;
+                        case 'delete':
+                            this.router.delete(route.path, middleware.handle.bind(middleware));
+                            break;
                         default:
                             throw new Error('method ' + method + ' is not supported');
                     }
@@ -200,6 +203,9 @@ export default class HTTPServerService {
                         break;
                     case 'post':
                         this.router.post(route.path, handleMiddleware.handle.bind(handleMiddleware));
+                        break;
+                    case 'delete':
+                        this.router.delete(route.path, handleMiddleware.handle.bind(handleMiddleware));
                         break;
                     default:
                         throw new Error('method ' + method + ' is not supported');
