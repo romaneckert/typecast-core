@@ -1,0 +1,47 @@
+extends ../../../layout/typecast/signed-in
+
+block append head
+    title=view.translate(locale, 'typecast.admin.design.title')
+    meta(name="description" content=view.translate(locale, 'typecast.admin.design.description'))
+
+block content
+
+    h1.h2=view.translate(locale, 'typecast.admin.design.headline')
+
+    h3 Accordion
+
+    .accordion
+        .accordion-element
+            .accordion-header
+                h3 Element 1
+            .accordion-body
+                p Element 1 Text
+        .accordion-element
+            .accordion-header
+                h3 Element 2
+            .accordion-body
+                p Element 2 Text   
+
+    h3 Table
+
+    table
+        tr
+            th Firstname
+            th Lastname
+            th Age
+        tr
+            td Jill
+            td Smith
+            td 50
+        tr
+            td Eve
+            td Jackson
+            td 94 
+        tr
+            td Jill
+            td Smith
+            td 50
+        tr
+            td Eve
+            td Jackson
+            td 94                       
