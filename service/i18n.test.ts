@@ -18,6 +18,7 @@ test('i18n', async () => {
     expect(await i18n.translate('de', 'application.title')).toBe('TYPECAST');
     expect(await i18n.translate('es', 'application.title')).toBe('TYPECAST');
 
+    expect(await i18n.translate('en', 'typecast.error.error_message', { message: 20 })).toBe('An error has occurred with the following message: 20');
     expect(await i18n.translate('en', 'typecast.error.error_message', { message: 'This is a test message.' })).toBe('An error has occurred with the following message: This is a test message.');
     expect(await i18n.translate('de', 'typecast.error.error_message', { message: 'Das ist eine Test Nachricht.' })).toBe(
         'Es ist ein Fehler mit folgender Nachricht aufgetreten: Das ist eine Test Nachricht.',

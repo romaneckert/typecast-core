@@ -127,7 +127,7 @@ export default class I18nService {
                 .replace('}}', '')
                 .trim();
 
-            if ('object' === typeof data && 'string' === typeof data[property]) {
+            if ('object' === typeof data && ('string' === typeof data[property] || 'number' === typeof data[property])) {
                 return data[property];
             }
 
