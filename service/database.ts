@@ -50,6 +50,7 @@ export default class DatabaseService {
 
     public async drop(): Promise<void> {
         await this.connection.dropDatabase();
+        await this.connection.synchronize();
     }
 
     public async stop(): Promise<boolean> {

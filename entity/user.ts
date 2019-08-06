@@ -1,6 +1,5 @@
 import { Column, Entity, ObjectID, PrimaryGeneratedColumn } from 'typeorm';
 
-// https://github.com/typeorm/typeorm/blob/master/docs/entity-inheritance.md
 @Entity()
 export default class User {
     @PrimaryGeneratedColumn()
@@ -9,17 +8,17 @@ export default class User {
     @Column()
     public email: string;
 
-    @Column({ nullable: true })
-    public passwordHash?: string;
+    @Column({ type: 'varchar', nullable: true })
+    public passwordHash: string | null = null;
 
-    @Column({ nullable: true })
-    public passwordHashCreationDate?: Date;
+    @Column({ type: 'datetime', nullable: true })
+    public passwordHashCreationDate: Date | null = null;
 
-    @Column({ nullable: true })
-    public passwordToken?: string;
+    @Column({ type: 'varchar', nullable: true })
+    public passwordToken: string | null = null;
 
-    @Column({ nullable: true })
-    public passwordTokenCreationDate?: Date;
+    @Column({ type: 'datetime', nullable: true })
+    public passwordTokenCreationDate: Date | null = null;
 
     @Column('simple-array')
     public roles: string[] = [];

@@ -28,7 +28,7 @@ export default class PasswordRoute implements IRoute {
         });
 
         // return password token expired after 24h
-        if (undefined === user || undefined === user.passwordTokenCreationDate || new Date().valueOf() - user.passwordTokenCreationDate.valueOf() > 24 * 60 * 60 * 1000) {
+        if (undefined === user || null === user.passwordTokenCreationDate || new Date().valueOf() - user.passwordTokenCreationDate.valueOf() > 24 * 60 * 60 * 1000) {
             return res.render('typecast/user/password-token-expired');
         }
 
@@ -47,10 +47,10 @@ export default class PasswordRoute implements IRoute {
         user.passwordHashCreationDate = new Date();
 
         // remove password token
-        user.passwordToken = undefined;
+        user.passwordToken = null;
 
         // remove password token creation date
-        user.passwordTokenCreationDate = undefined;
+        user.passwordTokenCreationDate = null;
 
         // save user
         await this.userRepository.save(user);
