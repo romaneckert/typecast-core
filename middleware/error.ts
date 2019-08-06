@@ -11,7 +11,7 @@ export default class ErrorMiddleware {
     }
 
     public async handle(err: any, req: express.Request, res: express.Response, next: () => void): Promise<void> {
-        this.logger.error(req.url + ' ' + err);
+        this.logger.error(req.url + ' ' + err, err);
         res.status(500);
         return res.render('status-500');
     }
