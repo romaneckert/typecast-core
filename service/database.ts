@@ -1,11 +1,11 @@
 import * as nodePath from 'path';
-import { Connection, createConnection, Repository } from 'typeorm';
-import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOptions';
+import { Connection, createConnection, Repository, ConnectionOptions } from 'typeorm';
 import ApplicationConfig from '../config/application-config';
 import DatabaseConfig from '../config/database-config';
 import Service from '../decorator/service';
 import FileSystemUtil from '../util/file-system';
 import LoggerService from './logger';
+import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 
 @Service()
 export default class DatabaseService {
@@ -13,34 +13,34 @@ export default class DatabaseService {
 
     private connection: Connection;
     private applicationConfig: ApplicationConfig;
-    private config: DatabaseConfig;
+    private databaseConfig: DatabaseConfig;
     private logger: LoggerService;
 
-    public constructor(applicationConfig: ApplicationConfig, config: DatabaseConfig, logger: LoggerService) {
+    public constructor(applicationConfig: ApplicationConfig, databaseConfig: DatabaseConfig, logger: LoggerService) {
         this.applicationConfig = applicationConfig;
-        this.config = config;
+        this.databaseConfig = databaseConfig;
         this.logger = logger;
     }
 
     public async start(): Promise<void> {
-        const config: MongoConnectionOptions = {
-            database: this.config.database,
+        const config: MysqlConnectionOptions = {
+            database: this.databaseConfig.database,
+            username: this.databaseConfig.username,
+            password: this.databaseConfig.password,
             entities: await this.getEntityPaths(),
-            host: this.config.host,
-            reconnectTries: 2,
+            host: this.databaseConfig.host,
             synchronize: true,
-            type: 'mongodb',
-            useNewUrlParser: true,
+            type: 'mysql',
         };
 
         const connection = await createConnection(config);
 
         if (null === connection) {
-            await this.logger.critical(`can not connect to db "${this.config.database}"`);
+            await this.logger.critical(`can not connect to db "${this.databaseConfig.database}"`);
         } else {
             this.connected = true;
             this.connection = connection;
-            await this.logger.notice(`connected to db "${this.config.database}"`);
+            await this.logger.notice(`connected to db "${this.databaseConfig.database}"`);
         }
     }
 

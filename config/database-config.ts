@@ -11,8 +11,8 @@ export default class DatabaseConfig {
         return EnvironmentVariable.get('DB_HOST', 'localhost');
     }
 
-    public get user(): string {
-        return EnvironmentVariable.get('DB_USER', 'root');
+    public get username(): string {
+        return EnvironmentVariable.get('DB_USERNAME', 'root');
     }
 
     public get password(): string {

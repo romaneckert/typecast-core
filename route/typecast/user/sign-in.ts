@@ -44,15 +44,7 @@ export default class SignInRoute implements IRoute {
 
         const user = await this.userRepository.findOne({ where: { email: form.data.email } });
 
-        if (undefined === user) {
-            await form.error('user', 'incorrect_username_or_password', 'typecast.error.user.incorrect_username_or_password');
-
-            return res.render('typecast/user/sign-in', {
-                form,
-            });
-        }
-
-        if (!(await this.auth.verifyPassword(form.data.password, user.passwordHash))) {
+        if (undefined === user || undefined === user.passwordHash || !(await this.auth.verifyPassword(form.data.password, user.passwordHash))) {
             await form.error('user', 'incorrect_username_or_password', 'typecast.error.user.incorrect_username_or_password');
 
             return res.render('typecast/user/sign-in', {

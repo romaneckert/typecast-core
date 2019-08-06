@@ -17,5 +17,5 @@ test('database-config', async () => {
     expect(typeof databaseConfig.database).toBe('string');
     expect(typeof databaseConfig.host).toBe('string');
     expect(() => databaseConfig.password).toThrow();
-    expect(() => databaseConfig.user).toThrow();
+    expect(() => databaseConfig.username).toThrow();
 });

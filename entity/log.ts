@@ -1,9 +1,9 @@
-import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { Column, Entity, ObjectID, PrimaryGeneratedColumn } from 'typeorm';
 
 // https://github.com/typeorm/typeorm/blob/master/docs/entity-inheritance.md
 @Entity()
 export default class Log {
-    @ObjectIdColumn()
+    @PrimaryGeneratedColumn()
     public id: ObjectID;
 
     @Column()
