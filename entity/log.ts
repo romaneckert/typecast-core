@@ -4,7 +4,7 @@ import { Column, Entity, ObjectID, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export default class Log {
     @PrimaryGeneratedColumn()
-    public id: ObjectID;
+    public id: number;
 
     @Column()
     public code: number;
