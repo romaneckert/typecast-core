@@ -8,8 +8,8 @@
         "dev": "npm run build && cd dist && export NODE_ENV=development && node index.js",
         "build": "rm -rf dist && tsc && cp -rf .env.* dist && cp -rf package.json dist && cp -rf jest.js.json dist && cp -rf LICENSE dist && cp -rf README.md dist && cp -rf view dist && cp -rf public dist && cp -rf locale dist && cp -rf .npmignore dist && cp -rf badges dist",
         "lint": "tslint -p tsconfig.json",
-        "test": "npm run build && cd dist && jest --runInBand --testTimeout 30000 --config jest.js.json && cd ../ && npm run lint",
-        "test:ts": "jest --runInBand --testTimeout 30000 --config jest.ts.json && jest-coverage-badges output './badges' && npm run lint",
+        "test": "npm run build && cd dist && jest --runInBand --testTimeout=30000 --config jest.js.json && cd ../ && npm run lint",
+        "test:ts": "jest --runInBand --testTimeout=30000 --config jest.ts.json && jest-coverage-badges output './badges' && npm run lint",
         "preversion": "npm test",
         "version": "git add -A .",
         "postversion": "git push && npm run build && cd dist && npm publish"
