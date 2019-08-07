@@ -6,9 +6,11 @@
 .accordion-header {
     border: 1px solid darken($color-white, 10%);
     background-color: $color-light-grey;
-    padding: 20px;
+    padding: 20px 10px 20px 10px;
     cursor: pointer;
     position: relative;
+    font-size: 14px;
+    font-weight: 500;
 
     &:before {
         position: absolute;
@@ -46,8 +48,9 @@
 .accordion-body {
     display: none;
     border: 1px solid darken($color-white, 10%);
+    border-top: none;
     background-color: $color-light-grey;
-    padding: 20px;
+    padding: 20px 10px 20px 10px;
 }
 .accordion-body > :last-child {
     padding: 0px;
