@@ -1,6 +1,5 @@
 import { Column, Entity, ObjectID, PrimaryGeneratedColumn } from 'typeorm';
 
-// https://github.com/typeorm/typeorm/blob/master/docs/entity-inheritance.md
 @Entity()
 export default class Log {
     @PrimaryGeneratedColumn()
@@ -12,16 +11,16 @@ export default class Log {
     @Column()
     public date: Date;
 
-    @Column()
+    @Column({ type: 'varchar' })
     public message: string;
 
-    @Column()
+    @Column({ type: 'varchar' })
     public contextType: string;
 
-    @Column()
+    @Column({ type: 'varchar' })
     public contextName: string;
 
-    @Column()
+    @Column({ type: 'text' })
     public data: string = '';
 
     constructor(code: number, date: Date, contextType: string, contextName: string, message: string, data?: string) {
