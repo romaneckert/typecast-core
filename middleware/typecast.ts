@@ -16,60 +16,80 @@ export default class TypecastMiddleware implements IMiddleware {
             throw new Error('can not get route.path from request');
         }
 
-        this.typecastConfig.currentRoutePath = req.route.path;
+        const typecastConfig: { [key: string]: any } = {
+            module: {},
+            currentRoutePath: req.route.path,
+        };
 
         if (0 !== req.route.path.indexOf('/typecast')) {
             return next();
         }
 
-        if (undefined !== this.typecastConfig.module) {
-            res.locals.typecast = this.typecastConfig;
-            return next();
-        }
-
-        this.typecastConfig.module = {};
-
-        for (const [key, route] of await Object.entries(await Container.getRoutes())) {
+        for (const route of await Object.values(await Container.getRoutes())) {
             if (undefined === route.backendModuleMainKey || undefined === route.backendModuleTitleKey || true === route.disabled) {
                 continue;
             }
 
+            if (undefined !== route.roles) {
+                if (undefined === res.locals.user || undefined === res.locals.user.roles) {
+                    continue;
+                }
+
+                let access = false;
+
+                for (const routeRole of route.roles) {
+                    for (const userRole of res.locals.user.roles) {
+                        if (routeRole === userRole) {
+                            access = true;
+                            break;
+                        }
+                    }
+
+                    if (access) {
+                        break;
+                    }
+                }
+
+                if (!access) {
+                    continue;
+                }
+            }
             const routeData = {
                 key: route.backendModuleTitleKey,
                 path: route.path,
             };
 
-            if (undefined === this.typecastConfig.module[route.backendModuleMainKey]) {
-                this.typecastConfig.module[route.backendModuleMainKey] = {
+            if (undefined === typecastConfig.module[route.backendModuleMainKey]) {
+                typecastConfig.module[route.backendModuleMainKey] = {
                     children: {},
                     key: route.backendModuleMainKey,
                 };
             }
 
             if (undefined !== route.backendModuleSubKey) {
-                if (undefined === this.typecastConfig.module[route.backendModuleMainKey].children[route.backendModuleSubKey]) {
-                    this.typecastConfig.module[route.backendModuleMainKey].children[route.backendModuleSubKey] = {
+                if (undefined === typecastConfig.module[route.backendModuleMainKey].children[route.backendModuleSubKey]) {
+                    typecastConfig.module[route.backendModuleMainKey].children[route.backendModuleSubKey] = {
                         children: {},
                         key: route.backendModuleSubKey,
                     };
-                    this.typecastConfig.module[route.backendModuleMainKey].children[route.backendModuleSubKey].children[routeData.key] = routeData;
+                    typecastConfig.module[route.backendModuleMainKey].children[route.backendModuleSubKey].children[routeData.key] = routeData;
                 }
             } else {
-                this.typecastConfig.module[route.backendModuleMainKey].children[routeData.key] = routeData;
+                typecastConfig.module[route.backendModuleMainKey].children[routeData.key] = routeData;
             }
         }
 
         const orderedModules: { [key: string]: any } = {};
-        Object.keys(this.typecastConfig.module)
+        Object.keys(typecastConfig.module)
             .sort()
             .reverse()
             .forEach(key => {
-                orderedModules[key] = this.typecastConfig.module[key];
+                orderedModules[key] = typecastConfig.module[key];
             });
 
-        this.typecastConfig.module = orderedModules;
+        typecastConfig.module = orderedModules;
 
-        res.locals.typecast = this.typecastConfig;
+        res.locals.typecast = typecastConfig;
 
         return next();
     }

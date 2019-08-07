@@ -10,7 +10,7 @@ export default class ReportRoute implements IRoute {
     public name: string = '/typecast/admin/system/report';
     public methods: string[] = ['get'];
     public path: string = '/typecast/admin/system/report';
-    public roles: string[] = ['user', 'admin'];
+    public roles: string[] = ['admin'];
     public backendModuleMainKey: string = 'admin';
     public backendModuleSubKey: string = 'system';
     public backendModuleTitleKey: string = 'report';
