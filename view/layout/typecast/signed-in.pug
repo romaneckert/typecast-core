@@ -3,6 +3,7 @@ extends ../default.pug
 block append head
     script(src=view.asset('vendor/jquery/jquery.min.js'))
     script(src=view.asset('typecast/js/accordion.js'))
+    script(src=view.asset('typecast/js/toolbar-left.js'))
     link(rel='stylesheet' href=view.asset('vendor/fontawesome/css/all.min.css'))
     link(rel='stylesheet' href=view.asset('typecast/css/style.css'))
 
@@ -21,20 +22,27 @@ block body
                 if typecast.module
                     ul
                         each level1data in typecast.module
-                            li 
+                            li
                                 span=view.translate(locale, 'typecast.' + level1data.key + '.title')
                                 if level1data.children
                                     ul
                                         each level2data in level1data.children
                                             if level2data.children
-                                                li.has-children
+                                                - let level2Class = (level2data.path === typecast.currentRoutePath ? 'active' : '');
+                                                each level3data in level2data.children
+                                                    -
+                                                        if(level3data.path === typecast.currentRoutePath) {
+                                                            level2Class = 'active open';
+                                                        }
+
+                                                li.has-children(class=level2Class)
                                                     a=view.translate(locale, 'typecast.' + level1data.key + '.' + level2data.key + '.title')
                                                     ul
                                                         each level3data in level2data.children
-                                                            li(style='display:none;')
+                                                            li(class=(level3data.path === typecast.currentRoutePath ? 'active' : ''))
                                                                 a(href=view.url(level3data.path))=view.translate(locale, 'typecast.' + level1data.key + '.' + level2data.key + '.' + level3data.key + '.title')
                                             else 
-                                                li
+                                                li(class=(level2data.path === typecast.currentRoutePath ? 'active' : ''))
                                                     a(href=view.url(level2data.path))=view.translate(locale, 'typecast.' + level1data.key + '.' + level2data.key + '.title')
 
         .typecast-content

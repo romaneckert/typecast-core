@@ -5,7 +5,10 @@ import IMiddleware from '../interface/middleware';
 
 @Middleware()
 export default class TypecastMiddleware implements IMiddleware {
-    private typecastConfig: { [key: string]: any };
+    private typecastConfig: { [key: string]: any } = {
+        module: undefined,
+        currentRoutePath: undefined,
+    };
 
     public async handle(req: express.Request, res: express.Response, next: () => void) {
         // check route.path from request
@@ -13,18 +16,18 @@ export default class TypecastMiddleware implements IMiddleware {
             throw new Error('can not get route.path from request');
         }
 
+        this.typecastConfig.currentRoutePath = req.route.path;
+
         if (0 !== req.route.path.indexOf('/typecast')) {
             return next();
         }
 
-        if (undefined !== this.typecastConfig) {
+        if (undefined !== this.typecastConfig.module) {
             res.locals.typecast = this.typecastConfig;
             return next();
         }
 
-        this.typecastConfig = {
-            module: {},
-        };
+        this.typecastConfig.module = {};
 
         for (const [key, route] of await Object.entries(await Container.getRoutes())) {
             if (undefined === route.backendModuleMainKey || undefined === route.backendModuleTitleKey || true === route.disabled) {

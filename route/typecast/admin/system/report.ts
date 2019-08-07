@@ -14,7 +14,6 @@ export default class ReportRoute implements IRoute {
     public backendModuleMainKey: string = 'admin';
     public backendModuleSubKey: string = 'system';
     public backendModuleTitleKey: string = 'report';
-    public disabled: boolean = true;
 
     private logRepository: Repository<Log>;
 
