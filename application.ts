@@ -1,5 +1,7 @@
 import * as dotenv from 'dotenv';
 import * as nodePath from 'path';
+import * as cluster from 'cluster';
+import * as os from 'os';
 import Autoloader from './core/autoloader';
 import Container from './core/container';
 import ApplicationConfig from './config/application-config';
@@ -39,6 +41,13 @@ export default class Application {
 
         const applicationConfig = await Container.get<ApplicationConfig>(ApplicationConfig);
         applicationConfig.paths = this.paths;
+
+        if (cluster.isMaster && applicationConfig.cluster) {
+            for (const cpu of os.cpus()) {
+                cluster.fork();
+            }
+            return;
+        }
 
         const contextConfig = await Container.get<ContextConfig>(ContextConfig);
 

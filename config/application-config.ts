@@ -13,6 +13,10 @@ export default class ApplicationConfig {
         return process.cwd();
     }
 
+    public get cluster(): boolean {
+        return Boolean(EnvironmentVariable.get('APP_CLUSTER', 1));
+    }
+
     public get version(): string {
         if (undefined !== this._version) {
             return this._version;
