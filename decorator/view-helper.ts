@@ -8,8 +8,8 @@ export default function ViewHelper(options?: { [key: string]: any }): ClassDecor
 
         let k = 0;
 
-        for (const option of Container.classes.viewHelper) {
-            if (option.target.isPrototypeOf(target)) {
+        for (const viewHelper of Container.classes.viewHelper) {
+            if (viewHelper.target.isPrototypeOf(target)) {
                 Container.classes.viewHelper[k] = {
                     options,
                     target,

@@ -8,8 +8,8 @@ export default function Service(options?: { [key: string]: any }): ClassDecorato
 
         let k = 0;
 
-        for (const option of Container.classes.service) {
-            if (option.target.isPrototypeOf(target)) {
+        for (const service of Container.classes.service) {
+            if (service.target.isPrototypeOf(target)) {
                 Container.classes.service[k] = {
                     options,
                     target,

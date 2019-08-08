@@ -1,6 +1,6 @@
 import Container from '../core/container';
 
-export default function Route(options: {
+export default function Route(options?: {
     name: string;
     methods: string[];
     path: string;
@@ -21,22 +21,37 @@ export default function Route(options: {
         }
 
         let k = 0;
+        let prototypeFound = false;
 
-        for (const option of Container.classes.route) {
-            if (option.target.isPrototypeOf(target)) {
+        for (const route of Container.classes.route) {
+            if (route.target.isPrototypeOf(target)) {
+                if (undefined === options) {
+                    options = route.options;
+                }
+
                 Container.classes.route[k] = {
                     options,
                     target,
                 };
-                return;
+
+                prototypeFound = true;
+                break;
             }
 
             k++;
         }
 
-        Container.classes.route.push({
-            options,
-            target,
-        });
+        if (!prototypeFound) {
+            Container.classes.route.push({
+                options,
+                target,
+            });
+        }
+
+        for (const route of Container.classes.route) {
+            if (undefined === route.options) {
+                throw new Error('route options empty');
+            }
+        }
     };
 }
