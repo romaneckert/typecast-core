@@ -78,14 +78,15 @@ export default class TypecastMiddleware implements IMiddleware {
                         children: {},
                         key: subKey,
                     };
-                    typecastConfig.module[mainKey].children[subKey].children[routeData.key] = routeData;
                 }
+                typecastConfig.module[mainKey].children[subKey].children[routeData.key] = routeData;
             } else {
                 typecastConfig.module[mainKey].children[routeData.key] = routeData;
             }
         }
 
         const orderedModules: { [key: string]: any } = {};
+
         Object.keys(typecastConfig.module)
             .sort()
             .reverse()

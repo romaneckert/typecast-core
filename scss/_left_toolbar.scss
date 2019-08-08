@@ -65,15 +65,6 @@
                 > li.has-children {
                     ul {
                         display: none;
-
-                        li {
-                            a {
-                                background-color: darken($color-dark-blue, 3%);
-                                &:hover {
-                                    background-color: darken($color-dark-blue, 6%);
-                                }
-                            }
-                        }
                     }
 
                     &.open {
@@ -82,7 +73,16 @@
 
                             li {
                                 a {
-                                    background-color: darken($color-dark-blue, 6%);
+                                    background-color: darken($color-dark-blue, 3%);
+                                    &:hover {
+                                        background-color: darken($color-dark-blue, 6%);
+                                    }
+                                }
+
+                                &.active {
+                                    a {
+                                        background-color: darken($color-dark-blue, 6%);
+                                    }
                                 }
                             }
                         }
