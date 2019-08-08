@@ -11,7 +11,7 @@ export default class Log {
     @Column()
     public date: Date;
 
-    @Column({ type: 'varchar' })
+    @Column({ type: 'text' })
     public message: string;
 
     @Column({ type: 'varchar' })

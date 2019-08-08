@@ -3,7 +3,6 @@ import { Repository } from 'typeorm';
 import Form from '../../../core/form';
 import Route from '../../../decorator/route';
 import User from '../../../entity/user';
-import IRoute from '../../../interface/route';
 import AuthService from '../../../service/auth';
 import DatabaseService from '../../../service/database';
 import I18nService from '../../../service/i18n';
@@ -12,12 +11,12 @@ import MailService from '../../../service/mail';
 import HTTPServerService from '../../../service/http-server';
 import EmailValidator from '../../../validator/email-validator';
 
-@Route()
-export default class PasswordResetRoute implements IRoute {
-    public name: string = '/typecast/user/password-reset';
-    public methods: string[] = ['get', 'post'];
-    public path: string = '/typecast/user/password-reset';
-
+@Route({
+    name: '/typecast/user/password-reset',
+    methods: ['get', 'post'],
+    path: '/typecast/user/password-reset',
+})
+export default class PasswordResetRoute {
     private auth: AuthService;
     private i18n: I18nService;
     private logger: LoggerService;

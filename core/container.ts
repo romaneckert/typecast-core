@@ -1,4 +1,3 @@
-import IRoute from '../interface/route';
 import IViewHelper from '../interface/view-helper';
 
 export default class Container {
@@ -93,7 +92,7 @@ export default class Container {
         return this.instances.viewHelper;
     }
 
-    public static async getRoutes(): Promise<{ [key: string]: IRoute }> {
+    public static async getRoutes(): Promise<{ [key: string]: any }> {
         for (const option of this.classes.route) {
             await this.get(option.target);
         }

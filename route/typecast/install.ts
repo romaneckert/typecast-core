@@ -3,7 +3,6 @@ import { Repository } from 'typeorm';
 import Form from '../../core/form';
 import Route from '../../decorator/route';
 import User from '../../entity/user';
-import IRoute from '../../interface/route';
 import AuthService from '../../service/auth';
 import DatabaseService from '../../service/database';
 import I18nService from '../../service/i18n';
@@ -11,12 +10,12 @@ import MailService from '../../service/mail';
 import HTTPServerService from '../../service/http-server';
 import EmailValidator from '../../validator/email-validator';
 
-@Route()
-export default class InstallRoute implements IRoute {
-    public name: string = '/typecast/install';
-    public methods: string[] = ['get', 'post'];
-    public path: string = '/typecast/install';
-
+@Route({
+    name: '/typecast/install',
+    methods: ['get', 'post'],
+    path: '/typecast/install',
+})
+export default class InstallRoute {
     private auth: AuthService;
     private i18n: I18nService;
     private mail: MailService;

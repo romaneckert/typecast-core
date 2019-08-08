@@ -1,16 +1,19 @@
 import express from 'express';
-import IRoute from '../../../interface/route';
 import Route from '../../../decorator/route';
 
-@Route()
-export default class DesignRoute implements IRoute {
-    public name: string = '/typecast/admin/design';
-    public methods: string[] = ['get'];
-    public path: string = '/typecast/admin/design';
-    public roles: string[] = ['admin'];
-    public backendModuleMainKey: string = 'admin';
-    public backendModuleTitleKey: string = 'design';
-
+@Route({
+    name: '/typecast/admin/design',
+    methods: ['get'],
+    roles: ['admin'],
+    path: '/typecast/admin/design',
+    backend: {
+        module: {
+            mainKey: 'admin',
+            titleKey: 'design',
+        },
+    },
+})
+export default class DesignRoute {
     public async handle(req: express.Request, res: express.Response): Promise<void> {
         return res.render('typecast/admin/design');
     }

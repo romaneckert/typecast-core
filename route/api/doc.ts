@@ -3,15 +3,14 @@ import ApplicationConfig from '../../config/application-config';
 import HTTPServerConfig from '../../config/http-server-config';
 import Container from '../../core/container';
 import Route from '../../decorator/route';
-import IRoute from '../../interface/route';
 import I18nService from '../../service/i18n';
 
-@Route()
-export default class ApiDoc implements IRoute {
-    public name: string = '/api/doc';
-    public methods: string[] = ['get'];
-    public path: string = '/api/doc';
-
+@Route({
+    name: '/api/doc',
+    methods: ['get'],
+    path: '/api/doc',
+})
+export default class ApiDoc {
     private applicationConfig: ApplicationConfig;
     private serverConfig: HTTPServerConfig;
     private i18n: I18nService;
@@ -55,7 +54,7 @@ export default class ApiDoc implements IRoute {
             servers: [{ url: this.serverConfig.baseUrl }],
         };
 
-        for (const [key, route] of Object.entries(routes)) {
+        for (const route of Object.values(routes)) {
             let options: any;
 
             for (const [property, value] of Object.entries(route)) {

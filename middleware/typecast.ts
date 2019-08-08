@@ -5,11 +5,6 @@ import IMiddleware from '../interface/middleware';
 
 @Middleware()
 export default class TypecastMiddleware implements IMiddleware {
-    private typecastConfig: { [key: string]: any } = {
-        module: undefined,
-        currentRoutePath: undefined,
-    };
-
     public async handle(req: express.Request, res: express.Response, next: () => void) {
         // check route.path from request
         if ('object' !== typeof req.route || 'string' !== typeof req.route.path) {
@@ -26,18 +21,28 @@ export default class TypecastMiddleware implements IMiddleware {
         }
 
         for (const route of await Object.values(await Container.getRoutes())) {
-            if (undefined === route.backendModuleMainKey || undefined === route.backendModuleTitleKey || true === route.disabled) {
+            if (
+                undefined === route.__options.backend ||
+                undefined === route.__options.backend.module ||
+                undefined === route.__options.backend.module.mainKey ||
+                undefined === route.__options.backend.module.titleKey ||
+                true === route.disabled
+            ) {
                 continue;
             }
 
-            if (undefined !== route.roles) {
+            const mainKey = route.__options.backend.module.mainKey;
+            const subKey = route.__options.backend.module.subKey;
+            const titleKey = route.__options.backend.module.titleKey;
+
+            if (undefined !== route.__options.roles) {
                 if (undefined === res.locals.user || undefined === res.locals.user.roles) {
                     continue;
                 }
 
                 let access = false;
 
-                for (const routeRole of route.roles) {
+                for (const routeRole of route.__options.roles) {
                     for (const userRole of res.locals.user.roles) {
                         if (routeRole === userRole) {
                             access = true;
@@ -54,28 +59,29 @@ export default class TypecastMiddleware implements IMiddleware {
                     continue;
                 }
             }
+
             const routeData = {
-                key: route.backendModuleTitleKey,
-                path: route.path,
+                key: titleKey,
+                path: route.__options.path,
             };
 
-            if (undefined === typecastConfig.module[route.backendModuleMainKey]) {
-                typecastConfig.module[route.backendModuleMainKey] = {
+            if (undefined === typecastConfig.module[mainKey]) {
+                typecastConfig.module[mainKey] = {
                     children: {},
-                    key: route.backendModuleMainKey,
+                    key: mainKey,
                 };
             }
 
-            if (undefined !== route.backendModuleSubKey) {
-                if (undefined === typecastConfig.module[route.backendModuleMainKey].children[route.backendModuleSubKey]) {
-                    typecastConfig.module[route.backendModuleMainKey].children[route.backendModuleSubKey] = {
+            if (undefined !== subKey) {
+                if (undefined === typecastConfig.module[mainKey].children[subKey]) {
+                    typecastConfig.module[mainKey].children[subKey] = {
                         children: {},
-                        key: route.backendModuleSubKey,
+                        key: subKey,
                     };
-                    typecastConfig.module[route.backendModuleMainKey].children[route.backendModuleSubKey].children[routeData.key] = routeData;
+                    typecastConfig.module[mainKey].children[subKey].children[routeData.key] = routeData;
                 }
             } else {
-                typecastConfig.module[route.backendModuleMainKey].children[routeData.key] = routeData;
+                typecastConfig.module[mainKey].children[routeData.key] = routeData;
             }
         }
 

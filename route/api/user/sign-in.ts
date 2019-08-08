@@ -3,7 +3,6 @@ import { Repository } from 'typeorm';
 import Form from '../../../core/form';
 import Route from '../../../decorator/route';
 import User from '../../../entity/user';
-import IRoute from '../../../interface/route';
 import AuthService from '../../../service/auth';
 import DatabaseService from '../../../service/database';
 import I18nService from '../../../service/i18n';
@@ -11,6 +10,9 @@ import LoggerService from '../../../service/logger';
 import UserSignInValidator from '../../../validator/user/sign-in-validator';
 
 @Route({
+    name: '/api/user/sign-in',
+    methods: ['get', 'post'],
+    path: '/api/user/sign-in',
     openapi: {
         post: {
             requestBody: {
@@ -47,11 +49,7 @@ import UserSignInValidator from '../../../validator/user/sign-in-validator';
         },
     },
 })
-export default class SignInRoute implements IRoute {
-    public name: string = '/api/user/sign-in';
-    public methods: string[] = ['get', 'post'];
-    public path: string = '/api/user/sign-in';
-
+export default class SignInRoute {
     private auth: AuthService;
     private logger: LoggerService;
     private i18n: I18nService;
