@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "sourceMap": true,
-        "target": "es2017",
+        "target": "es2019",
         "module": "commonjs",
         "declaration": true,
         "outDir": "./dist",
@@ -11,6 +11,6 @@
         "strictPropertyInitialization": false,
         "esModuleInterop": true
     },
-    "include": ["config", "service", "validator", "view-helper", "middleware", "core", "entity", "util", "interface", "route", "index.ts", "test"],
+    "include": ["config", "service", "validator", "view-helper", "middleware", "core", "entity", "util", "interface", "route", "index.ts", "application.ts"],
     "exclude": ["node_modules"]
 }

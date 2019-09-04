@@ -1,17 +1,27 @@
 import * as nodePath from 'path';
-import { Config } from '../decorator/config';
-import { FileSystemUtil } from '../util/file-system';
+import Config from '../decorator/config';
+import EnvironmentVariable from '../core/environment-variable';
+import FileSystemUtil from '../util/file-system';
 
 @Config()
-// TODO: use getter for validation
-export class ApplicationConfig {
+export default class ApplicationConfig {
     public buildDate: Date = new Date();
-    public paths: string[];
-    public rootPath: string = process.cwd();
-    public version: string;
+    public paths: string[] = [process.cwd()];
+    private _version: string;
 
-    constructor() {
-        // version
+    public get rootPath(): string {
+        return process.cwd();
+    }
+
+    public get cluster(): boolean {
+        return Boolean(EnvironmentVariable.get('APP_CLUSTER', 1));
+    }
+
+    public get version(): string {
+        if (undefined !== this._version) {
+            return this._version;
+        }
+
         const pathToPackageJson = nodePath.join(this.rootPath, 'package.json');
 
         if (!FileSystemUtil.isFileSync(pathToPackageJson)) {
@@ -20,12 +30,6 @@ export class ApplicationConfig {
 
         const data = JSON.parse(String(FileSystemUtil.readFileSync(pathToPackageJson)));
 
-        this.version = String(data.version);
-    }
-
-    public validate() {
-        if ('object' !== typeof this.paths || 0 === this.paths.length) {
-            throw new Error('paths is empty');
-        }
+        return (this._version = String(data.version));
     }
 }

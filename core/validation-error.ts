@@ -1,4 +1,4 @@
-export class ValidationError {
+export default class ValidationError {
     public property: string;
     public value: string;
     public errors: { [key: string]: string };

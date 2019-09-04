@@ -1,14 +1,14 @@
 import * as nodePath from 'path';
-import { ApplicationConfig } from '../config/application-config';
-import { I18nConfig } from '../config/i18n-config';
-import { ValidationError } from '../core/validation-error';
-import { Service } from '../decorator/service';
-import { FileSystemUtil } from '../util/file-system';
-import { LoggerService } from './logger';
+import ApplicationConfig from '../config/application-config';
+import I18nConfig from '../config/i18n-config';
+import ValidationError from '../core/validation-error';
+import Service from '../decorator/service';
+import FileSystemUtil from '../util/file-system';
+import LoggerService from './logger';
 
 // TODO: allow key.key1 and key.key1.key2
 @Service()
-export class I18nService {
+export default class I18nService {
     private catalog: { [key: string]: any } = {};
 
     private applicationConfig: ApplicationConfig;
@@ -127,7 +127,7 @@ export class I18nService {
                 .replace('}}', '')
                 .trim();
 
-            if ('object' === typeof data && 'string' === typeof data[property]) {
+            if ('object' === typeof data && ('string' === typeof data[property] || 'number' === typeof data[property])) {
                 return data[property];
             }
 

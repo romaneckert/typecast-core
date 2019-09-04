@@ -1,9 +1,9 @@
-import { ViewHelper } from '../decorator/view-helper';
-import { IViewHelper } from '../interface/view-helper';
-import { I18nService } from '../service/i18n';
+import ViewHelper from '../decorator/view-helper';
+import IViewHelper from '../interface/view-helper';
+import I18nService from '../service/i18n';
 
 @ViewHelper()
-export class TranslateViewHelper implements IViewHelper {
+export default class TranslateViewHelper implements IViewHelper {
     private i18n: I18nService;
 
     public constructor(i18n: I18nService) {

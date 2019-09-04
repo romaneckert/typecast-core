@@ -1,32 +1,27 @@
-import { Config } from '../decorator/config';
-import { IMiddleware } from '../interface/middleware';
-import { AuthMiddleware } from '../middleware/auth';
-import { LocaleMiddleware } from '../middleware/locale';
-import { RolesMiddleware } from '../middleware/roles';
-import { TypecastMiddleware } from '../middleware/typecast';
+import Config from '../decorator/config';
+import IMiddleware from '../interface/middleware';
+import AuthMiddleware from '../middleware/auth';
+import LocaleMiddleware from '../middleware/locale';
+import RolesMiddleware from '../middleware/roles';
+import TypecastMiddleware from '../middleware/typecast';
+import EnvironmentVariable from '../core/environment-variable';
 
 @Config()
-// TODO: use getter for validation
-export class HTTPServerConfig {
-    public baseUrl: string;
-    public port: number = 3000;
+export default class HTTPServerConfig {
     public middlewares: IMiddleware[] = [];
 
     public constructor(authMiddleware: AuthMiddleware, localeMiddleware: LocaleMiddleware, rolesMiddleware: RolesMiddleware, typecastMiddleware: TypecastMiddleware) {
-        
-        // baseUrl
-        this.baseUrl = String(process.env.APP_BASE_URL).replace(/\/$/, '');
-
         this.middlewares.push(authMiddleware);
         this.middlewares.push(localeMiddleware);
         this.middlewares.push(rolesMiddleware);
         this.middlewares.push(typecastMiddleware);
     }
 
-    public validate() {
-        // TODO: optimize
-        if ('string' !== typeof this.baseUrl || 0 === this.baseUrl.length) {
-            throw new Error('baseUrl is empty');
-        }
+    public get baseUrl(): string {
+        return EnvironmentVariable.get('HTTP_SERVER_BASE_URL', 'http://localhost:3000').replace(/\/$/, '');
+    }
+
+    public get port(): number {
+        return EnvironmentVariable.get('HTTP_SERVER_PORT', 3000);
     }
 }

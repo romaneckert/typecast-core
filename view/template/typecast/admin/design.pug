@@ -1,0 +1,169 @@
+extends ../../../layout/typecast/signed-in
+
+block append head
+    title=view.translate(locale, 'typecast.admin.design.title')
+    meta(name="description" content=view.translate(locale, 'typecast.admin.design.description'))
+
+block content
+
+    h1=view.translate(locale, 'typecast.admin.design.headline')
+
+    h1=view.translate(locale, 'typecast.admin.design.h1_headline')
+
+    h2=view.translate(locale, 'typecast.admin.design.h2_headline')
+
+    h3=view.translate(locale, 'typecast.admin.design.h3_headline')
+
+    h4=view.translate(locale, 'typecast.admin.design.h4_headline')
+
+    .text
+        p In dui magna, posuere eget, vestibulum et, tempor auctor, justo. Vestibulum facilisis, purus nec pulvinar iaculis, ligula mi congue nunc, vitae euismod ligula urna in dolor. Nam ipsum risus, rutrum vitae, vestibulum eu, molestie vel, lacus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Morbi ac felis.
+
+        p Phasellus blandit leo ut odio. Aenean viverra rhoncus pede. Suspendisse potenti. Nullam accumsan lorem in dui. Nam adipiscing.
+
+    h2 Accordion
+
+    .accordion
+        .accordion-element
+            .accordion-header Element 1
+            .accordion-body
+                p Element 1 Text
+        .accordion-element
+            .accordion-header Element 2
+            .accordion-body
+                p Element 2 Text   
+
+    h2 Table
+
+    .table-wrapper
+        table
+            tr
+                th Firstname
+                th Lastname
+                th Age
+            tr
+                td Jill
+                td Smith
+                td 50
+            tr
+                td Eve
+                td Jackson
+                td 94 
+            tr
+                td Jill
+                td Smith
+                td 50
+            tr
+                td Eve
+                td Jackson
+                td 94   
+
+    h2 Scrollable Table
+
+    .table-wrapper
+        table
+            tr
+                th Firstname
+                th Lastname
+                th Age
+                th Address
+                th City
+                th Firstname
+                th Lastname
+                th Age
+                th Address
+                th City
+                th Firstname
+                th Lastname
+                th Age
+                th Address
+                th City
+                th Firstname
+                th Lastname
+                th Age
+                th Address
+                th City
+            tr
+                td Jill
+                td Smith
+                td 50
+                td Street XYZ
+                td City XYZ
+                td Jill
+                td Smith
+                td 50
+                td Street XYZ
+                td City XYZ
+                td Jill
+                td Smith
+                td 50
+                td Street XYZ
+                td City XYZ
+                td Jill
+                td Smith
+                td 50
+                td Street XYZ
+                td City XYZ
+            tr
+                td Eve
+                td Jackson
+                td 94 
+                td Street ABC
+                td City XYZ
+                td Eve
+                td Jackson
+                td 94 
+                td Street ABC
+                td City XYZ
+                td Eve
+                td Jackson
+                td 94 
+                td Street ABC
+                td City XYZ
+                td Eve
+                td Jackson
+                td 94 
+                td Street ABC
+                td City XYZ
+            tr
+                td Jill
+                td Smith
+                td 50
+                td No Street
+                td City XYZ
+                td Jill
+                td Smith
+                td 50
+                td No Street
+                td City XYZ
+                td Jill
+                td Smith
+                td 50
+                td No Street
+                td City XYZ
+                td Jill
+                td Smith
+                td 50
+                td No Street
+                td City XYZ
+            tr
+                td Eve
+                td Jackson
+                td 94
+                td No Street 2
+                td City XYZ
+                td Eve
+                td Jackson
+                td 94
+                td No Street 2
+                td City XYZ
+                td Eve
+                td Jackson
+                td 94
+                td No Street 2
+                td City XYZ
+                td Eve
+                td Jackson
+                td 94
+                td No Street 2
+                td City XYZ                              

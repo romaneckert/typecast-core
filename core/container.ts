@@ -1,12 +1,11 @@
-import { IRoute } from '../interface/route';
-import { IViewHelper } from '../interface/view-helper';
+import IViewHelper from '../interface/view-helper';
 
-export class Container {
+export default class Container {
     public static classes: { [key: string]: any } = {};
 
     public static async get<T>(target: any, additionalKey: string = ''): Promise<T> {
         if (undefined === this.loggerClass) {
-            this.loggerClass = (await import('../service/logger')).LoggerService;
+            this.loggerClass = (await import('../service/logger')).default;
         }
 
         let resolvedOption;
@@ -52,7 +51,6 @@ export class Container {
         const injections = [];
 
         for (const param of params) {
-
             if (param.isPrototypeOf(this.loggerClass) || param === this.loggerClass) {
                 const contextType = resolvedNamespace;
                 const contextName = resolvedOption.target.name
@@ -94,7 +92,7 @@ export class Container {
         return this.instances.viewHelper;
     }
 
-    public static async getRoutes(): Promise<{ [key: string]: IRoute }> {
+    public static async getRoutes(): Promise<{ [key: string]: any }> {
         for (const option of this.classes.route) {
             await this.get(option.target);
         }

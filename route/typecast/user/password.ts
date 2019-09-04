@@ -1,19 +1,18 @@
 import express from 'express';
 import { Repository } from 'typeorm';
-import { Form } from '../../../core/form';
-import { Route } from '../../../decorator/route';
-import { User } from '../../../entity/user';
-import { IRoute } from '../../../interface/route';
-import { AuthService } from '../../../service/auth';
-import { DatabaseService } from '../../../service/database';
-import { PasswordValidator } from '../../../validator/password-validator';
+import Form from '../../../core/form';
+import Route from '../../../decorator/route';
+import User from '../../../entity/user';
+import AuthService from '../../../service/auth';
+import DatabaseService from '../../../service/database';
+import PasswordValidator from '../../../validator/password-validator';
 
-@Route()
-export class PasswordRoute implements IRoute {
-    public name: string = '/typecast/user/password';
-    public methods: string[] = ['get', 'post'];
-    public path: string = '/typecast/user/password/:passwordToken';
-
+@Route({
+    name: '/typecast/user/password',
+    methods: ['get', 'post'],
+    path: '/typecast/user/password/:passwordToken',
+})
+export default class PasswordRoute {
     private auth: AuthService;
     private userRepository: Repository<User>;
 
@@ -28,7 +27,7 @@ export class PasswordRoute implements IRoute {
         });
 
         // return password token expired after 24h
-        if (undefined === user || undefined === user.passwordTokenCreationDate || new Date().valueOf() - user.passwordTokenCreationDate.valueOf() > 24 * 60 * 60 * 1000) {
+        if (undefined === user || null === user.passwordTokenCreationDate || new Date().valueOf() - user.passwordTokenCreationDate.valueOf() > 24 * 60 * 60 * 1000) {
             return res.render('typecast/user/password-token-expired');
         }
 
@@ -47,10 +46,10 @@ export class PasswordRoute implements IRoute {
         user.passwordHashCreationDate = new Date();
 
         // remove password token
-        user.passwordToken = undefined;
+        user.passwordToken = null;
 
         // remove password token creation date
-        user.passwordTokenCreationDate = undefined;
+        user.passwordTokenCreationDate = null;
 
         // save user
         await this.userRepository.save(user);

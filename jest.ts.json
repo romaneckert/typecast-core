@@ -3,6 +3,7 @@
     "transform": {
         "^.+\\.ts$": "ts-jest"
     },
+    "bail": true,
     "collectCoverage": true,
     "collectCoverageFrom": [
         "<rootDir>/config/**",
@@ -18,7 +19,8 @@
         "<rootDir>/validator/**",
         "<rootDir>/view-helper/**"
     ],
-    "coverageReporters": ["text"],
+    "coverageReporters": ["json-summary", "text"],
     "testPathIgnorePatterns": ["<rootDir>/dist"],
-    "verbose": true
+    "verbose": true,
+    "errorOnDeprecated": true
 }

@@ -1,10 +1,9 @@
-import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-// https://github.com/typeorm/typeorm/blob/master/docs/entity-inheritance.md
 @Entity()
-export class Log {
-    @ObjectIdColumn()
-    public id: ObjectID;
+export default class Log {
+    @PrimaryGeneratedColumn()
+    public id: number;
 
     @Column()
     public code: number;
@@ -12,16 +11,16 @@ export class Log {
     @Column()
     public date: Date;
 
-    @Column()
+    @Column({ type: 'text' })
     public message: string;
 
-    @Column()
+    @Column({ type: 'varchar' })
     public contextType: string;
 
-    @Column()
+    @Column({ type: 'varchar' })
     public contextName: string;
 
-    @Column()
+    @Column({ type: 'text' })
     public data: string = '';
 
     constructor(code: number, date: Date, contextType: string, contextName: string, message: string, data?: string) {

@@ -1,4 +1,4 @@
-import { Config } from '../decorator/config';
+import Config from '../decorator/config';
 
 @Config()
 // TODO: use getter for validation
@@ -6,8 +6,6 @@ export class I18nConfig {
 
     public locales: string[] = ['en', 'de'];
     public defaultLocale: string = 'en';
-
-
 
     public validate() {
         if (0 === this.locales.length) {
@@ -18,4 +16,3 @@ export class I18nConfig {
             throw new Error(`defaultLocale not set or not valid - have to be string - example: 'en'`);
         }
     }
-}

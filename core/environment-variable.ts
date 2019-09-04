@@ -1,8 +1,7 @@
-import { EnvironmentVariableError } from '../error/environment-variable';
+import EnvironmentVariableError from '../error/environment-variable';
 
 // TODO: add cache
 export default class EnvironmentVariable {
-
     public static get(name: string, example: string): string;
     public static get(name: string, example: number): number;
     public static get(name: string, example: string | number): string | number {

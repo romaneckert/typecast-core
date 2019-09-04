@@ -5,22 +5,21 @@ import express from 'express';
 import helmet from 'helmet';
 import https from 'https';
 import * as nodePath from 'path';
-import { ApplicationConfig } from '../config/application-config';
-import { HTTPServerConfig } from '../config/http-server-config';
-import { Container } from '../core/container';
-import { Service } from '../decorator/service';
-import { IRoute } from '../interface/route';
-import { AccessMiddleware } from '../middleware/access';
-import { ErrorMiddleware } from '../middleware/error';
-import { HandleMiddleware } from '../middleware/handle';
-import { NotFoundMiddleware } from '../middleware/not-found';
-import { FileSystemUtil } from '../util/file-system';
-import { LoggerService } from './logger';
-import { RendererService } from './renderer';
+import ApplicationConfig from '../config/application-config';
+import HTTPServerConfig from '../config/http-server-config';
+import Container from '../core/container';
+import Service from '../decorator/service';
+import AccessMiddleware from '../middleware/access';
+import ErrorMiddleware from '../middleware/error';
+import HandleMiddleware from '../middleware/handle';
+import NotFoundMiddleware from '../middleware/not-found';
+import FileSystemUtil from '../util/file-system';
+import LoggerService from './logger';
+import RendererService from './renderer';
 
 @Service()
-export class HTTPServerService {
-    public routes: { [key: string]: IRoute } = {};
+export default class HTTPServerService {
+    public routes: { [key: string]: any } = {};
 
     private logger: LoggerService;
     private config: HTTPServerConfig;
@@ -37,14 +36,14 @@ export class HTTPServerService {
     private connection: any;
 
     constructor(
-        serverConfig: HTTPServerConfig,
+        httpServerConfig: HTTPServerConfig,
         applicationConfig: ApplicationConfig,
         logger: LoggerService,
         renderer: RendererService,
         accessMiddleware: AccessMiddleware,
         errorMiddleware: ErrorMiddleware,
     ) {
-        this.config = serverConfig;
+        this.config = httpServerConfig;
         this.applicationConfig = applicationConfig;
         this.logger = logger;
         this.renderer = renderer;
@@ -169,21 +168,24 @@ export class HTTPServerService {
 
     private async registerRoutes() {
         for (const route of Object.values(await Container.getRoutes())) {
-            if (undefined !== route.disabled && true === route.disabled) {
+            if (undefined !== route.__options.disabled && true === route.__options.disabled) {
                 continue;
             }
-            this.routes[route.name] = route;
+            this.routes[route.__options.name] = route;
         }
 
         for (const route of Object.values(this.routes)) {
             for (const middleware of this.config.middlewares) {
-                for (const method of route.methods) {
+                for (const method of route.__options.methods) {
                     switch (method) {
                         case 'get':
-                            this.router.get(route.path, middleware.handle.bind(middleware));
+                            this.router.get(route.__options.path, middleware.handle.bind(middleware));
                             break;
                         case 'post':
-                            this.router.post(route.path, middleware.handle.bind(middleware));
+                            this.router.post(route.__options.path, middleware.handle.bind(middleware));
+                            break;
+                        case 'delete':
+                            this.router.delete(route.__options.path, middleware.handle.bind(middleware));
                             break;
                         default:
                             throw new Error('method ' + method + ' is not supported');
@@ -191,15 +193,18 @@ export class HTTPServerService {
                 }
             }
 
-            for (const method of route.methods) {
+            for (const method of route.__options.methods) {
                 const handleMiddleware = new HandleMiddleware(route);
 
                 switch (method) {
                     case 'get':
-                        this.router.get(route.path, handleMiddleware.handle.bind(handleMiddleware));
+                        this.router.get(route.__options.path, handleMiddleware.handle.bind(handleMiddleware));
                         break;
                     case 'post':
-                        this.router.post(route.path, handleMiddleware.handle.bind(handleMiddleware));
+                        this.router.post(route.__options.path, handleMiddleware.handle.bind(handleMiddleware));
+                        break;
+                    case 'delete':
+                        this.router.delete(route.__options.path, handleMiddleware.handle.bind(handleMiddleware));
                         break;
                     default:
                         throw new Error('method ' + method + ' is not supported');

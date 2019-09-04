@@ -1,6 +1,6 @@
-import { Container } from '../core/container';
+import Container from '../core/container';
 
-export const Middleware = (options?: { [key: string]: any }): ClassDecorator => {
+export default function Middleware(options?: { [key: string]: any }): ClassDecorator {
     return target => {
         if (undefined === Container.classes.middleware) {
             Container.classes.middleware = [];
@@ -8,8 +8,8 @@ export const Middleware = (options?: { [key: string]: any }): ClassDecorator => 
 
         let k = 0;
 
-        for (const option of Container.classes.middleware) {
-            if (option.isPrototypeOf(target)) {
+        for (const middleware of Container.classes.middleware) {
+            if (middleware.target.isPrototypeOf(target)) {
                 Container.classes.middleware[k] = {
                     options,
                     target,
@@ -25,4 +25,4 @@ export const Middleware = (options?: { [key: string]: any }): ClassDecorator => 
             target,
         });
     };
-};
+}

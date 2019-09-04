@@ -1,18 +1,17 @@
 import express from 'express';
 import { Repository } from 'typeorm';
-import { Form } from '../core/form';
-import { Route } from '../decorator/route';
-import { Log } from '../entity/log';
-import { IRoute } from '../interface/route';
-import { DatabaseService } from '../service/database';
-import { UserSignInValidator } from '../validator/user/sign-in-validator';
+import Form from '../core/form';
+import Route from '../decorator/route';
+import Log from '../entity/log';
+import DatabaseService from '../service/database';
+import UserSignInValidator from '../validator/user/sign-in-validator';
 
-@Route()
-export class IndexRoute implements IRoute {
-    public name: string = '/';
-    public methods: string[] = ['get', 'post'];
-    public path: string = '/';
-
+@Route({
+    name: '/',
+    methods: ['get'],
+    path: '/',
+})
+export default class IndexRoute {
     private logRepository: Repository<Log>;
 
     public constructor(database: DatabaseService) {

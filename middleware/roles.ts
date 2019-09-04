@@ -1,12 +1,12 @@
 import express from 'express';
-import { AuthConfig } from '../config/auth-config';
-import { Container } from '../core/container';
-import { Middleware } from '../decorator/middleware';
-import { IMiddleware } from '../interface/middleware';
-import { HTTPServerService } from '../service/http-server';
+import AuthConfig from '../config/auth-config';
+import Container from '../core/container';
+import Middleware from '../decorator/middleware';
+import IMiddleware from '../interface/middleware';
+import HTTPServerService from '../service/http-server';
 
 @Middleware()
-export class RolesMiddleware implements IMiddleware {
+export default class RolesMiddleware implements IMiddleware {
     private routePathRoleMap: { [key: string]: string[] };
     private authConfig: AuthConfig;
 
@@ -61,14 +61,14 @@ export class RolesMiddleware implements IMiddleware {
 
         const server = await Container.get<HTTPServerService>(HTTPServerService);
 
-        for (const [key, route] of Object.entries(server.routes)) {
+        for (const route of Object.values(server.routes)) {
             let roles: string[] = [];
 
-            if (undefined !== route.roles) {
-                roles = route.roles;
+            if (undefined !== route.__options.roles) {
+                roles = route.__options.roles;
             }
 
-            this.routePathRoleMap[route.path] = roles;
+            this.routePathRoleMap[route.__options.path] = roles;
         }
     }
 }

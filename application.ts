@@ -1,31 +1,29 @@
 import * as dotenv from 'dotenv';
 import * as nodePath from 'path';
-import { ApplicationConfig } from '../config/application-config';
-import { DatabaseService } from '../service/database';
-import { I18nService } from '../service/i18n';
-import { MailService } from '../service/mail';
-import { HTTPServerService } from '../service/http-server';
-import { FileSystemUtil } from '../util/file-system';
-import { Autoloader } from './autoloader';
-import { Container } from './container';
-import { ContextConfig } from '../config/context-config';
-import { SMTPServerService } from '../service/smtp-server';
+import * as cluster from 'cluster';
+import * as os from 'os';
+import Autoloader from './core/autoloader';
+import Container from './core/container';
+import ApplicationConfig from './config/application-config';
+import DatabaseService from './service/database';
+import I18nService from './service/i18n';
+import MailService from './service/mail';
+import HTTPServerService from './service/http-server';
+import FileSystemUtil from './util/file-system';
+import ContextConfig from './config/context-config';
+import SMTPServerService from './service/smtp-server';
 
 // kill process on unhandled promise rejection
 process.on('unhandledRejection', err => {
     throw err;
 });
 
-export class Application {
+export default class Application {
     private paths: string[];
     private autoloader: Autoloader;
 
-    constructor(paths?: string[]) {
-        if (undefined === paths) {
-            this.paths = [process.cwd()];
-        } else {
-            this.paths = paths;
-        }
+    constructor(paths: string[] = [process.cwd()]) {
+        this.paths = paths;
 
         const pathToDotEnv = nodePath.join(process.cwd(), '.env.' + String(process.env.NODE_ENV).toLowerCase());
 
@@ -38,16 +36,17 @@ export class Application {
         this.autoloader = new Autoloader();
     }
 
-    public async start() {
+    public async start(): Promise<void> {
         await this.autoloader.load(this.paths);
 
         const applicationConfig = await Container.get<ApplicationConfig>(ApplicationConfig);
         applicationConfig.paths = this.paths;
 
-        for (const config of Object.values(await Container.getConfigs())) {
-            if ('function' === typeof config.validate) {
-                config.validate();
+        if (cluster.isMaster && applicationConfig.cluster) {
+            for (const cpu of os.cpus()) {
+                cluster.fork();
             }
+            return;
         }
 
         const contextConfig = await Container.get<ContextConfig>(ContextConfig);

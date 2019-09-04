@@ -1,26 +1,25 @@
-import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-// https://github.com/typeorm/typeorm/blob/master/docs/entity-inheritance.md
 @Entity()
-export class User {
-    @ObjectIdColumn()
-    public id: ObjectID;
+export default class User {
+    @PrimaryGeneratedColumn()
+    public id: number;
 
     @Column()
     public email: string;
 
-    @Column()
-    public passwordHash: string;
+    @Column({ type: 'varchar', nullable: true })
+    public passwordHash: string | null = null;
 
-    @Column()
-    public passwordHashCreationDate: Date;
+    @Column({ type: 'datetime', nullable: true })
+    public passwordHashCreationDate: Date | null = null;
 
-    @Column()
-    public passwordToken?: string;
+    @Column({ type: 'varchar', nullable: true })
+    public passwordToken: string | null = null;
 
-    @Column()
-    public passwordTokenCreationDate?: Date;
+    @Column({ type: 'datetime', nullable: true })
+    public passwordTokenCreationDate: Date | null = null;
 
-    @Column()
+    @Column('simple-array')
     public roles: string[] = [];
 }

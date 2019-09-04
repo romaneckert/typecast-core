@@ -1,8 +1,8 @@
 .typecast-toolbar-left {
-    min-width: 250px;
-    max-width: 250px;
+    min-width: 220px;
+    max-width: 220px;
     height: 100%;
-    position: absolute;
+    position: fixed;
     display: block;
     top: 0px;
     left: 0px;
@@ -27,6 +27,12 @@
             width: 100%;
             display: block;
 
+            &.active {
+                a {
+                    background-color: darken($color-dark-blue, 6%);
+                }
+            }
+
             span {
                 text-transform: uppercase;
                 padding-left: 20px;
@@ -37,16 +43,17 @@
             a {
                 width: 100%;
                 display: block;
-                height: 46px;
-                line-height: 46px;
+                height: 40px;
+                line-height: 40px;
                 color: $color-white;
                 padding-left: 20px;
+                font-size: 12px;
                 position: relative;
                 box-sizing: border-box;
                 text-decoration: none;
                 cursor: pointer;
                 &:hover {
-                    background-color: darken($color-dark-blue, 3%);
+                    background-color: darken($color-dark-blue, 6%);
                 }
             }
         }
@@ -56,6 +63,37 @@
         > li {
             > ul {
                 > li.has-children {
+                    ul {
+                        display: none;
+                    }
+
+                    &.open {
+                        ul {
+                            display: block;
+
+                            li {
+                                a {
+                                    background-color: darken($color-dark-blue, 3%);
+                                    &:hover {
+                                        background-color: darken($color-dark-blue, 6%);
+                                    }
+                                }
+
+                                &.active {
+                                    a {
+                                        background-color: darken($color-dark-blue, 6%);
+                                    }
+                                }
+                            }
+                        }
+
+                        > a {
+                            &:before {
+                                content: '\f077';
+                            }
+                        }
+                    }
+
                     > a {
                         &:before {
                             position: absolute;

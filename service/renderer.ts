@@ -1,20 +1,17 @@
 import * as nodePath from 'path';
 import * as pug from 'pug';
-import { ApplicationConfig } from '../config/application-config';
-import { HTTPServerConfig } from '../config/http-server-config';
-import { Container } from '../core/container';
-import { Service } from '../decorator/service';
-import { FileSystemUtil } from '../util/file-system';
+import ApplicationConfig from '../config/application-config';
+import Container from '../core/container';
+import Service from '../decorator/service';
+import FileSystemUtil from '../util/file-system';
 
 @Service()
-export class RendererService {
+export default class RendererService {
     private applicationConfig: ApplicationConfig;
-    private serverConfig: HTTPServerConfig;
     private templates: { [key: string]: any } = {};
 
-    public constructor(applicationConfig: ApplicationConfig, serverConfig: HTTPServerConfig) {
+    public constructor(applicationConfig: ApplicationConfig) {
         this.applicationConfig = applicationConfig;
-        this.serverConfig = serverConfig;
     }
 
     public async start() {
@@ -27,7 +24,7 @@ export class RendererService {
         }
     }
 
-    public async render(filePath: string, locals: { [key: string]: any }, callback: (val: any, template: any) => void): Promise<void> {
+    public async render(filePath: string, locals: { [key: string]: any }, callback: (val: any, renderedHTML?: any) => void): Promise<void> {
         if ('function' !== typeof this.templates[filePath]) {
             throw new Error(`template ${filePath} does not exists`);
         }
@@ -45,7 +42,11 @@ export class RendererService {
             locals.view[viewHelperName] = viewHelper.render.bind(viewHelper);
         }
 
-        callback(null, this.templates[filePath](locals, { cache: true }));
+        try {
+            return callback(null, this.templates[filePath](locals, { cache: true }));
+        } catch (err) {
+            return callback(err);
+        }
     }
 
     private async compileTemplates(path: string) {

@@ -1,18 +1,21 @@
-import { Config } from '../decorator/config';
+import Config from '../decorator/config';
+import EnvironmentVariable from '../core/environment-variable';
 
 @Config()
-// TODO: use getter for validation
-export class DatabaseConfig {
-    public host: string = 'localhost';
-    public database?: string = process.env.DB_DATABASE;
+export default class DatabaseConfig {
+    public get database(): string {
+        return EnvironmentVariable.get('DB_DATABASE', 'typecast');
+    }
 
-    public validate() {
-        if ('string' !== typeof this.host || 0 === this.host.length) {
-            throw new Error(`host not set or not valid - have to be string - example: localhost`);
-        }
+    public get host(): string {
+        return EnvironmentVariable.get('DB_HOST', 'localhost');
+    }
 
-        if ('string' !== typeof this.database || 0 === this.database.length) {
-            throw new Error(`database not set or not valid - have to be string - example: typecast-core`);
-        }
+    public get username(): string {
+        return EnvironmentVariable.get('DB_USERNAME', 'root');
+    }
+
+    public get password(): string {
+        return EnvironmentVariable.get('DB_PASSWORD', '********');
     }
 }

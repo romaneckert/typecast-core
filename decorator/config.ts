@@ -1,14 +1,14 @@
-import { Container } from '../core/container';
+import Container from '../core/container';
 
-export const Config = (options?: { [key: string]: any }): ClassDecorator => {
+export default function Config(options?: { [key: string]: any }): ClassDecorator {
     return target => {
         if (undefined === Container.classes.config) {
             Container.classes.config = [];
         }
 
         let k = 0;
-        for (const option of Container.classes.config) {
-            if (option.isPrototypeOf(target)) {
+        for (const config of Container.classes.config) {
+            if (config.target.isPrototypeOf(target)) {
                 Container.classes.config[k] = {
                     options,
                     target,
@@ -24,4 +24,4 @@ export const Config = (options?: { [key: string]: any }): ClassDecorator => {
             target,
         });
     };
-};
+}

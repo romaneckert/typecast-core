@@ -1,72 +1,102 @@
 import express from 'express';
-import { Container } from '../core/container';
-import { Middleware } from '../decorator/middleware';
-import { IMiddleware } from '../interface/middleware';
+import Container from '../core/container';
+import Middleware from '../decorator/middleware';
+import IMiddleware from '../interface/middleware';
 
 @Middleware()
-export class TypecastMiddleware implements IMiddleware {
-    private typecastConfig: { [key: string]: any };
-
+export default class TypecastMiddleware implements IMiddleware {
     public async handle(req: express.Request, res: express.Response, next: () => void) {
         // check route.path from request
         if ('object' !== typeof req.route || 'string' !== typeof req.route.path) {
             throw new Error('can not get route.path from request');
         }
 
+        const typecastConfig: { [key: string]: any } = {
+            module: {},
+            currentRoutePath: req.route.path,
+        };
+
         if (0 !== req.route.path.indexOf('/typecast')) {
             return next();
         }
 
-        if (undefined !== this.typecastConfig) {
-            res.locals.typecast = this.typecastConfig;
-            return next();
-        }
-
-        this.typecastConfig = {
-            module: {},
-        };
-
-        for (const [key, route] of await Object.entries(await Container.getRoutes())) {
-            if (undefined === route.backendModuleMainKey || undefined === route.backendModuleTitleKey || true === route.disabled) {
+        for (const route of await Object.values(await Container.getRoutes())) {
+            if (
+                undefined === route.__options.backend ||
+                undefined === route.__options.backend.module ||
+                undefined === route.__options.backend.module.mainKey ||
+                undefined === route.__options.backend.module.titleKey ||
+                true === route.disabled
+            ) {
                 continue;
             }
 
+            const mainKey = route.__options.backend.module.mainKey;
+            const subKey = route.__options.backend.module.subKey;
+            const titleKey = route.__options.backend.module.titleKey;
+
+            if (undefined !== route.__options.roles) {
+                if (undefined === res.locals.user || undefined === res.locals.user.roles) {
+                    continue;
+                }
+
+                let access = false;
+
+                for (const routeRole of route.__options.roles) {
+                    for (const userRole of res.locals.user.roles) {
+                        if (routeRole === userRole) {
+                            access = true;
+                            break;
+                        }
+                    }
+
+                    if (access) {
+                        break;
+                    }
+                }
+
+                if (!access) {
+                    continue;
+                }
+            }
+
             const routeData = {
-                key: route.backendModuleTitleKey,
-                path: route.path,
+                key: titleKey,
+                path: route.__options.path,
             };
 
-            if (undefined === this.typecastConfig.module[route.backendModuleMainKey]) {
-                this.typecastConfig.module[route.backendModuleMainKey] = {
+            if (undefined === typecastConfig.module[mainKey]) {
+                typecastConfig.module[mainKey] = {
                     children: {},
-                    key: route.backendModuleMainKey,
+                    key: mainKey,
                 };
             }
 
-            if (undefined !== route.backendModuleSubKey) {
-                if (undefined === this.typecastConfig.module[route.backendModuleMainKey].children[route.backendModuleSubKey]) {
-                    this.typecastConfig.module[route.backendModuleMainKey].children[route.backendModuleSubKey] = {
+            if (undefined !== subKey) {
+                if (undefined === typecastConfig.module[mainKey].children[subKey]) {
+                    typecastConfig.module[mainKey].children[subKey] = {
                         children: {},
-                        key: route.backendModuleSubKey,
+                        key: subKey,
                     };
-                    this.typecastConfig.module[route.backendModuleMainKey].children[route.backendModuleSubKey].children[routeData.key] = routeData;
                 }
+                typecastConfig.module[mainKey].children[subKey].children[routeData.key] = routeData;
             } else {
-                this.typecastConfig.module[route.backendModuleMainKey].children[routeData.key] = routeData;
+                typecastConfig.module[mainKey].children[routeData.key] = routeData;
             }
         }
 
         const orderedModules: { [key: string]: any } = {};
-        Object.keys(this.typecastConfig.module)
+
+        Object.keys(typecastConfig.module)
             .sort()
             .reverse()
             .forEach(key => {
-                orderedModules[key] = this.typecastConfig.module[key];
+                orderedModules[key] = typecastConfig.module[key];
             });
 
-        this.typecastConfig.module = orderedModules;
+        typecastConfig.module = orderedModules;
 
-        res.locals.typecast = this.typecastConfig;
+        res.locals.typecast = typecastConfig;
 
         return next();
     }
