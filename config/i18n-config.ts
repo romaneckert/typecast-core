@@ -2,7 +2,7 @@ import Config from '../decorator/config';
 
 @Config()
 // TODO: use getter for validation
-export class I18nConfig {
+export default class I18nConfig {
     public locales: string[] = ['en', 'de'];
     public defaultLocale: string = 'en';
 
