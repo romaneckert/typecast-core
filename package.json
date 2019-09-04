@@ -1,6 +1,6 @@
 {
     "name": "@typecast/core",
-    "version": "0.0.73",
+    "version": "0.0.74",
     "description": "",
     "scripts": {
         "update": "npx npm-update-all",
