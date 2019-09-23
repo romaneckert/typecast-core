@@ -14,8 +14,7 @@
     "license": "MIT",
     "author": "Roman Eckert",
     "scripts": {
-        "node-ts": "node-ts",
-        "gulp": "npm run node-ts gulp",
+        "gulp": "gulp",
         "test": "jest",
         "test-watch": "jest --watch",
         "update": "npx npm-update-all"
@@ -23,20 +22,17 @@
     "jest": {
         "bail": true,
         "collectCoverage": true,
-        "collectCoverageFrom": [
-            "<rootDir>/**/*"
-        ],
         "coverageReporters": [
             "json-summary",
             "text"
         ],
         "errorOnDeprecated": true,
         "roots": [
-            "<rootDir>/src"
+            "<rootDir>/packages/core"
         ],
         "testEnvironment": "node",
         "transform": {
-            "^.+\\.tsx?$": "ts-jest"
+            "^.+\\.ts$": "ts-jest"
         },
         "verbose": true
     },

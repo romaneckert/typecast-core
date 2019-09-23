@@ -1,15 +1,13 @@
-import * as gulp from 'gulp';
-gulp.task('default', () => console.log('default'));
+import { dest } from 'gulp';
+import { createProject } from 'gulp-typescript';
 
-/*
-const { src, dest } = require('gulp');
-const { createProject } = require('gulp-typescript');
+const packages = {
+    core: createProject('packages/core/tsconfig.json'),
+};
 
-function defaultTask() {
-    return createProject('tsconfig.json')
+export default function defaultTask() {
+    return packages.core
         .src()
-        .pipe(createProject('tsconfig.json')())
+        .pipe(packages.core())
         .pipe(dest('dist'));
 }
-
-exports.default = defaultTask;*/
