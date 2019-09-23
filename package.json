@@ -7,7 +7,8 @@
         "npm": ">=6"
     },
     "scripts": {
-        "update": "npx npm-update-all"
+        "update": "npx npm-update-all",
+        "test": "jest"
     },
     "repository": {
         "type": "git",
@@ -18,6 +19,23 @@
     "license": "MIT",
     "bugs": {
         "url": "https://github.com/romaneckert/typecast-core/issues"
+    },
+    "jest": {
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/src"
+        ],
+        "transform": {
+            "^.+\\.tsx?$": "ts-jest"
+        },
+        "bail": true,
+        "collectCoverage": true,
+        "coverageReporters": [
+            "json-summary",
+            "text"
+        ],
+        "verbose": true,
+        "errorOnDeprecated": true
     },
     "homepage": "https://github.com/romaneckert/typecast-core#readme",
     "devDependencies": {
