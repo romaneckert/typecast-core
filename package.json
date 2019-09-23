@@ -2,42 +2,55 @@
     "name": "@typecast/core",
     "version": "0.0.74",
     "description": "@typecast/core",
-    "engines": {
-        "node": ">=12",
-        "npm": ">=6"
-    },
-    "scripts": {
-        "update": "npx npm-update-all",
-        "test": "jest"
+    "keywords": [],
+    "homepage": "https://github.com/romaneckert/typecast-core#readme",
+    "bugs": {
+        "url": "https://github.com/romaneckert/typecast-core/issues"
     },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/romaneckert/typecast-core.git"
     },
-    "keywords": [],
-    "author": "Roman Eckert",
     "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/romaneckert/typecast-core/issues"
+    "author": "Roman Eckert",
+    "scripts": {
+        "test": "jest",
+        "update": "npx npm-update-all"
     },
     "jest": {
-        "testEnvironment": "node",
-        "roots": [
-            "<rootDir>/src"
-        ],
-        "transform": {
-            "^.+\\.tsx?$": "ts-jest"
-        },
         "bail": true,
         "collectCoverage": true,
         "coverageReporters": [
             "json-summary",
             "text"
         ],
-        "verbose": true,
-        "errorOnDeprecated": true
+        "errorOnDeprecated": true,
+        "roots": [
+            "<rootDir>/src"
+        ],
+        "testEnvironment": "node",
+        "transform": {
+            "^.+\\.tsx?$": "ts-jest"
+        },
+        "verbose": true
     },
-    "homepage": "https://github.com/romaneckert/typecast-core#readme",
+    "dependencies": {
+        "axios": "^0.19.0",
+        "class-validator": "^0.10.0",
+        "compression": "^1.7.4",
+        "cookie-parser": "^1.4.4",
+        "dotenv": "^8.1.0",
+        "express": "^4.17.1",
+        "helmet": "^3.21.1",
+        "jsonwebtoken": "^8.5.1",
+        "mysql": "^2.17.1",
+        "nodemailer": "^6.3.0",
+        "pug": "^2.0.4",
+        "querystring": "^0.2.0",
+        "reflect-metadata": "^0.1.13",
+        "smtp-server": "^3.5.0",
+        "typeorm": "^0.2.19"
+    },
     "devDependencies": {
         "@types/compression": "^1.0.1",
         "@types/cookie-parser": "^1.4.2",
@@ -63,21 +76,8 @@
         "tslint-config-prettier": "^1.18.0",
         "typescript": "^3.6.3"
     },
-    "dependencies": {
-        "axios": "^0.19.0",
-        "class-validator": "^0.10.0",
-        "compression": "^1.7.4",
-        "cookie-parser": "^1.4.4",
-        "dotenv": "^8.1.0",
-        "express": "^4.17.1",
-        "helmet": "^3.21.1",
-        "jsonwebtoken": "^8.5.1",
-        "mysql": "^2.17.1",
-        "nodemailer": "^6.3.0",
-        "pug": "^2.0.4",
-        "querystring": "^0.2.0",
-        "reflect-metadata": "^0.1.13",
-        "smtp-server": "^3.5.0",
-        "typeorm": "^0.2.19"
+    "engines": {
+        "node": ">=12",
+        "npm": ">=6"
     }
 }
