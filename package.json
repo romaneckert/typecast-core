@@ -14,12 +14,18 @@
     "license": "MIT",
     "author": "Roman Eckert",
     "scripts": {
+        "node-ts": "node-ts",
+        "gulp": "npm run node-ts gulp",
         "test": "jest",
+        "test-watch": "jest --watch",
         "update": "npx npm-update-all"
     },
     "jest": {
         "bail": true,
         "collectCoverage": true,
+        "collectCoverageFrom": [
+            "<rootDir>/**/*"
+        ],
         "coverageReporters": [
             "json-summary",
             "text"
@@ -56,6 +62,7 @@
         "@types/cookie-parser": "^1.4.2",
         "@types/dotenv": "^6.1.1",
         "@types/express": "^4.17.1",
+        "@types/gulp": "4.0.6",
         "@types/helmet": "0.0.44",
         "@types/jest": "^24.0.18",
         "@types/jsonwebtoken": "^8.3.4",
@@ -67,11 +74,13 @@
         "gulp-autoprefixer": "^7.0.0",
         "gulp-sass": "^4.0.2",
         "gulp-strip-css-comments": "^2.0.0",
+        "gulp-typescript": "5.0.1",
         "jest": "^24.9.0",
         "jest-coverage-badges": "^1.1.2",
         "node-sass": "^4.12.0",
         "prettier": "^1.18.2",
         "ts-jest": "^24.1.0",
+        "ts-node": "8.4.1",
         "tslint": "^5.20.0",
         "tslint-config-prettier": "^1.18.0",
         "typescript": "^3.6.3"
