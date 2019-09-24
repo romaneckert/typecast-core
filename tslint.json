@@ -5,6 +5,7 @@
             "options": ["allow-leading-underscore", "allow-pascal-case"]
         },
         "ordered-imports": false,
-        "object-literal-sort-keys": false
+        "object-literal-sort-keys": false,
+        "interface-name": false
     }
 }

@@ -16,16 +16,27 @@
     "scripts": {
         "gulp": "gulp",
         "test": "jest",
-        "test-watch": "jest --watchAll",
+        "test:watch": "jest --watch",
         "update": "npx npm-update-all"
     },
     "jest": {
         "bail": true,
         "collectCoverage": true,
+        "collectCoverageFrom": [
+            "<rootDir>/packages/**/*.ts"
+        ],
         "coverageReporters": [
             "json-summary",
             "text"
         ],
+        "coverageThreshold": {
+            "global": {
+                "branches": 100,
+                "functions": 100,
+                "lines": 100,
+                "statements": 100
+            }
+        },
         "errorOnDeprecated": true,
         "roots": [
             "<rootDir>/packages/core"

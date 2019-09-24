@@ -6,7 +6,7 @@
             "request": "launch",
             "name": "Debug Jest Tests",
             "cwd": "${workspaceFolder}",
-            "args": ["--inspect-brk", "/usr/local/bin/npm", "run", "test:ts"],
+            "args": ["--inspect-brk", "/usr/local/bin/npm", "run", "test"],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
         }
