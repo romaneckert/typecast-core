@@ -16,7 +16,7 @@
     "scripts": {
         "gulp": "gulp",
         "test": "jest",
-        "test-watch": "jest --watch",
+        "test-watch": "jest --watchAll",
         "update": "npx npm-update-all"
     },
     "jest": {

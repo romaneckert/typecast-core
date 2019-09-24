@@ -6,4 +6,6 @@ import HTTPServerService from './service/http-server.service';
     controllers: [IndexController],
     services: [HTTPServerService]
 })
-export default class CoreModule {}
+export default class CoreModule {
+    
+}
