@@ -12,6 +12,11 @@ describe('service', () => {
         expect(await httpServer.stop()).toBe(false);
         expect(await httpServer.stop()).toBe(false);
         expect(await httpServer.start()).toBe(true);
+
+        expect(typeof httpServer.port).toBe('number');
+
         expect(await httpServer.stop()).toBe(true);
+
+        expect(httpServer.port).toBe(undefined);
     });
 });

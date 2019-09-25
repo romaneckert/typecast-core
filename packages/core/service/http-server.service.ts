@@ -5,10 +5,11 @@ import LoggerService from './logger.service';
 
 @ServiceDecorator()
 export default class HTTPServerService {
+    private _port: number | undefined;
+
     private server: Server;
     private connection: Server | undefined;
     private logger: LoggerService;
-    private currentPort: number | undefined;
 
     constructor(logger: LoggerService) {
         this.logger = logger;
@@ -41,14 +42,18 @@ export default class HTTPServerService {
         }
 
         this.connection = undefined;
-        this.currentPort = undefined;
+        this._port = undefined;
         await this.logger.notice('http server stopped');
 
         return true;
     }
 
+    public get port(): number | undefined {
+        return this._port;
+    }
+
     protected async listen(port: number): Promise<boolean> {
-        if (undefined !== this.currentPort) {
+        if (undefined !== this._port) {
             await this.logger.error('http server already started');
             return false;
         }
@@ -57,7 +62,7 @@ export default class HTTPServerService {
             await new Promise((resolve, reject) => {
                 this.connection = this.server
                     .listen({ port }, () => {
-                        this.currentPort = port;
+                        this._port = port;
                         resolve();
                     })
                     .on('error', reject);
