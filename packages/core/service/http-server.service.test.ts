@@ -12,5 +12,6 @@ describe('service', () => {
         expect(await httpServer.stop()).toBe(false);
         expect(await httpServer.stop()).toBe(false);
         expect(await httpServer.start()).toBe(true);
+        expect(await httpServer.stop()).toBe(true);
     });
 });

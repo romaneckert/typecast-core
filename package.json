@@ -14,6 +14,7 @@
     "license": "MIT",
     "author": "Roman Eckert",
     "scripts": {
+        "dev": "export NODE_ENV=development && ts-node ./index.ts",
         "gulp": "gulp",
         "test": "jest",
         "test:watch": "jest --watch",

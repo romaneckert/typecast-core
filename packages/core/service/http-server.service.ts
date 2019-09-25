@@ -15,20 +15,7 @@ export default class HTTPServerService {
     }
 
     public async start(): Promise<boolean> {
-        if (undefined !== this.connection) {
-            await this.logger.error('http server already running');
-            return false;
-        }
-
-        this.connection = this.app.listen();
-
-        const address = this.connection.address();
-
-        if ('object' === typeof address && null !== address) {
-            await this.logger.notice('http server listening on port: ' + address.port);
-        }
-
-        return true;
+        return await this.listen(3000);
     }
 
     public async stop(): Promise<boolean> {
@@ -47,6 +34,19 @@ export default class HTTPServerService {
 
         this.connection = undefined;
         await this.logger.notice('http server stopped');
+
+        return true;
+    }
+
+    protected async listen(port: number): Promise<boolean> {
+        try {
+            await new Promise((resolve, reject) => {
+                this.connection = this.app.listen({ port }, resolve).on('error', reject);
+            });
+        } catch (err) {
+            this.logger.warning(`cannot listen on port ${port} - try to start server on port ${port + 1}`);
+            return await this.listen(port + 1);
+        }
 
         return true;
     }
