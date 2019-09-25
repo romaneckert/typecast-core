@@ -35,6 +35,6 @@ export default class LoggerService {
     }
 
     private async log(code: number, message: string, data?: any): Promise<void> {
-        // console.log(code, message, data);
+        console.log(code, message);
     }
 }
