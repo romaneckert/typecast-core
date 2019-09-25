@@ -1,18 +1,25 @@
+import { createServer, Server } from 'https';
 import express from 'express';
-import { Server } from 'http';
 import ServiceDecorator from '../decorator/service.decorator';
 import LoggerService from './logger.service';
 
 @ServiceDecorator()
 export default class HTTPServerService {
-    private app: express.Application;
+    private server: Server;
     private connection: Server | undefined;
     private logger: LoggerService;
     private currentPort: number | undefined;
 
     constructor(logger: LoggerService) {
         this.logger = logger;
-        this.app = express();
+
+        this.server = createServer(
+            {
+                // cert: await FileSystemUtil.readFile(this.pathToCertPem),
+                // key: await FileSystemUtil.readFile(this.pathToKeyPem),
+            },
+            express(),
+        );
     }
 
     public async start(): Promise<boolean> {
@@ -48,7 +55,7 @@ export default class HTTPServerService {
 
         try {
             await new Promise((resolve, reject) => {
-                this.connection = this.app
+                this.connection = this.server
                     .listen({ port }, () => {
                         this.currentPort = port;
                         resolve();
