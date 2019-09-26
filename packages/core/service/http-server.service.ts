@@ -3,10 +3,9 @@ import express from 'express';
 import ServiceDecorator from '../decorator/service.decorator';
 import LoggerService from './logger.service';
 
+// TODO: certificates
 @ServiceDecorator()
 export default class HTTPServerService {
-    private _port: number | undefined;
-
     private server: Server;
     private connection: Server | undefined;
     private logger: LoggerService;
@@ -37,24 +36,33 @@ export default class HTTPServerService {
                 }
             });
         } catch (err) {
-            await this.logger.error('http server already stopped');
+            await this.logger.error('http server already listen');
             return false;
         }
 
-        this.connection = undefined;
-        this._port = undefined;
+        delete this.connection;
         await this.logger.notice('http server stopped');
 
         return true;
     }
 
     public get port(): number | undefined {
-        return this._port;
+        if (undefined === this.connection) {
+            return undefined;
+        }
+
+        const address = this.connection.address();
+
+        if ('object' === typeof address && null !== address) {
+            return address.port;
+        }
+
+        return undefined;
     }
 
     protected async listen(port: number): Promise<boolean> {
-        if (undefined !== this._port) {
-            await this.logger.error('http server already started');
+        if (undefined !== this.port) {
+            await this.logger.error('http server already listen');
             return false;
         }
 
@@ -62,7 +70,6 @@ export default class HTTPServerService {
             await new Promise((resolve, reject) => {
                 this.connection = this.server
                     .listen({ port }, () => {
-                        this._port = port;
                         resolve();
                     })
                     .on('error', reject);
