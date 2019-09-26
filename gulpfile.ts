@@ -12,7 +12,7 @@ import chalk from 'chalk';
 const fs = new FileSystemService();
 const packages = ['packages/core'];
 
-async function test(cb: any): Promise<void> {
+export async function test(cb: any): Promise<void> {
     const promises = [];
 
     for (const entry of packages) {
@@ -57,4 +57,4 @@ function compile(): Stream {
     return stream;
 }
 
-export default parallel(series(clean, compile, test), listen);
+export default series(parallel(clean, compile, listen), test);

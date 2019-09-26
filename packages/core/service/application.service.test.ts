@@ -15,31 +15,29 @@ class Test2Service extends Test1Service {}
 @ServiceDecorator()
 class Test3Service extends Test2Service {}
 
-describe('service', () => {
-    test('application', async () => {
-        const core = await ApplicationService.create<CoreModule>(CoreModule);
+test('application', async () => {
+    const core = await ApplicationService.create<CoreModule>(CoreModule);
 
-        // test inheritence
-        expect((await ApplicationService.create<Test2Service>(Test2Service)) instanceof Test3Service).toBe(true);
+    // test inheritence
+    expect((await ApplicationService.create<Test2Service>(Test2Service)) instanceof Test3Service).toBe(true);
 
-        // test not allowed registerClass after first create
-        try {
-            ApplicationService.registerClass(TestServiceWithoutDecorator);
-        } catch (e) {
-            expect(e.message).toBe('registerClass() not allowed after create() call');
-        }
+    // test not allowed registerClass after first create
+    try {
+        ApplicationService.registerClass(TestServiceWithoutDecorator);
+    } catch (e) {
+        expect(e.message).toBe('registerClass() not allowed after create() call');
+    }
 
-        // test create not registered class
-        try {
-            await ApplicationService.create<TestServiceWithoutDecorator>(TestServiceWithoutDecorator);
-        } catch (e) {
-            expect(e.message).toBe('class is not registered');
-        }
+    // test create not registered class
+    try {
+        await ApplicationService.create<TestServiceWithoutDecorator>(TestServiceWithoutDecorator);
+    } catch (e) {
+        expect(e.message).toBe('class is not registered');
+    }
 
-        expect(Object.keys(ApplicationService.classes).length).toBeGreaterThan(0);
-        expect(Object.keys(ApplicationService.instances).length).toBeGreaterThan(0);
+    expect(Object.keys(ApplicationService.classes).length).toBeGreaterThan(0);
+    expect(Object.keys(ApplicationService.instances).length).toBeGreaterThan(0);
 
-        expect(await core.start()).toBe(true);
-        expect(await core.stop()).toBe(true);
-    });
+    expect(await core.start()).toBe(true);
+    expect(await core.stop()).toBe(true);
 });

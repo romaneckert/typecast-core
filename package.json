@@ -17,8 +17,7 @@
         "doc": "typedoc --out ./doc/api packages",
         "dev": "export NODE_ENV=development && ts-node ./index.ts",
         "gulp": "gulp",
-        "test": "jest",
-        "test:watch": "jest --watch",
+        "test": "gulp test",
         "update": "npx npm-update-all"
     },
     "jest": {
