@@ -6,6 +6,7 @@ import LoggerService from './logger.service';
 // TODO: certificates
 @ServiceDecorator()
 export default class HTTPServerService {
+
     private server: Server;
     private connection: Server | undefined;
     private logger: LoggerService;
@@ -23,7 +24,7 @@ export default class HTTPServerService {
     }
 
     public async start(): Promise<boolean> {
-        return await this.listen(3000);
+        return await this.listen(80);
     }
 
     public async stop(): Promise<boolean> {
