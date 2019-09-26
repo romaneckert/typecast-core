@@ -4,6 +4,8 @@ import ServiceDecorator from '../decorator/service.decorator';
 import LoggerService from './logger.service';
 
 // TODO: certificates
+// TODO: load port from conf
+// TODO: optimize test with already blocked port
 @ServiceDecorator()
 export default class HTTPServerService {
 
