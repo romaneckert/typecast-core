@@ -1,12 +1,14 @@
 import * as nodeFs from 'fs';
 import * as nodePath from 'path';
+import ServiceDecorator from '../decorator/service.decorator';
 
+@ServiceDecorator()
 export default class FileSystemService {
-    public static rename(oldPath: nodeFs.PathLike, newPath: nodeFs.PathLike): Promise<void> {
+    public async rename(oldPath: string, newPath: string): Promise<void> {
         return nodeFs.promises.rename(oldPath, newPath);
     }
 
-    public async remove(path: nodeFs.PathLike): Promise<void> {
+    public async remove(path: string): Promise<void> {
         if ((await this.isFile(path)) || (await this.isSymbolicLink(path))) {
             await nodeFs.promises.unlink(path);
         } else if (await this.isDirectory(path)) {
@@ -18,7 +20,7 @@ export default class FileSystemService {
         }
     }
 
-    public async isFile(path: nodeFs.PathLike): Promise<boolean> {
+    public async isFile(path: string): Promise<boolean> {
         let stats = null;
 
         try {
@@ -30,19 +32,7 @@ export default class FileSystemService {
         return stats.isFile();
     }
 
-    public isFileSync(path: string): boolean {
-        let stats = null;
-
-        try {
-            stats = nodeFs.lstatSync(path);
-        } catch (err) {
-            return false;
-        }
-
-        return stats.isFile();
-    }
-
-    public async isSymbolicLink(path: nodeFs.PathLike): Promise<boolean> {
+    public async isSymbolicLink(path: string): Promise<boolean> {
         let stats = null;
 
         try {
@@ -54,7 +44,7 @@ export default class FileSystemService {
         return stats.isSymbolicLink();
     }
 
-    public async isDirectory(path: nodeFs.PathLike): Promise<boolean> {
+    public async isDirectory(path: string): Promise<boolean> {
         let stats = null;
 
         try {
@@ -66,7 +56,7 @@ export default class FileSystemService {
         return stats.isDirectory();
     }
 
-    public async isSymbolicLinkToDirectory(path: nodeFs.PathLike): Promise<boolean> {
+    public async isSymbolicLinkToDirectory(path: string): Promise<boolean> {
         let stats = null;
 
         try {
@@ -78,7 +68,7 @@ export default class FileSystemService {
         return stats.isDirectory() && (await this.isSymbolicLink(path));
     }
 
-    public async ensureFileExists(path: nodeFs.PathLike): Promise<void> {
+    public async ensureFileExists(path: string): Promise<void> {
         try {
             return await nodeFs.promises.access(path, nodeFs.constants.R_OK);
         } catch (err) {
@@ -88,15 +78,15 @@ export default class FileSystemService {
         return await nodeFs.promises.appendFile(path, '');
     }
 
-    public async ensureDirExists(path: nodeFs.PathLike): Promise<void> {
+    public async ensureDirExists(path: string): Promise<void> {
         return await nodeFs.promises.mkdir(path, { recursive: true });
     }
 
-    public async appendFile(path: nodeFs.PathLike, data: any): Promise<void> {
+    public async appendFile(path: string, data: any): Promise<void> {
         return nodeFs.promises.appendFile(path, data);
     }
 
-    public async readFile(path: nodeFs.PathLike, options?: any): Promise<Buffer> {
+    public async readFile(path: string, options?: any): Promise<Buffer> {
         if (undefined === options) {
             options = 'utf8';
         }
@@ -104,15 +94,7 @@ export default class FileSystemService {
         return nodeFs.promises.readFile(path, options);
     }
 
-    public readFileSync(path: nodeFs.PathLike, options?: any): Buffer {
-        if (undefined === options) {
-            options = 'utf8';
-        }
-
-        return nodeFs.readFileSync(path, options);
-    }
-
-    public async readDirectory(path: nodeFs.PathLike): Promise<string[]> {
+    public async readDirectory(path: string): Promise<string[]> {
         return nodeFs.promises.readdir(path);
     }
 }

@@ -37,7 +37,8 @@ function listen(cb: any) {
 }
 
 async function clean(): Promise<void> {
-    return await fs.remove('./dist');
+    await fs.remove('./var');
+    await fs.remove('./dist');
 }
 
 function compile(): Stream {
@@ -57,4 +58,4 @@ function compile(): Stream {
     return stream;
 }
 
-export default series(parallel(clean, compile, listen), test);
+export default series(clean, parallel(compile, listen), test);
