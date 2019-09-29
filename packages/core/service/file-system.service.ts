@@ -4,12 +4,16 @@ import ServiceDecorator from '../decorator/service.decorator';
 
 @ServiceDecorator()
 export default class FileSystemService {
+    public async symlink(target: string, path: string) {
+        return nodeFs.promises.symlink(target, path);
+    }
+
     public async rename(oldPath: string, newPath: string): Promise<void> {
         return nodeFs.promises.rename(oldPath, newPath);
     }
 
     public async remove(path: string): Promise<void> {
-        if ((await this.isFile(path)) || (await this.isSymbolicLink(path))) {
+        if ((await this.isFile(path)) || (await this.isSymlink(path))) {
             await nodeFs.promises.unlink(path);
         } else if (await this.isDirectory(path)) {
             for (const file of await nodeFs.promises.readdir(path)) {
@@ -32,7 +36,7 @@ export default class FileSystemService {
         return stats.isFile();
     }
 
-    public async isSymbolicLink(path: string): Promise<boolean> {
+    public async isSymlink(path: string): Promise<boolean> {
         let stats = null;
 
         try {
@@ -56,7 +60,7 @@ export default class FileSystemService {
         return stats.isDirectory();
     }
 
-    public async isSymbolicLinkToDirectory(path: string): Promise<boolean> {
+    public async isSymlinkToDirectory(path: string): Promise<boolean> {
         let stats = null;
 
         try {
@@ -65,7 +69,7 @@ export default class FileSystemService {
             return false;
         }
 
-        return stats.isDirectory() && (await this.isSymbolicLink(path));
+        return stats.isDirectory() && (await this.isSymlink(path));
     }
 
     public async ensureFileExists(path: string): Promise<void> {
