@@ -22,8 +22,14 @@ export async function test(cb: any): Promise<void> {
     const results = await Promise.all(promises);
 
     for (const result of results) {
-        if (!result.results.success) {
-            console.log(chalk.red('TEST FAILED'));
+        if (result.results.success) {
+            console.log(chalk.black.bgGreen('           '));
+            console.log(chalk.black.bgGreen(' TEST DONE '));
+            console.log(chalk.black.bgGreen('           '));
+        } else {
+            console.log(chalk.black.bgRed('             '));
+            console.log(chalk.black.bgRed(' TEST FAILED '));
+            console.log(chalk.black.bgRed('             '));
         }
     }
 }

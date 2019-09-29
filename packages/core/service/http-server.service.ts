@@ -8,7 +8,6 @@ import LoggerService from './logger.service';
 // TODO: optimize test with already blocked port
 @ServiceDecorator()
 export default class HTTPServerService {
-
     private server: Server;
     private connection: Server | undefined;
     private logger: LoggerService;

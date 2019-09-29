@@ -1,6 +1,4 @@
-import ControllerDecorator from "../decorator/controller.decorator";
+import ControllerDecorator from '../decorator/controller.decorator';
 
 @ControllerDecorator()
-export default class IndexController {
-    
-}
+export default class IndexController {}

@@ -1,12 +1,17 @@
 import 'reflect-metadata';
 
 export default class ApplicationService {
-    public static registerClass(target: any) {
+    public static registerClass(target: any, type: string) {
         if (this._created) {
             throw new Error('registerClass() not allowed after create() call');
         }
 
-        this._classes[Object.keys(this._classes).length] = target;
+        if (undefined === this._classes[type]) {
+            this._classes[type] = {};
+            this._instances[type] = {};
+        }
+
+        this._classes[type][Object.keys(this._classes[type]).length] = target;
     }
 
     public static get classes(): any {
@@ -21,64 +26,116 @@ export default class ApplicationService {
         // clean perviosly registered classes
         if (!this._created) {
             this._created = true;
-
             await this.cleanClasses();
+            await this.detectLoggerClass();
             await this.createInstances();
         }
 
-        let resolvedTarget = null;
-        let resolvedIndex = null;
-
-        for (const [index, entry] of Object.entries(this._classes)) {
-            if (target.isPrototypeOf(entry) || target === entry) {
-                resolvedIndex = index;
-                resolvedTarget = entry;
-                break;
-            }
-        }
-
-        if (null === resolvedTarget || null === resolvedIndex) {
-            throw new Error('class is not registered');
-        }
-
-        return this._instances[resolvedIndex];
+        return this.createInstance(target);
     }
 
     private static _created: boolean = false;
-    private static _classes: { [key: string]: any } = {};
-    private static _instances: { [key: string]: any } = {};
+    private static _classes: { [key: string]: { [key: string]: any } } = {};
+    private static _loggerClass: any;
+    private static _instances: { [key: string]: { [key: string]: any } } = {};
 
-    private static async createInstances(): Promise<void> {
-        for (const [index, entry] of Object.entries(this._classes)) {
-            const injections = [];
-            const classParameters = Reflect.getMetadata('design:paramtypes', entry) || [];
+    private static async createInstance(target: any): Promise<any> {
+        let resolvedTarget: any = null;
+        let resolvedType: string = '';
+        let resolvedIndex: string = '';
 
-            for (const classParameter of classParameters) {
-                injections.push(await this.create<any>(classParameter));
+        for (const [type, classes] of Object.entries(this._classes)) {
+            if (null !== resolvedTarget) {
+                break;
             }
 
-            const instance = new entry(...injections);
-            this._instances[index] = instance;
+            for (const [index, entry] of Object.entries(classes)) {
+                if (target.isPrototypeOf(entry) || target === entry) {
+                    resolvedIndex = index;
+                    resolvedTarget = entry;
+                    resolvedType = type;
+                    break;
+                }
+            }
+        }
+
+        if (null === resolvedTarget) {
+            throw new Error('class is not registered');
+        }
+
+        if (undefined !== this._instances[resolvedType] && undefined !== this._instances[resolvedType][resolvedIndex]) {
+            return this._instances[resolvedType][resolvedIndex];
+        }
+
+        const instancesToInject = [];
+        const classParameters = Reflect.getMetadata('design:paramtypes', resolvedTarget) || [];
+
+        for (const classParameter of classParameters) {
+            let instance = null;
+
+            if (classParameter.isPrototypeOf(this._loggerClass) || classParameter === this._loggerClass) {
+                instance = new this._loggerClass(resolvedType, resolvedTarget.name);
+            } else {
+                instance = await this.createInstance(classParameter);
+            }
+
+            instancesToInject.push(instance);
+        }
+
+        return (this._instances[resolvedType][resolvedIndex] = new resolvedTarget(...instancesToInject));
+    }
+
+    private static async createInstances(): Promise<void> {
+        for (const classes of Object.values(this._classes)) {
+            for (const entry of Object.values(classes)) {
+                if (entry === this._loggerClass) {
+                    continue;
+                }
+
+                await this.createInstance(entry);
+            }
+        }
+    }
+
+    private static async detectLoggerClass(): Promise<void> {
+        for (const classes of Object.values(this._classes)) {
+            for (const entry of Object.values(classes)) {
+                if (
+                    'function' === typeof entry.prototype.emergency &&
+                    'function' === typeof entry.prototype.alert &&
+                    'function' === typeof entry.prototype.critical &&
+                    'function' === typeof entry.prototype.error &&
+                    'function' === typeof entry.prototype.warning &&
+                    'function' === typeof entry.prototype.notice &&
+                    'function' === typeof entry.prototype.info &&
+                    'function' === typeof entry.prototype.debug
+                ) {
+                    this._loggerClass = entry;
+                }
+            }
         }
     }
 
     private static async cleanClasses(): Promise<void> {
-        for (const [index, entry] of Object.entries(this._classes)) {
-            if (await this.removePrototype(index, entry)) {
-                await this.cleanClasses();
-                return;
+        for (const classes of Object.values(this._classes)) {
+            for (const entry of Object.values(classes)) {
+                if (await this.removePrototype(entry)) {
+                    await this.cleanClasses();
+                    return;
+                }
             }
         }
     }
 
-    private static async removePrototype(indexToTest: string, classToTest: any): Promise<boolean> {
-        for (const [index, entry] of Object.entries(this._classes)) {
-            if (entry.isPrototypeOf(classToTest)) {
-                delete this._classes[index];
-                return true;
+    private static async removePrototype(classToTest: any): Promise<boolean> {
+        for (const [type, classes] of Object.entries(this._classes)) {
+            for (const [index, entry] of Object.entries(classes)) {
+                if (entry.isPrototypeOf(classToTest)) {
+                    delete this._classes[type][index];
+                    return true;
+                }
             }
         }
-
         return false;
     }
 }

@@ -23,7 +23,7 @@ test('application', async () => {
 
     // test not allowed registerClass after first create
     try {
-        ApplicationService.registerClass(TestServiceWithoutDecorator);
+        ApplicationService.registerClass(TestServiceWithoutDecorator, 'service');
     } catch (e) {
         expect(e.message).toBe('registerClass() not allowed after create() call');
     }
