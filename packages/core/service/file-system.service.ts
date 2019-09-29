@@ -25,51 +25,35 @@ export default class FileSystemService {
     }
 
     public async isFile(path: string): Promise<boolean> {
-        let stats = null;
-
         try {
-            stats = await nodeFs.promises.lstat(path);
+            return (await nodeFs.promises.lstat(path)).isFile();
         } catch (err) {
             return false;
         }
-
-        return stats.isFile();
     }
 
     public async isSymlink(path: string): Promise<boolean> {
-        let stats = null;
-
         try {
-            stats = await nodeFs.promises.lstat(path);
+            return (await nodeFs.promises.lstat(path)).isSymbolicLink();
         } catch (err) {
             return false;
         }
-
-        return stats.isSymbolicLink();
     }
 
     public async isDirectory(path: string): Promise<boolean> {
-        let stats = null;
-
         try {
-            stats = await nodeFs.promises.lstat(path);
+            return (await nodeFs.promises.lstat(path)).isDirectory();
         } catch (err) {
             return false;
         }
-
-        return stats.isDirectory();
     }
 
     public async isSymlinkToDirectory(path: string): Promise<boolean> {
-        let stats = null;
-
         try {
-            stats = await nodeFs.promises.stat(path);
+            return (await nodeFs.promises.stat(path)).isDirectory() && (await this.isSymlink(path));
         } catch (err) {
             return false;
         }
-
-        return stats.isDirectory() && (await this.isSymlink(path));
     }
 
     public async ensureFileExists(path: string): Promise<void> {
@@ -83,19 +67,15 @@ export default class FileSystemService {
     }
 
     public async ensureDirExists(path: string): Promise<void> {
-        return await nodeFs.promises.mkdir(path, { recursive: true });
+        return nodeFs.promises.mkdir(path, { recursive: true });
     }
 
     public async appendFile(path: string, data: any): Promise<void> {
         return nodeFs.promises.appendFile(path, data);
     }
 
-    public async readFile(path: string, options?: any): Promise<Buffer> {
-        if (undefined === options) {
-            options = 'utf8';
-        }
-
-        return nodeFs.promises.readFile(path, options);
+    public async readFile(path: string): Promise<string> {
+        return String(await nodeFs.promises.readFile(path, 'utf8'));
     }
 
     public async readDirectory(path: string): Promise<string[]> {

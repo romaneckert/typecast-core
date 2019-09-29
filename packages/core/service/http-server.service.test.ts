@@ -1,11 +1,21 @@
+/* tslint:disable:no-empty */
+
 import https from 'https';
 import ApplicationService from './application.service';
 import HTTPServerService from './http-server.service';
 
 test('http-service', async () => {
-    // create test server to block port 80
-
-    https.createServer().listen(80);
+    // try to create test server to block port 80
+    try {
+        await new Promise((resolve, reject) => {
+            https
+                .createServer()
+                .listen({ port: 80 }, () => {
+                    resolve();
+                })
+                .on('error', reject);
+        });
+    } catch (err) {}
 
     const httpServer = await ApplicationService.create<HTTPServerService>(HTTPServerService);
 
