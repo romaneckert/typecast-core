@@ -3,7 +3,6 @@ import StringUtil from '../util/string';
 
 @ServiceDecorator()
 export default class LoggerService {
-    
     private _contextType: string;
     private _contextName: string;
     private _allowedTypes: string[] = ['controller', 'service', 'module'];
