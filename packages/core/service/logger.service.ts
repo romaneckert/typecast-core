@@ -1,5 +1,5 @@
 import ServiceDecorator from '../decorator/service.decorator';
-import StringUtil from '../util/string';
+import StringUtil from '../util/string.util';
 
 @ServiceDecorator()
 export default class LoggerService {

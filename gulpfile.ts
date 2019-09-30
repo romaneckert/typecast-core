@@ -5,14 +5,15 @@ import { createProject } from 'gulp-typescript';
 import path from 'path';
 import merge from 'merge-stream';
 import { Stream } from 'stream';
-import FileSystemService from './packages/core/service/file-system.service';
+import FileSystemUtil from './packages/core/util/file-system.util';
 import jest from 'jest';
 import chalk from 'chalk';
 
-const fs = new FileSystemService();
 const packages = ['packages/core'];
 
 export async function test(cb: any): Promise<void> {
+    process.env.NODE_ENV = 'test';
+
     const promises = [];
 
     for (const entry of packages) {
@@ -43,8 +44,8 @@ function listen(cb: any) {
 }
 
 async function clean(): Promise<void> {
-    await fs.remove('./var');
-    await fs.remove('./dist');
+    await FileSystemUtil.remove('./var');
+    await FileSystemUtil.remove('./dist');
 }
 
 function compile(): Stream {

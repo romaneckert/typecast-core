@@ -1,8 +1,5 @@
 import cluster from 'cluster';
 import os from 'os';
-import path from 'path';
-import fs from 'fs';
-import dotenv from 'dotenv';
 import ModuleDecorator from './decorator/module.decorator';
 import HTTPServerService from './service/http-server.service';
 import ModuleInterface from './interface/module.interface';
@@ -17,7 +14,6 @@ export default class CoreModule implements ModuleInterface {
     protected httpServer: HTTPServerService;
 
     constructor(applicationConfig: ApplicationConfig, httpServer: HTTPServerService) {
-        this.loadDotEnvFile();
         this.applicationConfig = applicationConfig;
         this.httpServer = httpServer;
     }
@@ -35,15 +31,5 @@ export default class CoreModule implements ModuleInterface {
 
     public async stop(): Promise<boolean> {
         return await this.httpServer.stop();
-    }
-
-    private loadDotEnvFile() {
-        const pathToDotEnv = path.join(process.cwd(), '.env.' + String(process.env.NODE_ENV).toLowerCase());
-
-        if (!fs.existsSync(pathToDotEnv)) {
-            throw new Error(`${pathToDotEnv} does not exists`);
-        }
-
-        dotenv.config({ path: pathToDotEnv });
     }
 }

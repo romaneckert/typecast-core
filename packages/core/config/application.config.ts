@@ -1,15 +1,25 @@
 import ConfigDecorator from '../decorator/controller.decorator';
-import EnvironmentVariable from '../util/environment-variable';
+import EnvironmentVariable from '../util/environment-variable.util';
 
 @ConfigDecorator()
 export default class ApplicationConfig {
-    public buildDate: Date = new Date();
+    private _startDate: Date;
+    private _cluster: boolean = false;
+
+    constructor() {
+        this._startDate = new Date();
+        this._cluster = Boolean(EnvironmentVariable.get('APP_CLUSTER', 1));
+    }
 
     public get rootPath(): string {
         return process.cwd();
     }
 
     public get cluster(): boolean {
-        return Boolean(EnvironmentVariable.get('APP_CLUSTER', 1));
+        return this._cluster;
+    }
+
+    public get startDate(): Date {
+        return this._startDate;
     }
 }

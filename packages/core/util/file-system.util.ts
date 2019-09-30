@@ -1,18 +1,16 @@
 import * as nodeFs from 'fs';
 import * as nodePath from 'path';
-import ServiceDecorator from '../decorator/service.decorator';
 
-@ServiceDecorator()
-export default class FileSystemService {
-    public async symlink(target: string, path: string) {
+export default class FileSystemUtil {
+    public static async symlink(target: string, path: string) {
         return nodeFs.promises.symlink(target, path);
     }
 
-    public async rename(oldPath: string, newPath: string): Promise<void> {
+    public static async rename(oldPath: string, newPath: string): Promise<void> {
         return nodeFs.promises.rename(oldPath, newPath);
     }
 
-    public async remove(path: string): Promise<void> {
+    public static async remove(path: string): Promise<void> {
         if ((await this.isFile(path)) || (await this.isSymlink(path))) {
             await nodeFs.promises.unlink(path);
         } else if (await this.isDirectory(path)) {
@@ -24,7 +22,7 @@ export default class FileSystemService {
         }
     }
 
-    public async isFile(path: string): Promise<boolean> {
+    public static async isFile(path: string): Promise<boolean> {
         try {
             return (await nodeFs.promises.lstat(path)).isFile();
         } catch (err) {
@@ -32,7 +30,7 @@ export default class FileSystemService {
         }
     }
 
-    public async isSymlink(path: string): Promise<boolean> {
+    public static async isSymlink(path: string): Promise<boolean> {
         try {
             return (await nodeFs.promises.lstat(path)).isSymbolicLink();
         } catch (err) {
@@ -40,7 +38,7 @@ export default class FileSystemService {
         }
     }
 
-    public async isDirectory(path: string): Promise<boolean> {
+    public static async isDirectory(path: string): Promise<boolean> {
         try {
             return (await nodeFs.promises.lstat(path)).isDirectory();
         } catch (err) {
@@ -48,7 +46,7 @@ export default class FileSystemService {
         }
     }
 
-    public async isSymlinkToDirectory(path: string): Promise<boolean> {
+    public static async isSymlinkToDirectory(path: string): Promise<boolean> {
         try {
             return (await nodeFs.promises.stat(path)).isDirectory() && (await this.isSymlink(path));
         } catch (err) {
@@ -56,7 +54,7 @@ export default class FileSystemService {
         }
     }
 
-    public async ensureFileExists(path: string): Promise<void> {
+    public static async ensureFileExists(path: string): Promise<void> {
         try {
             return await nodeFs.promises.access(path, nodeFs.constants.R_OK);
         } catch (err) {
@@ -66,19 +64,19 @@ export default class FileSystemService {
         return await nodeFs.promises.appendFile(path, '');
     }
 
-    public async ensureDirExists(path: string): Promise<void> {
+    public static async ensureDirExists(path: string): Promise<void> {
         return nodeFs.promises.mkdir(path, { recursive: true });
     }
 
-    public async appendFile(path: string, data: any): Promise<void> {
+    public static async appendFile(path: string, data: any): Promise<void> {
         return nodeFs.promises.appendFile(path, data);
     }
 
-    public async readFile(path: string): Promise<string> {
+    public static async readFile(path: string): Promise<string> {
         return String(await nodeFs.promises.readFile(path, 'utf8'));
     }
 
-    public async readDirectory(path: string): Promise<string[]> {
+    public static async readDirectory(path: string): Promise<string[]> {
         return nodeFs.promises.readdir(path);
     }
 }
