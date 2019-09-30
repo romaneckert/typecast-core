@@ -1,8 +1,5 @@
 import 'reflect-metadata';
-import path from 'path';
-import dotenv from 'dotenv';
-import EnvironmentVariable from '../util/environment-variable.util';
-import FileSystemUtil from '../util/file-system.util';
+import EnvironmentUtil from '../util/environment.util';
 
 export default class ApplicationService {
     public static registerClass(target: any, type: string) {
@@ -23,9 +20,9 @@ export default class ApplicationService {
         if (!this._created) {
             this._created = true;
 
-            await this.loadDotEnvFile();
             await this.cleanClasses();
             await this.detectLoggerClass();
+            await EnvironmentUtil.load();
             await this.createInstances();
         }
 
@@ -44,18 +41,6 @@ export default class ApplicationService {
     private static _classes: { [key: string]: { [key: string]: any } } = {};
     private static _loggerClass: any;
     private static _instances: { [key: string]: { [key: string]: any } } = {};
-
-    private static async loadDotEnvFile() {
-        const nodeEnv = await EnvironmentVariable.get('NODE_ENV', 'production');
-
-        const pathToDotEnv = path.join(process.cwd(), '.env.' + nodeEnv.toLowerCase());
-
-        if (!(await FileSystemUtil.isFile(pathToDotEnv))) {
-            throw new Error(`${pathToDotEnv} does not exists`);
-        }
-
-        dotenv.config({ path: pathToDotEnv });
-    }
 
     private static async createInstance(target: any): Promise<any> {
         let resolvedTarget: any = null;
@@ -100,7 +85,14 @@ export default class ApplicationService {
             instancesToInject.push(instance);
         }
 
-        return (this._instances[resolvedType][resolvedIndex] = new resolvedTarget(...instancesToInject));
+        const resolvedInstance = new resolvedTarget(...instancesToInject);
+
+        // TODO: optimize
+        if ('function' === typeof resolvedInstance.init) {
+            await resolvedInstance.init();
+        }
+
+        return (this._instances[resolvedType][resolvedIndex] = resolvedInstance);
     }
 
     private static async createInstances(): Promise<void> {
