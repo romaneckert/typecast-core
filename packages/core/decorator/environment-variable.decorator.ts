@@ -4,6 +4,6 @@ import EnvironmentVariableInterface from '../interface/environment-variable.inte
 
 export default function EnvironmentVariableDecorator(environmentVariable: EnvironmentVariableInterface) {
     return (target: any, propertyKey: any) => {
-        target[propertyKey] = EnvironmentUtil.getVariable(environmentVariable);
+        target[propertyKey] = EnvironmentUtil.getValue(environmentVariable);
     };
 }

@@ -1,16 +1,20 @@
+import dotenv from 'dotenv';
 import EnvironmentVariableError from '../error/environment-variable.error';
 import FileSystemUtil from './file-system.util';
 import EnvironmentVariableInterface from '../interface/environment-variable.interface';
 
 export default class EnvironmentUtil {
-    public static getVariable(environmentVariable: EnvironmentVariableInterface): string {
-        this.writeToDotEnvExample(environmentVariable);
+    public static getValue(environmentVariable: EnvironmentVariableInterface): string | number | boolean {
+        if (undefined !== this._values[environmentVariable.name]) {
+            return this._values[environmentVariable.name];
+        }
 
-        // write to .env.example
+        this._variables[environmentVariable.name] = environmentVariable;
+
         // try load env variables
         // try load dotenv variables and overwrite if not exists
         // try to get variable from env
-        // if not exists throw error
+        // if not exists write example file and throw error
 
         return 'asdfdsf';
         // this._variables[environmentVariable.name] = environmentVariable;
@@ -18,7 +22,7 @@ export default class EnvironmentUtil {
 
     public static async load(): Promise<void> {
         // sort this._variables
-        const orderedVariables: { [name: string]: { example: string | string[] | number | number[] | boolean; value: string | boolean | number | undefined; required: boolean } } = {};
+        const orderedVariables: { [name: string]: EnvironmentVariableInterface } = {};
         Object.keys(this._variables)
             .sort()
             .forEach(key => {
@@ -45,12 +49,26 @@ export default class EnvironmentUtil {
         // load variable from file
     }
 
-    protected static _variables: { [name: string]: any } = {};
+    protected static _variables: { [name: string]: EnvironmentVariableInterface } = {};
+    protected static _values: { [name: string]: string | number | boolean } = {};
 
-    protected static writeToDotEnvExample(environmentVariable: EnvironmentVariableInterface) {
-        const pathToDotEnvExample = '.env.example';
+    protected static writeToExampleDotEnv(environmentVariable: EnvironmentVariableInterface) {
+        const pathToExampleDotEnv = 'example.env';
 
-        FileSystemUtil.ensureFileExistsSync(pathToDotEnvExample);
+        FileSystemUtil.ensureFileExistsSync(pathToExampleDotEnv);
+        const exampleDotEnvData = dotenv.parse(FileSystemUtil.readFileSync(pathToExampleDotEnv));
+
+        const example = environmentVariable.example;
+
+        if ('boolean' === typeof example) {
+            exampleDotEnvData[environmentVariable.name] = String(Number(environmentVariable.example));
+        } else if ('number' === typeof example) {
+            exampleDotEnvData[environmentVariable.name] = String(environmentVariable.example);
+        }
+
+        exampleDotEnvData[environmentVariable.name] = String(environmentVariable.example);
+
+        console.log(exampleDotEnvData);
     }
 
     protected static async _loadVariableFromEnv(name: string): Promise<void> {
@@ -64,6 +82,7 @@ export default class EnvironmentUtil {
     }
 
     protected static async _loadVariable(name: string, value: string | undefined): Promise<void> {
+        /*
         const conf = this._variables[name];
 
         if ('string' !== typeof value || 0 === value.length) {
@@ -72,7 +91,7 @@ export default class EnvironmentUtil {
 
         switch (typeof conf.example) {
             case 'string':
-                this._variables[name].value = value;
+                this._values[name] = value;
                 break;
             case 'number':
                 if ('string' === typeof value) {
@@ -80,23 +99,24 @@ export default class EnvironmentUtil {
                         throw new EnvironmentVariableError(name, conf.example);
                     }
 
-                    this._variables[name].value = Number(value);
+                    this._values[name] = Number(value);
                 }
 
                 // check if value is valid number
-                if (Number.isNaN(this._variables[name].value)) {
+                if (Number.isNaN(this._values[name])) {
                     throw new EnvironmentVariableError(name, conf.example);
                 }
 
-                this._variables[name].value = value;
+                this._values[name] = value;
                 break;
             case 'boolean':
                 if ('number' !== typeof value) {
                     throw new EnvironmentVariableError(name, conf.example);
                 }
 
-                this._variables[name].value = Boolean(value);
+                this._values[name] = Boolean(value);
                 break;
         }
+        */
     }
 }

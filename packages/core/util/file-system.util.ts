@@ -64,7 +64,7 @@ export default class FileSystemUtil {
         return await nodeFs.promises.appendFile(path, '');
     }
 
-    public static async ensureFileExistsSync(path: string): Promise<void> {
+    public static ensureFileExistsSync(path: string): void {
         try {
             return nodeFs.accessSync(path, nodeFs.constants.R_OK);
         } catch (err) {
@@ -78,7 +78,7 @@ export default class FileSystemUtil {
         return nodeFs.promises.mkdir(path, { recursive: true });
     }
 
-    public static async ensureDirExistsSync(path: string): Promise<void> {
+    public static ensureDirExistsSync(path: string): void {
         return nodeFs.mkdirSync(path, { recursive: true });
     }
 
@@ -87,7 +87,11 @@ export default class FileSystemUtil {
     }
 
     public static async readFile(path: string): Promise<string> {
-        return String(await nodeFs.promises.readFile(path, 'utf8'));
+        return await nodeFs.promises.readFile(path, 'utf8');
+    }
+
+    public static readFileSync(path: string): string {
+        return nodeFs.readFileSync(path, 'utf8');
     }
 
     public static async readDirectory(path: string): Promise<string[]> {
