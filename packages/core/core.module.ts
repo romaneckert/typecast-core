@@ -19,12 +19,13 @@ export default class CoreModule implements ModuleInterface {
     }
 
     public async start(): Promise<boolean> {
+        /*
         if (cluster.isMaster && this.applicationConfig.cluster) {
             for (const cpu of os.cpus()) {
                 cluster.fork();
             }
             return true;
-        }
+        }*/
 
         return await this.httpServer.start();
     }

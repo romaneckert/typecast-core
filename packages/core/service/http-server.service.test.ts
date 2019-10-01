@@ -1,7 +1,7 @@
 /* tslint:disable:no-empty */
 
 import https from 'https';
-import ApplicationService from './application.service';
+import ApplicationUtil from '../util/application.util';
 import HTTPServerService from './http-server.service';
 
 test('http-service', async () => {
@@ -17,7 +17,7 @@ test('http-service', async () => {
         });
     } catch (err) {}
 
-    const httpServer = await ApplicationService.create<HTTPServerService>(HTTPServerService);
+    const httpServer = await ApplicationUtil.create<HTTPServerService>(HTTPServerService);
 
     expect(await httpServer.start()).toBe(true);
     expect(await httpServer.start()).toBe(false);

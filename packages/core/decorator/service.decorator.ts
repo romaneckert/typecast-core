@@ -1,7 +1,7 @@
-import ApplicationService from '../service/application.service';
+import ApplicationUtil from '../util/application.util';
 
 export default function ServiceDecorator(): ClassDecorator {
     return target => {
-        ApplicationService.registerClass(target, 'service');
+        ApplicationUtil.registerClass(target, 'service');
     };
 }

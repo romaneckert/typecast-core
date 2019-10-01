@@ -1,7 +1,6 @@
 import 'reflect-metadata';
-import EnvironmentUtil from '../util/environment.util';
 
-export default class ApplicationService {
+export default class ApplicationUtil {
     public static registerClass(target: any, type: string) {
         if (this._created) {
             throw new Error('registerClass() not allowed after create() call');
@@ -22,7 +21,6 @@ export default class ApplicationService {
 
             await this.cleanClasses();
             await this.detectLoggerClass();
-            await EnvironmentUtil.load();
             await this.createInstances();
         }
 
@@ -85,14 +83,7 @@ export default class ApplicationService {
             instancesToInject.push(instance);
         }
 
-        const resolvedInstance = new resolvedTarget(...instancesToInject);
-
-        // TODO: optimize
-        if ('function' === typeof resolvedInstance.init) {
-            await resolvedInstance.init();
-        }
-
-        return (this._instances[resolvedType][resolvedIndex] = resolvedInstance);
+        return (this._instances[resolvedType][resolvedIndex] = new resolvedTarget(...instancesToInject));
     }
 
     private static async createInstances(): Promise<void> {

@@ -1,23 +1,19 @@
 import EnvironmentVariableError from '../error/environment-variable.error';
 import FileSystemUtil from './file-system.util';
+import EnvironmentVariableInterface from '../interface/environment-variable.interface';
 
 export default class EnvironmentUtil {
-    public static getVariable(name: string): string | number | boolean {
-        const variable = this._variables[name];
+    public static getVariable(environmentVariable: EnvironmentVariableInterface): string {
+        this.writeToDotEnvExample(environmentVariable);
 
-        if ('undefined' === typeof variable || 'undefined' === typeof variable.value) {
-            throw new EnvironmentVariableError(name);
-        }
+        // write to .env.example
+        // try load env variables
+        // try load dotenv variables and overwrite if not exists
+        // try to get variable from env
+        // if not exists throw error
 
-        return variable.value;
-    }
-
-    public static registerVariable(name: string, example: string | string[] | number | number[] | boolean, required: boolean): void {
-        this._variables[name] = {
-            example,
-            required,
-            value: undefined,
-        };
+        return 'asdfdsf';
+        // this._variables[environmentVariable.name] = environmentVariable;
     }
 
     public static async load(): Promise<void> {
@@ -44,12 +40,18 @@ export default class EnvironmentUtil {
         await FileSystemUtil.ensureFileExists('.env.example');
 
         // ensure .env.context exists
-        await FileSystemUtil.ensureFileExists('.env.' + this.getVariable('NODE_ENV'));
+        // await FileSystemUtil.ensureFileExists('.env.' + this.getVariable('NODE_ENV'));
 
         // load variable from file
     }
 
-    protected static _variables: { [name: string]: { example: string | string[] | number | number[] | boolean; value: string | boolean | number | undefined; required: boolean } } = {};
+    protected static _variables: { [name: string]: any } = {};
+
+    protected static writeToDotEnvExample(environmentVariable: EnvironmentVariableInterface) {
+        const pathToDotEnvExample = '.env.example';
+
+        FileSystemUtil.ensureFileExistsSync(pathToDotEnvExample);
+    }
 
     protected static async _loadVariableFromEnv(name: string): Promise<void> {
         const conf = this._variables[name];
@@ -62,7 +64,6 @@ export default class EnvironmentUtil {
     }
 
     protected static async _loadVariable(name: string, value: string | undefined): Promise<void> {
-
         const conf = this._variables[name];
 
         if ('string' !== typeof value || 0 === value.length) {
@@ -71,8 +72,6 @@ export default class EnvironmentUtil {
 
         switch (typeof conf.example) {
             case 'string':
-                
-
                 this._variables[name].value = value;
                 break;
             case 'number':
@@ -81,11 +80,11 @@ export default class EnvironmentUtil {
                         throw new EnvironmentVariableError(name, conf.example);
                     }
 
-                    value = Number(value);
+                    this._variables[name].value = Number(value);
                 }
 
                 // check if value is valid number
-                if (Number.isNaN(value)) {
+                if (Number.isNaN(this._variables[name].value)) {
                     throw new EnvironmentVariableError(name, conf.example);
                 }
 

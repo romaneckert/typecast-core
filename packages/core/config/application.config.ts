@@ -1,16 +1,27 @@
 import ConfigDecorator from '../decorator/config.decorator';
-import EnvironmentUtil from '../util/environment.util';
+import EnvironmentVariableDecorator from '../decorator/environment-variable.decorator';
 
-@ConfigDecorator([['APP_CLUSTER', true, false], ['NODE_ENV', ['production', 'acceptance', 'staging', 'test', 'development'], true]])
+@ConfigDecorator()
 export default class ApplicationConfig {
-    protected _cluster: boolean;
+    @EnvironmentVariableDecorator({
+        name: 'NODE_ENV',
+        example: 'production',
+        required: true,
+        allowedValues: ['production', 'acceptance', 'staging', 'test', 'development'],
+    })
     protected _context: string;
+
+    @EnvironmentVariableDecorator({
+        name: 'APP_CLUSTER',
+        example: true,
+        required: true,
+    })
+    protected _cluster: boolean;
+
     protected _rootPath: string;
     protected _startDate: Date;
 
     constructor() {
-        this._cluster = Boolean(EnvironmentUtil.getVariable('APP_CLUSTER'));
-        this._context = String(EnvironmentUtil.getVariable('NODE_ENV'));
         this._rootPath = process.cwd();
         this._startDate = new Date();
     }

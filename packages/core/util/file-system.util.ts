@@ -15,7 +15,7 @@ export default class FileSystemUtil {
             await nodeFs.promises.unlink(path);
         } else if (await this.isDirectory(path)) {
             for (const file of await nodeFs.promises.readdir(path)) {
-                await this.remove(nodePath.join(path.toString(), file));
+                await this.remove(nodePath.join(path, file));
             }
 
             await nodeFs.promises.rmdir(path);
@@ -58,14 +58,28 @@ export default class FileSystemUtil {
         try {
             return await nodeFs.promises.access(path, nodeFs.constants.R_OK);
         } catch (err) {
-            await this.ensureDirExists(nodePath.dirname(path.toString()));
+            await this.ensureDirExists(nodePath.dirname(path));
         }
 
         return await nodeFs.promises.appendFile(path, '');
     }
 
+    public static async ensureFileExistsSync(path: string): Promise<void> {
+        try {
+            return nodeFs.accessSync(path, nodeFs.constants.R_OK);
+        } catch (err) {
+            this.ensureDirExistsSync(nodePath.dirname(path));
+        }
+
+        return nodeFs.appendFileSync(path, '');
+    }
+
     public static async ensureDirExists(path: string): Promise<void> {
         return nodeFs.promises.mkdir(path, { recursive: true });
+    }
+
+    public static async ensureDirExistsSync(path: string): Promise<void> {
+        return nodeFs.mkdirSync(path, { recursive: true });
     }
 
     public static async appendFile(path: string, data: any): Promise<void> {

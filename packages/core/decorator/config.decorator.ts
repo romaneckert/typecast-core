@@ -1,12 +1,7 @@
-import ApplicationService from '../service/application.service';
-import EnvironmentUtil from '../util/environment.util';
+import ApplicationUtil from '../util/application.util';
 
-export default function ConfigDecorator(config: Array<[string, string | string[] | number | number[] | boolean, boolean]>): ClassDecorator {
+export default function ConfigDecorator(): ClassDecorator {
     return target => {
-        for (const variableConfig of config) {
-            EnvironmentUtil.registerVariable(variableConfig[0], variableConfig[1], variableConfig[2]);
-        }
-
-        ApplicationService.registerClass(target, 'config');
+        ApplicationUtil.registerClass(target, 'config');
     };
 }

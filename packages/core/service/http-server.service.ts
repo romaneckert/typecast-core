@@ -38,7 +38,7 @@ export default class HTTPServerService {
                 }
             });
         } catch (err) {
-            await this.logger.error('http server already listen');
+            await this.logger.error('http server already stopped');
             return false;
         }
 
