@@ -9,6 +9,16 @@ export default class EnvironmentUtil {
             return this._values[environmentVariable.name];
         }
 
+        if (undefined === this._values.NODE_ENV) { 
+            if ('undefined' === typeof process.env.NODE_ENV) {
+                throw new EnvironmentVariableError('NODE_ENV', 'production', ['production', 'staging', 'acceptance', 'test', 'development']);
+            } 
+
+            this._loadVariableFromEnv();
+        }
+
+        
+
         this._variables[environmentVariable.name] = environmentVariable;
 
         // try load env variables
@@ -51,6 +61,10 @@ export default class EnvironmentUtil {
 
     protected static _variables: { [name: string]: EnvironmentVariableInterface } = {};
     protected static _values: { [name: string]: string | number | boolean } = {};
+
+    protected static loadEnvironmentVariablesFromContextDotEnv() {
+        dotenv.config({ path: context.env });
+    }
 
     protected static writeToExampleDotEnv(environmentVariable: EnvironmentVariableInterface) {
         const pathToExampleDotEnv = 'example.env';

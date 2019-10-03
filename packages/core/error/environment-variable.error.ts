@@ -1,14 +1,20 @@
 // TODO: optimize for types
 export default class EnvironmentVariableError extends Error {
-    constructor(variableName: string, example?: string | string[] | number | number[] | boolean) {
-        if ('boolean' === typeof example) {
-            example = Number(example);
+    constructor(variableName: string, example?: string | number | boolean, allowedValues?: string[] | number[]) {
+        const parts = [`${variableName} not set or not valid`];
+
+        if ('undefined' !== typeof example) {
+            if ('boolean' === typeof example) {
+                example = Number(example);
+            }
+
+            parts.push(`example: ${example}`);
         }
 
-        if ('undefined' === typeof example) {
-            super(`${variableName} not set or not valid`);
-        } else {
-            super(`${variableName} not set or not valid - example: ${example}`);
+        if ('undefined' !== typeof allowedValues) {
+            parts.push(`allowed values: ${allowedValues.join(' | ')}`);
         }
+
+        super(parts.join(' - '));
     }
 }

@@ -6,8 +6,6 @@ export default class ApplicationConfig {
     @EnvironmentVariableDecorator({
         name: 'NODE_ENV',
         example: 'production',
-        required: true,
-        allowedValues: ['production', 'acceptance', 'staging', 'test', 'development'],
     })
     protected _context: string;
 
