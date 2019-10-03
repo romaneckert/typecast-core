@@ -27,7 +27,7 @@ export default class FileSystemUtil {
             nodeFs.unlinkSync(path);
         } else if (this.isDirectorySync(path)) {
             for (const file of nodeFs.readdirSync(path)) {
-                this.remove(nodePath.join(path, file));
+                this.removeSync(nodePath.join(path, file));
             }
 
             nodeFs.rmdirSync(path);

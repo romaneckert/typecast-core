@@ -41,7 +41,7 @@ test('file-system', async () => {
 
     // remove
     await FileSystemUtil.remove(pathToTestDir1);
-    await FileSystemUtil.remove(pathToTestDir2);
+    FileSystemUtil.removeSync(pathToTestDir2);
 
     // ensureDirExists
     await FileSystemUtil.ensureDirExists(pathToTestDir2);
@@ -61,17 +61,19 @@ test('file-system', async () => {
     await FileSystemUtil.ensureDirExists(pathToTestDir1);
     await FileSystemUtil.ensureDirExists(pathToTestDir2);
 
-    // ensureFileExists
-    await FileSystemUtil.ensureFileExists(pathToTestFile1);
+    // ensureFileExistsSync
+    FileSystemUtil.ensureFileExistsSync(pathToTestFile1);
 
     // isFile
     expect(await FileSystemUtil.isFile(pathToTestFile1)).toBe(true);
+    expect(FileSystemUtil.isFileSync(pathToTestFile1)).toBe(true);
 
     // remove
     await FileSystemUtil.remove(pathToTestFile1);
 
     // isFile
     expect(await FileSystemUtil.isFile(pathToTestFile1)).toBe(false);
+    expect(FileSystemUtil.isFileSync(pathToTestFile1)).toBe(false);
 
     // ensureFileExists
     await FileSystemUtil.ensureFileExists(pathToTestFile1);
@@ -81,13 +83,16 @@ test('file-system', async () => {
 
     // readFile
     expect(await FileSystemUtil.readFile(pathToTestFile1)).toBe(testString);
+    expect(FileSystemUtil.readFileSync(pathToTestFile1)).toBe(testString);
 
     // rename
     await FileSystemUtil.rename(pathToTestFile1, pathToTestFile2);
 
     // isFile
     expect(await FileSystemUtil.isFile(pathToTestFile1)).toBe(false);
+    expect(FileSystemUtil.isFileSync(pathToTestFile1)).toBe(false);
     expect(await FileSystemUtil.isFile(pathToTestFile2)).toBe(true);
+    expect(FileSystemUtil.isFileSync(pathToTestFile2)).toBe(true);
 
     // readDir
     expect((await FileSystemUtil.readDirectory(pathToTestDir1)).length).toBe(0);
@@ -99,4 +104,5 @@ test('file-system', async () => {
 
     // isSymlink on not existing dir
     expect(await FileSystemUtil.isSymlink(pathToTest)).toBe(false);
+    expect(FileSystemUtil.isSymlinkSync(pathToTest)).toBe(false);
 });
