@@ -1,15 +1,17 @@
+import EnvironmentVariableInterface from '../interface/environment-variable.interface';
+
 // TODO: optimize for types
 export default class EnvironmentVariableError extends Error {
-    constructor(variableName: string, example?: string | number | boolean, allowedValues?: string[] | number[]) {
-        const parts = [`${variableName} not set or not valid`];
+    constructor(environmentVariable: EnvironmentVariableInterface) {
+        const parts = [`${environmentVariable.name} not set or not valid`];
+        let example = environmentVariable.example;
+        const allowedValues = environmentVariable.allowedValues;
 
-        if ('undefined' !== typeof example) {
-            if ('boolean' === typeof example) {
-                example = Number(example);
-            }
-
-            parts.push(`example: ${example}`);
+        if ('boolean' === typeof example) {
+            example = Number(example);
         }
+
+        parts.push(`example: ${example}`);
 
         if ('undefined' !== typeof allowedValues) {
             parts.push(`allowed values: ${allowedValues.join(' | ')}`);

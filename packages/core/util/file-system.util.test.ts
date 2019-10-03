@@ -1,27 +1,29 @@
 import FileSystemUtil from './file-system.util';
 import path from 'path';
 
-test('file-system', async () => {
-    const pathToTest = path.join(process.cwd(), 'var/', 'test/');
-    const testDir1 = 'file-system-1';
-    const testDir2 = 'file-system-2';
-    const pathToTestDir1 = path.join(pathToTest, testDir1, '/');
-    const pathToTestDir2 = path.join(pathToTest, testDir2, '/');
-    const testFile1 = 'test-file-1.txt';
-    const testFile2 = 'test-file-2.txt';
-    const pathToTestFile1 = path.join(pathToTestDir1, testFile1);
-    const pathToTestFile2 = path.join(pathToTestDir2, testFile2);
-    const testString = 'test-string';
+const pathToTest = path.join(process.cwd(), 'var/', 'test/');
+const testDir1 = 'file-system-1';
+const testDir2 = 'file-system-2';
+const pathToTestDir1 = path.join(pathToTest, testDir1, '/');
+const pathToTestDir2 = path.join(pathToTest, testDir2, '/');
+const testFile1 = 'test-file-1.txt';
+const testFile2 = 'test-file-2.txt';
+const pathToTestFile1 = path.join(pathToTestDir1, testFile1);
+const pathToTestFile2 = path.join(pathToTestDir2, testFile2);
+const testString = 'test-string';
 
+test('file-system', async () => {
     // isDirectory
     expect(await FileSystemUtil.isDirectory(pathToTestDir1)).toBe(false);
+    expect(FileSystemUtil.isDirectorySync(pathToTestDir1)).toBe(false);
 
     // ensureDirExists
     await FileSystemUtil.ensureDirExists(pathToTestDir1);
-    await FileSystemUtil.ensureDirExists(pathToTestDir2);
+    FileSystemUtil.ensureDirExistsSync(pathToTestDir2);
 
     // isDirectory
     expect(await FileSystemUtil.isDirectory(pathToTestDir1)).toBe(true);
+    expect(FileSystemUtil.isDirectorySync(pathToTestDir2)).toBe(true);
 
     // ensureFileExists
     await FileSystemUtil.ensureFileExists(pathToTestFile2);
@@ -31,8 +33,11 @@ test('file-system', async () => {
 
     // isSymlink
     expect(await FileSystemUtil.isSymlink(pathToTestDir1)).toBe(false);
+    expect(FileSystemUtil.isSymlinkSync(pathToTestDir1)).toBe(false);
     expect(await FileSystemUtil.isSymlink(pathToTestFile1)).toBe(true);
+    expect(FileSystemUtil.isSymlinkSync(pathToTestFile1)).toBe(true);
     expect(await FileSystemUtil.isSymlink(pathToTestFile2)).toBe(false);
+    expect(FileSystemUtil.isSymlinkSync(pathToTestFile2)).toBe(false);
 
     // remove
     await FileSystemUtil.remove(pathToTestDir1);

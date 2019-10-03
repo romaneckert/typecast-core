@@ -33,6 +33,8 @@ export async function test(cb: any): Promise<void> {
             console.log(chalk.black.bgRed('             '));
         }
     }
+
+    cb();
 }
 
 function listen(cb: any) {

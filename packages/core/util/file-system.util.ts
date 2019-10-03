@@ -22,9 +22,29 @@ export default class FileSystemUtil {
         }
     }
 
+    public static removeSync(path: string): void {
+        if (this.isFileSync(path) || this.isSymlinkSync(path)) {
+            nodeFs.unlinkSync(path);
+        } else if (this.isDirectorySync(path)) {
+            for (const file of nodeFs.readdirSync(path)) {
+                this.remove(nodePath.join(path, file));
+            }
+
+            nodeFs.rmdirSync(path);
+        }
+    }
+
     public static async isFile(path: string): Promise<boolean> {
         try {
             return (await nodeFs.promises.lstat(path)).isFile();
+        } catch (err) {
+            return false;
+        }
+    }
+
+    public static isFileSync(path: string): boolean {
+        try {
+            return nodeFs.lstatSync(path).isFile();
         } catch (err) {
             return false;
         }
@@ -38,9 +58,25 @@ export default class FileSystemUtil {
         }
     }
 
+    public static isSymlinkSync(path: string): boolean {
+        try {
+            return nodeFs.lstatSync(path).isSymbolicLink();
+        } catch (err) {
+            return false;
+        }
+    }
+
     public static async isDirectory(path: string): Promise<boolean> {
         try {
             return (await nodeFs.promises.lstat(path)).isDirectory();
+        } catch (err) {
+            return false;
+        }
+    }
+
+    public static isDirectorySync(path: string): boolean {
+        try {
+            return nodeFs.lstatSync(path).isDirectory();
         } catch (err) {
             return false;
         }
@@ -71,7 +107,7 @@ export default class FileSystemUtil {
             this.ensureDirExistsSync(nodePath.dirname(path));
         }
 
-        return nodeFs.appendFileSync(path, '');
+        return this.appendFileSync(path, '');
     }
 
     public static async ensureDirExists(path: string): Promise<void> {
@@ -84,6 +120,10 @@ export default class FileSystemUtil {
 
     public static async appendFile(path: string, data: any): Promise<void> {
         return nodeFs.promises.appendFile(path, data);
+    }
+
+    public static appendFileSync(path: string, data: any): void {
+        return nodeFs.appendFileSync(path, data);
     }
 
     public static async readFile(path: string): Promise<string> {
