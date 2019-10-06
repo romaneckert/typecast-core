@@ -79,7 +79,8 @@ export default class EnvironmentUtil {
                 comments.push('optional');
             }
 
-            data.push(`${name}=${example} # ` + comments.join(' - '));
+            data.push(`# ${comments.join(' - ')}`);
+            data.push(`${name}=${example}`);
         }
 
         FileSystemUtil.appendFileSync(pathToExampleDotEnv, data.join('\n'));

@@ -1,13 +1,18 @@
 import ServiceDecorator from '../decorator/service.decorator';
 import StringUtil from '../util/string.util';
+import LogEntity from '../entity/log.entity';
+import ApplicationConfig from '../config/application.config';
 
 @ServiceDecorator()
 export default class LoggerService {
-    private _contextType: string;
-    private _contextName: string;
-    private _allowedTypes: string[] = ['controller', 'service', 'module'];
+    protected _applicationConfig: ApplicationConfig;
+    protected _contextType: string;
+    protected _contextName: string;
+    protected _allowedTypes: string[] = ['controller', 'module', 'service', 'util'];
 
-    public constructor(contextType: string, contextName: string) {
+    public constructor(applicationConfig: ApplicationConfig, contextType: string, contextName: string) {
+        this._applicationConfig = applicationConfig;
+
         contextType = contextType.toLowerCase();
         contextName = StringUtil.decamelize(contextName);
 
@@ -56,7 +61,103 @@ export default class LoggerService {
         await this.log(7, message, data);
     }
 
-    private async log(code: number, message: string, data?: any): Promise<void> {
-        // console.log(code, message, this._contextType, this._contextName);
+    protected async log(code: number, message: string, data?: any): Promise<void> {
+        console.log(code, message, this._contextType, this._contextName);
+
+        const date = new Date();
+
+        // trim message
+        message = message.trim();
+
+        // remove line breaks from message
+        message = message.replace(/(\r?\n|\r)/gm, ' ');
+
+        // string type cast data
+        if (undefined === data) {
+            data = '';
+        }
+
+        data = StringUtil.cast(data);
+
+        const log = new LogEntity(code, date, this._contextType, this._contextName, message, data);
+
+        await this._writeLog(log);
+        await this._writeToConsole(log);
+    }
+
+    protected async _writeLog(log: LogEntity) {
+        /*
+        const logFilePaths = [
+            nodePath.join(this.applicationConfig.rootPath, 'var', this.contextConfig.context.toLowerCase(), 'log', log.level + '.log'),
+            nodePath.join(this.applicationConfig.rootPath, 'var', this.contextConfig.context.toLowerCase(), 'log', log.contextType, log.contextName, log.level + '.log'),
+        ];
+
+        let output = '[' + this.dateToString(log.date) + '] ';
+        output += '[' + log.level + '] ';
+        output += '[' + log.contextType + '/' + log.contextName + '] ';
+        output += '[' + log.message + ']';
+        output = output.replace(/\r?\n?/g, '').trim();
+
+        for (const logFilePath of logFilePaths) {
+            // check if log file exists and create if not
+            await FileSystemUtil.ensureFileExists(logFilePath);
+
+            // check if log rotation is necessary
+            // await this._rotateLogFile(logFile);
+
+            // write line to log file
+            await FileSystemUtil.appendFile(logFilePath, output + '\n');
+        }
+        */
+    }
+
+    protected async _writeToConsole(log: LogEntity): Promise<void> {
+        /*
+        // disabled, if log level less then notice and in mode production
+        if (this.contextConfig.isProduction() && log.code > 5) {
+            return;
+        }
+
+        const output = [];
+        output.push('[' + log.level + ']');
+        output.push('[' + log.contextType + '/' + log.contextName + ']');
+        output.push(log.message);
+
+        if (0 > log.data.length) {
+            output.push('[' + log.data + ']');
+        }
+
+        output.push('[pid:' + process.pid + ']');
+
+        const colors: { [key: number]: string } = {
+            0: '\x1b[31m',
+            1: '\x1b[31m',
+            2: '\x1b[31m',
+            3: '\x1b[31m',
+            4: '\x1b[33m',
+            5: '\x1b[34m',
+            6: '\x1b[34m',
+            7: '\x1b[37m',
+        };
+
+        // disabled, if context in mode test
+        if (this.contextConfig.isTest()) {
+            return;
+        }
+
+        // tslint:disable-next-line
+        console.log(
+            colors[log.code],
+            output
+                .join(' ')
+                .replace(/\r?\n?/g, '')
+                .trim(),
+            '\x1b[0m',
+        );
+        */
+    }
+
+    private dateToString(date: Date): string {
+        return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + ' ' + date.toTimeString().slice(0, 8);
     }
 }

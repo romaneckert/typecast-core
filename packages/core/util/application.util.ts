@@ -20,11 +20,14 @@ export default class ApplicationUtil {
             this._created = true;
 
             await this.cleanClasses();
+
+            console.log(this._classes);
+
             await this.detectLoggerClass();
             await this.createInstances();
         }
 
-        return this.createInstance(target);
+        return this.createInstance(target, this.name, 'util');
     }
 
     public static get classes(): any {
@@ -40,7 +43,8 @@ export default class ApplicationUtil {
     private static _loggerClass: any;
     private static _instances: { [key: string]: { [key: string]: any } } = {};
 
-    private static async createInstance(target: any): Promise<any> {
+    private static async createInstance(target: any, parentName: string, parentType: string): Promise<any> {
+
         let resolvedTarget: any = null;
         let resolvedType: string = '';
         let resolvedIndex: string = '';
@@ -71,16 +75,32 @@ export default class ApplicationUtil {
         const instancesToInject = [];
         const classParameters = Reflect.getMetadata('design:paramtypes', resolvedTarget) || [];
 
+        let isLogger = false;
+        let loggerParameters: string[] = [];
+
+        if (resolvedTarget.isPrototypeOf(this._loggerClass) || resolvedTarget === this._loggerClass) {
+            isLogger = true;
+            loggerParameters = [parentType, parentName];
+        }
+
         for (const classParameter of classParameters) {
+
+            console.log(target);
+            console.log(classParameter);
+
             let instance = null;
 
-            if (classParameter.isPrototypeOf(this._loggerClass) || classParameter === this._loggerClass) {
-                instance = new this._loggerClass(resolvedType, resolvedTarget.name);
+            if (isLogger && classParameter === String) {
+                instance = loggerParameters.shift();
             } else {
-                instance = await this.createInstance(classParameter);
+                instance = await this.createInstance(classParameter, resolvedTarget.name, resolvedType);
             }
 
             instancesToInject.push(instance);
+        }
+
+        if (isLogger) {
+            return new resolvedTarget(...instancesToInject);
         }
 
         return (this._instances[resolvedType][resolvedIndex] = new resolvedTarget(...instancesToInject));
@@ -93,11 +113,12 @@ export default class ApplicationUtil {
                     continue;
                 }
 
-                await this.createInstance(entry);
+                await this.createInstance(entry, this.name, 'util');
             }
         }
     }
 
+    // TODO: use is Prototype of logger service
     private static async detectLoggerClass(): Promise<void> {
         for (const classes of Object.values(this._classes)) {
             for (const entry of Object.values(classes)) {

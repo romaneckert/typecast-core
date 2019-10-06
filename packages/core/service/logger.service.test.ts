@@ -1,16 +1,26 @@
+/* tslint:disable:no-empty */
+
 import LoggerService from './logger.service';
+import ApplicationUtil from '../util/application.util';
+
+class TestClass {
+    constructor(logger: LoggerService) {
+        console.log(logger);
+    }
+}
 
 test('logger', async () => {
-    let logger: LoggerService;
+    ApplicationUtil.registerClass(TestClass, 'invalid');
 
-    // test not allowed registerClass after first create
     try {
-        logger = new LoggerService('invalidType', 'test');
+        await ApplicationUtil.create<TestClass>(TestClass);
     } catch (e) {
         expect(e.message).toBe('type "invalidtype" is not allowed');
     }
 
-    logger = new LoggerService('service', 'test');
+    return;
+
+    const logger = await ApplicationUtil.create<LoggerService>(LoggerService);
 
     await Promise.all([
         logger.alert('alert message'),
