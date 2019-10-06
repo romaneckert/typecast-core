@@ -2,6 +2,8 @@ import ServiceDecorator from '../decorator/service.decorator';
 import StringUtil from '../util/string.util';
 import LogEntity from '../entity/log.entity';
 import ApplicationConfig from '../config/application.config';
+import * as nodePath from 'path';
+import FileSystemUtil from '../util/file-system.util';
 
 @ServiceDecorator()
 export default class LoggerService {
@@ -16,6 +18,7 @@ export default class LoggerService {
         contextType = contextType.toLowerCase();
         contextName = StringUtil.decamelize(contextName);
 
+        // TODO: add test with viewhelper
         if (!this._allowedTypes.includes(contextType)) {
             throw new Error(`type "${contextType}" is not allowed`);
         }
@@ -62,8 +65,6 @@ export default class LoggerService {
     }
 
     protected async log(code: number, message: string, data?: any): Promise<void> {
-        console.log(code, message, this._contextType, this._contextName);
-
         const date = new Date();
 
         // trim message
@@ -86,10 +87,9 @@ export default class LoggerService {
     }
 
     protected async _writeLog(log: LogEntity) {
-        /*
         const logFilePaths = [
-            nodePath.join(this.applicationConfig.rootPath, 'var', this.contextConfig.context.toLowerCase(), 'log', log.level + '.log'),
-            nodePath.join(this.applicationConfig.rootPath, 'var', this.contextConfig.context.toLowerCase(), 'log', log.contextType, log.contextName, log.level + '.log'),
+            nodePath.join(this._applicationConfig.rootPath, 'var', this._applicationConfig.context, 'log', log.level + '.log'),
+            nodePath.join(this._applicationConfig.rootPath, 'var', this._applicationConfig.context, 'log', log.contextType, log.contextName, log.level + '.log'),
         ];
 
         let output = '[' + this.dateToString(log.date) + '] ';
@@ -108,13 +108,11 @@ export default class LoggerService {
             // write line to log file
             await FileSystemUtil.appendFile(logFilePath, output + '\n');
         }
-        */
     }
 
     protected async _writeToConsole(log: LogEntity): Promise<void> {
-        /*
-        // disabled, if log level less then notice and in mode production
-        if (this.contextConfig.isProduction() && log.code > 5) {
+        // disabled, if in context test or log level less then notice and in context production
+        if (this._applicationConfig.isTest() || (this._applicationConfig.isProduction() && log.code > 5)) {
             return;
         }
 
@@ -140,11 +138,6 @@ export default class LoggerService {
             7: '\x1b[37m',
         };
 
-        // disabled, if context in mode test
-        if (this.contextConfig.isTest()) {
-            return;
-        }
-
         // tslint:disable-next-line
         console.log(
             colors[log.code],
@@ -154,7 +147,6 @@ export default class LoggerService {
                 .trim(),
             '\x1b[0m',
         );
-        */
     }
 
     private dateToString(date: Date): string {

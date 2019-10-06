@@ -4,7 +4,7 @@ import FileSystemUtil from './file-system.util';
 import EnvironmentVariableInterface from '../interface/environment-variable.interface';
 
 export default class EnvironmentUtil {
-    public static getValue(environmentVariable: EnvironmentVariableInterface): string | number | boolean {
+    public static getValue(environmentVariable: EnvironmentVariableInterface): string | number | boolean | undefined {
         // check if value already set and return
         if (undefined !== this._values[environmentVariable.name]) {
             return this._values[environmentVariable.name];
@@ -34,7 +34,7 @@ export default class EnvironmentUtil {
 
     protected static _contextDotEnvLoaded: boolean = false;
     protected static _variables: { [name: string]: EnvironmentVariableInterface } = {};
-    protected static _values: { [name: string]: string | number | boolean } = {};
+    protected static _values: { [name: string]: string | number | boolean | undefined } = {};
 
     protected static _loadContextDotEnv(): void {
         const pathToContextDotEnv = this._values.NODE_ENV + '.env';
@@ -86,9 +86,13 @@ export default class EnvironmentUtil {
         FileSystemUtil.appendFileSync(pathToExampleDotEnv, data.join('\n'));
     }
 
-    protected static _getValueFromEnv(name: string): string | number | boolean {
+    protected static _getValueFromEnv(name: string): string | number | boolean | undefined {
         const environmentVariable = this._variables[name];
         let value = process.env[name] as any;
+
+        if (false === environmentVariable.required) {
+            return undefined;
+        }
 
         if ('string' !== typeof value || 0 === value.length) {
             this._updateDotEnvFiles();

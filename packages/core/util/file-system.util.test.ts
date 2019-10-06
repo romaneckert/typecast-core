@@ -42,6 +42,7 @@ test('file-system', async () => {
     // remove
     await FileSystemUtil.remove(pathToTestDir1);
     FileSystemUtil.removeSync(pathToTestDir2);
+    FileSystemUtil.removeSync(pathToTestDir2);
 
     // ensureDirExists
     await FileSystemUtil.ensureDirExists(pathToTestDir2);

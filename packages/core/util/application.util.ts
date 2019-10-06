@@ -20,9 +20,6 @@ export default class ApplicationUtil {
             this._created = true;
 
             await this.cleanClasses();
-
-            console.log(this._classes);
-
             await this.detectLoggerClass();
             await this.createInstances();
         }
@@ -44,7 +41,6 @@ export default class ApplicationUtil {
     private static _instances: { [key: string]: { [key: string]: any } } = {};
 
     private static async createInstance(target: any, parentName: string, parentType: string): Promise<any> {
-
         let resolvedTarget: any = null;
         let resolvedType: string = '';
         let resolvedIndex: string = '';
@@ -84,10 +80,6 @@ export default class ApplicationUtil {
         }
 
         for (const classParameter of classParameters) {
-
-            console.log(target);
-            console.log(classParameter);
-
             let instance = null;
 
             if (isLogger && classParameter === String) {
