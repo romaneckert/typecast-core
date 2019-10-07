@@ -8,7 +8,7 @@ test('application-config', async () => {
     expect(applicationConfig.context).toBe('test');
     expect(typeof applicationConfig.rootPath).toBe('string');
     expect(applicationConfig.rootPath.length).toBeGreaterThan(0);
-    expect(applicationConfig.startDate.getTime() < Date.now()).toBe(true);
+    expect(applicationConfig.startDate.getTime() <= Date.now()).toBe(true);
 
     expect(applicationConfig.isAcceptance()).toBe(false);
     expect(applicationConfig.isDevelopment()).toBe(false);

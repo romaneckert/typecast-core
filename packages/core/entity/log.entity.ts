@@ -29,6 +29,7 @@ export default class LogEntity {
         this.contextType = contextType;
         this.contextName = contextName;
         this.message = message;
+        this.data = data;
     }
 
     public get level(): string {

@@ -121,7 +121,7 @@ export default class LoggerService {
         output.push('[' + log.contextType + '/' + log.contextName + ']');
         output.push(log.message);
 
-        if (0 > log.data.length) {
+        if (0 < log.data.length) {
             output.push('[' + log.data + ']');
         }
 

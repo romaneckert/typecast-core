@@ -73,7 +73,7 @@ export default class EnvironmentUtil {
 
             const comments = [];
 
-            if (environmentVariable.required) {
+            if (undefined === environmentVariable.required || true === environmentVariable.required) {
                 comments.push('required');
             } else {
                 comments.push('optional');
