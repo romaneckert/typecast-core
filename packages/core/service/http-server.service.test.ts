@@ -10,7 +10,7 @@ test('http-service', async () => {
         await new Promise((resolve, reject) => {
             https
                 .createServer()
-                .listen({ port: 80 }, () => {
+                .listen({ port: 3000 }, () => {
                     resolve();
                 })
                 .on('error', reject);

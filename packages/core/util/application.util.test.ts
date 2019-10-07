@@ -3,6 +3,7 @@
 import ApplicationUtil from './application.util';
 import CoreModule from '../core.module';
 import ServiceDecorator from '../decorator/service.decorator';
+import LoggerService from '../service/logger.service';
 
 class TestServiceWithoutDecorator {}
 
@@ -14,6 +15,13 @@ class Test2Service extends Test1Service {}
 
 @ServiceDecorator()
 class Test3Service extends Test2Service {}
+
+@ServiceDecorator()
+class TestLoggerService extends LoggerService {
+    protected async log(code: number, message: string, data?: any): Promise<void> {
+        const test = code + message;
+    }
+}
 
 test('application', async () => {
     const core = await ApplicationUtil.create<CoreModule>(CoreModule);

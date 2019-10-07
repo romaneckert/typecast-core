@@ -17,11 +17,11 @@ export default class ApplicationUtil {
     public static async create<T>(target: any): Promise<T> {
         // clean perviosly registered classes
         if (!this._created) {
-            this._created = true;
-
             await this.cleanClasses();
             await this.detectLoggerClass();
             await this.createInstances();
+
+            this._created = true;
         }
 
         return this.createInstance(target, this.name, 'util');
@@ -110,22 +110,13 @@ export default class ApplicationUtil {
         }
     }
 
-    // TODO: use is Prototype of logger service
     private static async detectLoggerClass(): Promise<void> {
-        for (const classes of Object.values(this._classes)) {
-            for (const entry of Object.values(classes)) {
-                if (
-                    'function' === typeof entry.prototype.emergency &&
-                    'function' === typeof entry.prototype.alert &&
-                    'function' === typeof entry.prototype.critical &&
-                    'function' === typeof entry.prototype.error &&
-                    'function' === typeof entry.prototype.warning &&
-                    'function' === typeof entry.prototype.notice &&
-                    'function' === typeof entry.prototype.info &&
-                    'function' === typeof entry.prototype.debug
-                ) {
-                    this._loggerClass = entry;
-                }
+        const LoggerService = (await import('../service/logger.service')).default;
+
+        for (const entry of Object.values(this._classes.service)) {
+            if (LoggerService.isPrototypeOf(entry) || entry === LoggerService) {
+                this._loggerClass = entry;
+                return;
             }
         }
     }

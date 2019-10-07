@@ -10,25 +10,15 @@ export default class LoggerService {
     protected _applicationConfig: ApplicationConfig;
     protected _contextType: string;
     protected _contextName: string;
-    protected _allowedTypes: string[] = ['controller', 'module', 'service', 'util'];
 
     public constructor(applicationConfig: ApplicationConfig, contextType: string, contextName: string) {
         this._applicationConfig = applicationConfig;
 
         contextType = contextType.toLowerCase();
         contextName = StringUtil.decamelize(contextName);
+        contextName = contextName.replace('-' + contextType, '');
 
-        // TODO: add test with viewhelper
-        if (!this._allowedTypes.includes(contextType)) {
-            throw new Error(`type "${contextType}" is not allowed`);
-        }
-
-        this._contextType = contextType.toLowerCase();
-
-        for (const type of this._allowedTypes) {
-            contextName = contextName.replace('-' + type, '');
-        }
-
+        this._contextType = contextType;
         this._contextName = contextName;
     }
 
@@ -82,8 +72,7 @@ export default class LoggerService {
 
         const log = new LogEntity(code, date, this._contextType, this._contextName, message, data);
 
-        await this._writeLog(log);
-        await this._writeToConsole(log);
+        await Promise.all([this._writeLog(log), this._writeToConsole(log)]);
     }
 
     protected async _writeLog(log: LogEntity) {
@@ -92,11 +81,15 @@ export default class LoggerService {
             nodePath.join(this._applicationConfig.rootPath, 'var', this._applicationConfig.context, 'log', log.contextType, log.contextName, log.level + '.log'),
         ];
 
-        let output = '[' + this.dateToString(log.date) + '] ';
-        output += '[' + log.level + '] ';
-        output += '[' + log.contextType + '/' + log.contextName + '] ';
-        output += '[' + log.message + ']';
-        output = output.replace(/\r?\n?/g, '').trim();
+        const output = [];
+        output.push('[' + this.dateToString(log.date) + ']');
+        output.push('[' + log.level + ']');
+        output.push('[' + log.contextType + '/' + log.contextName + ']');
+        output.push('[' + log.message + ']');
+
+        if (0 < log.data.length) {
+            output.push('[' + log.data + ']');
+        }
 
         for (const logFilePath of logFilePaths) {
             // check if log file exists and create if not
@@ -106,7 +99,13 @@ export default class LoggerService {
             // await this._rotateLogFile(logFile);
 
             // write line to log file
-            await FileSystemUtil.appendFile(logFilePath, output + '\n');
+            await FileSystemUtil.appendFile(
+                logFilePath,
+                output
+                    .join(' ')
+                    .replace(/\r?\n?/g, '')
+                    .trim() + '\n',
+            );
         }
     }
 
